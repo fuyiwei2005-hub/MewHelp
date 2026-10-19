@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 import httpx
@@ -5,10 +6,11 @@ from fastapi import FastAPI, HTTPException
 
 from app.chat import SessionResponse, chat_events
 from app.config import Settings
-from app.context import ContextTooLarge, prepare_messages
-from app.gateway import ModelGateway, OpenAICompatibleGateway
-from app.prompts import render_system
-from app.schemas import ChatRequest
+from app.context import ContextTooLarge, estimate_tokens, prepare_messages
+from app.gateway import ModelGateway, OpenAICompatibleGateway, UpstreamError, UpstreamTimeout
+from app.prompts import render_extraction, render_system
+from langchain_core.messages import HumanMessage
+from app.schemas import AfterSales, ChatRequest, ExtractRequest
 from app.sessions import CapacityExceeded, SessionBusy, SessionNotFound, SessionStore
 
 
@@ -51,6 +53,18 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
             raise HTTPException(413, "当前问题超过输入预算，请缩短后重试。") from None
         return SessionResponse(
             chat_events(app.state.gateway, store, session, messages, config), store, session)
+
+    @app.post("/after-sales/extract", response_model=AfterSales)
+    async def extract(payload: ExtractRequest):
+        if estimate_tokens([HumanMessage(content=render_extraction(payload.description))]) > config.input_budget:
+            raise HTTPException(413, "售后描述超过输入预算，请缩短后重试。")
+        try:
+            async with asyncio.timeout(config.llm_timeout_seconds):
+                return await app.state.gateway.extract(payload.description)
+        except (UpstreamTimeout, TimeoutError):
+            raise HTTPException(504, {"code": UpstreamTimeout.code, "message": UpstreamTimeout.message}) from None
+        except UpstreamError as error:
+            raise HTTPException(502, {"code": error.code, "message": error.message}) from None
 
     return app
 
