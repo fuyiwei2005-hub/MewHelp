@@ -1,0 +1,252 @@
+event: meta
+data: {"conversation_id": "e8997ab3921046f297b41864d14c1a06"}
+
+event: token
+data: {"text": "我已"}
+
+event: token
+data: {"text": "记"}
+
+event: token
+data: {"text": "下"}
+
+event: token
+data: {"text": "订单"}
+
+event: token
+data: {"text": "号"}
+
+event: token
+data: {"text": " DS"}
+
+event: token
+data: {"text": "202"}
+
+event: token
+data: {"text": "610"}
+
+event: token
+data: {"text": "190"}
+
+event: token
+data: {"text": "01"}
+
+event: token
+data: {"text": "。"}
+
+event: token
+data: {"text": "杯子"}
+
+event: token
+data: {"text": "破损"}
+
+event: token
+data: {"text": "需要"}
+
+event: token
+data: {"text": "换"}
+
+event: token
+data: {"text": "货"}
+
+event: token
+data: {"text": "的话"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "请"}
+
+event: token
+data: {"text": "先"}
+
+event: token
+data: {"text": "确认"}
+
+event: token
+data: {"text": "两点"}
+
+event: token
+data: {"text": "：\n\n"}
+
+event: token
+data: {"text": "1"}
+
+event: token
+data: {"text": "."}
+
+event: token
+data: {"text": " "}
+
+event: token
+data: {"text": "商品"}
+
+event: token
+data: {"text": "外"}
+
+event: token
+data: {"text": "包装"}
+
+event: token
+data: {"text": "和"}
+
+event: token
+data: {"text": "杯"}
+
+event: token
+data: {"text": "体"}
+
+event: token
+data: {"text": "破损"}
+
+event: token
+data: {"text": "的情况"}
+
+event: token
+data: {"text": "是否"}
+
+event: token
+data: {"text": "方便"}
+
+event: token
+data: {"text": "拍照"}
+
+event: token
+data: {"text": "留存"}
+
+event: token
+data: {"text": "？\n"}
+
+event: token
+data: {"text": "2"}
+
+event: token
+data: {"text": "."}
+
+event: token
+data: {"text": " "}
+
+event: token
+data: {"text": "是否"}
+
+event: token
+data: {"text": "已经"}
+
+event: token
+data: {"text": "签"}
+
+event: token
+data: {"text": "收"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "以及"}
+
+event: token
+data: {"text": "签"}
+
+event: token
+data: {"text": "收"}
+
+event: token
+data: {"text": "日期"}
+
+event: token
+data: {"text": "是哪"}
+
+event: token
+data: {"text": "天"}
+
+event: token
+data: {"text": "？\n\n"}
+
+event: token
+data: {"text": "我"}
+
+event: token
+data: {"text": "目前"}
+
+event: token
+data: {"text": "只能"}
+
+event: token
+data: {"text": "对话"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "不能"}
+
+event: token
+data: {"text": "查询"}
+
+event: token
+data: {"text": "订单"}
+
+event: token
+data: {"text": "或"}
+
+event: token
+data: {"text": "直接"}
+
+event: token
+data: {"text": "办理"}
+
+event: token
+data: {"text": "换"}
+
+event: token
+data: {"text": "货"}
+
+event: token
+data: {"text": "；"}
+
+event: token
+data: {"text": "您"}
+
+event: token
+data: {"text": "提供"}
+
+event: token
+data: {"text": "这些"}
+
+event: token
+data: {"text": "信息"}
+
+event: token
+data: {"text": "后"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "我可以"}
+
+event: token
+data: {"text": "帮"}
+
+event: token
+data: {"text": "您"}
+
+event: token
+data: {"text": "梳理"}
+
+event: token
+data: {"text": "接下来"}
+
+event: token
+data: {"text": "该怎么"}
+
+event: token
+data: {"text": "处理"}
+
+event: token
+data: {"text": "。"}
+
+event: done
+data: {"finish_reason": "stop", "conversation_id": "e8997ab3921046f297b41864d14c1a06", "input_tokens_estimate": 880, "token_count_method": "utf8_bytes_conservative"}
+
