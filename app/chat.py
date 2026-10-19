@@ -48,13 +48,13 @@ async def chat_events(gateway: ModelGateway, store: SessionStore, session: Sessi
         if finish_reason != "stop" or not answer.strip():
             yield event("error", {"code": "incomplete_response", "message": "回复未完整生成，本轮未保存，请重试。"})
             return
-        # Commit only complete question/answer pairs.
-        store.commit(session, trim_history([*messages[1:], AIMessage(content=answer)], settings.input_budget))
         yield event("done", {
             "finish_reason": "stop", "conversation_id": session.id,
             "input_tokens_estimate": estimate_tokens(messages),
             "token_count_method": "utf8_bytes_conservative",
         })
+        # Resume here only after StreamingResponse successfully sends done.
+        store.commit(session, trim_history([*messages[1:], AIMessage(content=answer)], settings.input_budget))
     except (TimeoutError, UpstreamTimeout):
         yield event("error", {"code": UpstreamTimeout.code, "message": UpstreamTimeout.message})
     except UpstreamError as error:
@@ -71,7 +71,6 @@ async def chat_events(gateway: ModelGateway, store: SessionStore, session: Sessi
             if upstream is not None and hasattr(upstream, "aclose"):
                 with suppress(Exception):
                     await upstream.aclose()
-        store.release(session)
 
 
 class SessionResponse(StreamingResponse):

@@ -114,27 +114,31 @@ def test_busy_and_capacity_http_errors():
 
 def test_cancellation_closes_upstream_and_unlocks_session():
     from app.main import create_app
-    from app.chat import chat_events
+    from app.chat import SessionResponse, chat_events
     from app.gateway import StreamPiece
     async def run():
-        started, closed = asyncio.Event(), asyncio.Event()
+        closed = asyncio.Event()
         class Slow:
             async def stream(self, messages):
                 try:
-                    started.set()
                     await asyncio.Event().wait()
                     yield StreamPiece(text="never")
                 finally:
                     closed.set()
-        app = create_app(config(heartbeat_seconds=0.01), Slow())
+        cfg = config(heartbeat_seconds=0.01, llm_timeout_seconds=1)
+        app = create_app(cfg, Slow())
         store = app.state.store
         session = store.acquire(None)
-        iterator = chat_events(app.state.gateway, store, session, [], config(heartbeat_seconds=0.01))
-        assert (await anext(iterator)).startswith("event: meta")
-        task = asyncio.create_task(anext(iterator))
-        await started.wait()
-        await task  # heartbeat before upstream finishes
-        await iterator.aclose()
+        response = SessionResponse(chat_events(app.state.gateway, store, session, [], cfg), store, session)
+        async def receive():
+            await asyncio.Event().wait()
+        async def send(message):
+            if message["type"] == "http.response.body" and message.get("body", b"").startswith(b": ping"):
+                raise OSError("client disconnected")
+        try:
+            await response({"type": "http", "asgi": {"spec_version": "2.4"}}, receive, send)
+        except Exception:
+            pass
         assert closed.is_set() and not session.busy and session.history == []
     asyncio.run(run())
 
@@ -191,4 +195,56 @@ def test_first_token_arrives_before_generation_finishes_over_socket():
         thread.join(5)
         server_socket.close()
     assert not thread.is_alive()
+
+
+def test_failed_done_send_does_not_commit_history():
+    from app.chat import SessionResponse, chat_events
+    from app.context import prepare_messages
+    from app.main import create_app
+    async def run():
+        app = create_app(config(), Gateway())
+        store = app.state.store
+        session = store.acquire(None)
+        messages = prepare_messages("客服", [], "hi", 100)
+        response = SessionResponse(chat_events(app.state.gateway, store, session, messages, config()), store, session)
+        async def receive():
+            await asyncio.Event().wait()
+        async def send(message):
+            if message["type"] == "http.response.body" and b"event: done" in message.get("body", b""):
+                raise OSError("client disconnected before completion")
+        scope = {"type": "http", "asgi": {"version": "3.0", "spec_version": "2.4"}}
+        try:
+            await response(scope, receive, send)
+        except Exception:
+            pass
+        assert not session.busy
+        assert session.history == []
+    asyncio.run(run())
+
+
+def test_session_stays_busy_until_final_http_body_is_sent():
+    from app.chat import SessionResponse, chat_events
+    from app.context import prepare_messages
+    from app.main import create_app
+    from app.sessions import SessionBusy
+    async def run():
+        app = create_app(config(), Gateway())
+        store = app.state.store
+        session = store.acquire(None)
+        response = SessionResponse(
+            chat_events(app.state.gateway, store, session, prepare_messages("客服", [], "hi", 100), config()),
+            store, session)
+        final_send_checked = False
+        async def receive():
+            await asyncio.Event().wait()
+        async def send(message):
+            nonlocal final_send_checked
+            if message["type"] == "http.response.body" and not message.get("more_body", False):
+                with pytest.raises(SessionBusy):
+                    store.acquire(session.id)
+                final_send_checked = True
+        await response({"type": "http", "asgi": {"spec_version": "2.4"}}, receive, send)
+        assert final_send_checked
+        assert store.acquire(session.id).busy
+    asyncio.run(run())
 
