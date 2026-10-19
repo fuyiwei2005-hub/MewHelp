@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7f9f8">
+<title>青禾 · 在线客服</title>
+<style>
+:root{color-scheme:light;--ink:#223b36;--muted:#7c8e88;--green:#276858;--line:#e4ebe7;--paper:#f7f9f8}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,"Microsoft YaHei UI","PingFang SC",system-ui,sans-serif;color:var(--ink);background:var(--paper);font-size:14px}button,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:default}button:focus-visible,textarea:focus-visible{outline:3px solid #9ac6b6;outline-offset:3px}svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);height:100dvh;min-height:520px}.sidebar{padding:32px 22px 24px;background:#edf3ef;border-right:1px solid #e1e9e3;display:flex;flex-direction:column;gap:34px}.brand{display:flex;align-items:center;gap:11px;padding:0 8px}.brand-mark{width:37px;height:37px;display:grid;place-items:center;border-radius:12px;background:var(--green);color:white}.brand-mark svg{width:25px;height:25px}.brand-name{font-weight:650;font-size:18px;letter-spacing:2px}.brand-sub{font-size:10px;letter-spacing:2.5px;color:var(--muted);margin-top:3px}
+.new-chat{border:1px solid #d5e1da;border-radius:11px;background:#fff;padding:13px 16px;display:flex;align-items:center;gap:10px;color:var(--green);font-weight:600;box-shadow:0 2px 3px #1c473506;transition:background .15s}.new-chat:hover{background:#f8fcf9}.new-chat:disabled{opacity:.5}.section-label{font-size:10px;letter-spacing:2px;color:#91a298;padding:0 12px;margin-bottom:12px}.current-chat{display:flex;align-items:center;gap:10px;padding:13px 12px;border-radius:9px;background:#dde9e1;color:#38604e;font-size:12px}.current-chat svg{width:17px}.current-chat span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sidebar-note{margin-top:auto;padding:18px 15px;border:1px solid #dce6df;border-radius:12px;line-height:1.9;color:#82958a;font-size:11px}.sidebar-note strong{display:block;color:#587463;font-size:12px;font-weight:500;margin-bottom:7px}.sidebar-bottom{display:flex;gap:8px;align-items:center;padding:0 8px;font-size:10px;color:#879b90}.tiny-dot{width:5px;height:5px;border-radius:50%;background:#79a88c}
+.workspace{display:flex;flex-direction:column;min-width:0;min-height:0;background:linear-gradient(180deg,#fafcfb 0%,#f6f8f7 100%)}header{height:87px;flex-shrink:0;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 42px;background:#ffffff9c}.header-title{display:flex;align-items:center;gap:13px}.avatar{height:38px;width:38px;background:#e8f0eb;border:1px solid #dce8e0;border-radius:50%;display:grid;place-items:center;color:var(--green);flex-shrink:0}.avatar svg{width:20px}.header-title h1{font-size:14px;font-weight:600;margin:0 0 5px}.header-title p{font-size:10px;color:#8b9a94;margin:0;letter-spacing:.5px}.connection{display:flex;align-items:center;gap:7px;background:#edf5ef;border:1px solid #dceadf;color:#5c8068;border-radius:20px;padding:6px 11px;font-size:10px}.connection i{height:5px;width:5px;background:#7baa88;border-radius:50%}.mobile-new{display:none}
+.chat-scroll{flex:1;min-height:0;overflow:auto;scroll-behavior:auto;scrollbar-width:thin;scrollbar-color:#d9e4dd transparent}.chat-content{max-width:830px;margin:0 auto;padding:34px 38px 32px}.welcome{padding:54px 0 30px;animation:appear .4s ease}.welcome-label{display:flex;align-items:center;gap:9px;color:#8aa092;font-size:10px;letter-spacing:2px;margin-bottom:25px}.welcome-label span{height:1px;width:27px;background:#b6cabe}.welcome h2{font-size:33px;line-height:1.55;font-weight:500;letter-spacing:1px;margin:0 0 13px;color:#2a4a3d}.welcome h2 em{font-style:normal;color:#8fae9a}.welcome>p{font-size:12px;color:#8b9a92;line-height:2;margin:0 0 34px}.suggestions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.suggestion{text-align:left;border:1px solid #e0e9e2;border-radius:12px;background:#fff;padding:18px 15px;transition:transform .2s,border-color .2s;color:#3f5d4c;min-height:112px}.suggestion:hover{transform:translateY(-3px);border-color:#abc7b4}.suggestion svg{width:21px;height:21px;color:#82a58c;display:block;margin-bottom:14px}.suggestion-title{display:flex;justify-content:space-between;align-items:center;font-size:12px}.suggestion-title span{color:#b2c4b7;font-size:16px}.suggestion small{display:block;margin-top:7px;font-size:10px;color:#9aa99e}.welcome-foot{display:flex;align-items:center;gap:7px;margin-top:24px;font-size:10px;color:#a0afa5}.welcome-foot svg{height:13px;width:13px}
+.date-divider{display:flex;align-items:center;justify-content:center;gap:12px;color:#a5b2aa;font-size:10px;margin:4px 0 29px}.date-divider:before,.date-divider:after{content:"";width:32px;height:1px;background:#e0e8e2}.message{display:flex;gap:11px;margin-bottom:26px;animation:appear .2s ease}.message.user{flex-direction:row-reverse}.message-avatar{height:30px;width:30px;border-radius:10px;display:grid;place-items:center;color:#668d73;background:#e8f0e9;flex-shrink:0;margin-top:22px}.message-avatar svg{height:17px;width:17px}.user .message-avatar{background:#dfe9e3;color:#648071}.message-body{max-width:calc(100% - 50px);min-width:0}.message-meta{font-size:10px;color:#9ba99f;display:flex;gap:9px;margin:2px 3px 8px}.user .message-meta{justify-content:flex-end}.bubble{border:1px solid #e3eae5;border-radius:3px 16px 16px 16px;background:#fff;box-shadow:0 2px 4px #264e3a03;padding:15px 18px;font-size:13px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere;min-height:51px;color:#43584b}.user .bubble{color:#fff;background:#326c57;border-color:#326c57;border-radius:16px 3px 16px 16px}.message.error .bubble{border-color:#e8dbcf;background:#fffdf9}.message-note{font-size:10px;color:#a47955;margin:8px 3px 0;line-height:1.6}.bubble.typing:empty:before{content:"";display:inline-block;width:5px;height:5px;margin:4px 3px;background:#8ea997;border-radius:50%;box-shadow:10px 0 #b1c4b7,20px 0 #d3dfd6;animation:pulse 1.1s infinite}.bubble.typing:not(:empty):after{content:"";display:inline-block;width:2px;height:13px;background:#8aaa96;vertical-align:middle;margin-left:3px;animation:pulse 1s infinite}
+.composer-area{padding:12px 38px 21px;flex-shrink:0;background:linear-gradient(0deg,#f6f8f7 75%,#f6f8f700)}.composer-wrap{max-width:754px;margin:0 auto}.composer{background:#fff;border:1px solid #dce7df;border-radius:15px;box-shadow:0 5px 22px #25513c05;padding:15px 17px 12px;transition:border-color .2s}.composer:focus-within{border-color:#98b6a3;box-shadow:0 0 0 3px #326c5707}textarea{display:block;width:100%;resize:none;min-height:30px;max-height:120px;border:0;background:transparent;color:#3b5747;font-size:13px;line-height:1.8;padding:0;outline:none!important}textarea::placeholder{color:#a6b2aa}.composer-toolbar{display:flex;align-items:center;justify-content:space-between;margin-top:12px}.input-hint{font-size:10px;color:#b0bbb3;display:flex;align-items:center;gap:6px}.input-hint svg{height:13px;width:13px}.send{height:33px;padding:0 13px;display:flex;align-items:center;gap:7px;border:0;border-radius:8px;background:#326c57;color:#fff;font-size:11px;transition:background .2s}.send svg{height:14px;width:14px}.send:hover{background:#245340}.send:disabled{background:#cbd9d0;color:#f6faf7}.send.stop{background:#e9efea;color:#627c69}.footer-meta{display:flex;align-items:center;justify-content:space-between;margin:11px 4px 0;font-size:9px;color:#a0b0a5}.footer-meta span:first-child{display:flex;align-items:center;gap:5px}.footer-meta svg{height:12px;width:12px}.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}[hidden]{display:none!important}@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{50%{opacity:.3}}
+@media(min-width:1500px){.chat-content{max-width:900px;padding-top:48px}.composer-wrap{max-width:824px}.welcome{padding-top:80px}}
+@media(max-width:950px){.shell{grid-template-columns:205px minmax(0,1fr)}.sidebar{padding:28px 17px}.chat-content{padding:30px 25px}.composer-area{padding:10px 25px 20px}header{padding:0 25px}.suggestions{gap:8px}.suggestion{padding:15px 11px}.welcome h2{font-size:29px}}
+@media(max-width:680px){.shell{display:block;min-height:0}.sidebar{display:none}.workspace{height:100dvh}header{height:73px;padding:0 19px}.connection{display:none}.mobile-new{display:flex;border:1px solid #dce7df;border-radius:8px;background:#fff;align-items:center;gap:5px;padding:8px;color:#63826c;font-size:11px}.mobile-new svg{width:15px;height:15px}.chat-content{padding:23px 18px}.welcome{padding-top:32px}.welcome h2{font-size:29px}.welcome>p{margin-bottom:25px}.suggestions{grid-template-columns:1fr}.suggestion{min-height:0;padding:15px;display:grid;grid-template-columns:25px 1fr;column-gap:13px}.suggestion svg{grid-row:1/3;margin:4px 0 0}.suggestion small{margin-top:4px}.welcome-foot{margin-top:18px}.message{gap:8px;margin-bottom:23px}.message-avatar{width:26px;height:26px;border-radius:8px}.message-body{max-width:calc(100% - 34px)}.bubble{padding:13px 15px}.composer-area{padding:8px 14px max(14px,env(safe-area-inset-bottom))}.footer-meta{font-size:8px}.input-hint{font-size:9px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+ <div class="brand"><div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M5 17C3 9 8 4 19 4c1 10-4 16-12 14M6 18l8-8"/><path d="M10 14v-4m0 4h4"/></svg></div><div><div class="brand-name">青禾</div><div class="brand-sub">CARE STUDIO</div></div></div>
+ <button class="new-chat" id="new-chat"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>开启新对话</button>
+ <div><div class="section-label">本次对话</div><div class="current-chat"><svg viewBox="0 0 24 24"><path d="M5 5h14v11H9l-4 4z"/></svg><span id="conversation-title">有什么可以帮您？</span></div></div>
+ <div class="sidebar-note"><strong>每个问题，都认真回应。</strong>购物咨询、物流疑问、售后诉求，<br>我们陪您一起理清。</div>
+ <div class="sidebar-bottom"><span class="tiny-dot"></span>用心服务，安心购物</div>
+</aside>
+<main class="workspace">
+ <header><div class="header-title"><div class="avatar"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0116 0v2M4 11H3v6h3v-6zm16 0h1v6h-3v-6zM18 17v2h-6"/><path d="M10 19h3"/></svg></div><div><h1>青禾在线客服</h1><p id="status" role="status">很高兴为您服务</p></div></div><div class="connection"><i></i>在线为您解答</div><button class="mobile-new" id="mobile-new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新对话</button></header>
+ <div class="chat-scroll" id="chat-scroll">
+ <div class="chat-content">
+ <section class="welcome" id="welcome">
+  <div class="welcome-label"><span></span>让沟通，简单一点</div>
+  <h2>您好，<br>有问题，<em>慢慢说。</em></h2>
+  <p>从选购到售后，有疑问都可以在这里聊聊。<br>我会认真听，也会记得我们刚才聊到的事。</p>
+  <div class="suggestions">
+   <button class="suggestion" data-question="收到的杯子破损了，我想申请换货。"><svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10M8 5l8 4"/></svg><div class="suggestion-title">商品收到有问题<span>↗</span></div><small>一起理清售后诉求</small></button>
+   <button class="suggestion" data-question="我的订单物流好几天没更新了，该怎么办？"><svg viewBox="0 0 24 24"><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg><div class="suggestion-title">想问问物流进度<span>↗</span></div><small>说说您遇到的情况</small></button>
+   <button class="suggestion" data-question="想申请退货退款，需要先准备哪些信息？"><svg viewBox="0 0 24 24"><path d="M8 7H4v-4M4 7a8 8 0 111 12M12 8v5l3 2"/></svg><div class="suggestion-title">了解退换货<span>↗</span></div><small>帮您梳理下一步</small></button>
+  </div>
+  <div class="welcome-foot"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-8 9-8 9s-8-4-8-9V7zM8 12l3 3 5-6"/></svg>请勿发送密码、验证码等敏感信息</div>
+ </section>
+ <div id="messages" role="log" aria-label="客服对话记录"></div>
+ </div></div>
+ <div class="composer-area"><div class="composer-wrap">
+  <form class="composer" id="chat-form"><label class="visually-hidden" for="message-input">输入您的问题</label><textarea id="message-input" rows="1" maxlength="32000" placeholder="把您的问题告诉我…" autocomplete="off"></textarea><div class="composer-toolbar"><div class="input-hint"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M7 9h1m3 0h1m3 0h1M7 13h1m3 0h1m3 0h1M8 16h8"/></svg>Enter 发送 · Shift + Enter 换行</div><button type="submit" class="send" id="send" disabled><span id="send-label">发送</span><svg viewBox="0 0 24 24" id="send-icon"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button></div></form>
+  <div class="footer-meta"><span><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-8 9-8 9s-8-4-8-9V7zM8 12l3 3 5-6"/></svg>智能客服 · 具体处理结果请以店铺确认为准</span><span id="session-label">新的开始</span></div>
+ </div></div>
+</main>
+</div>
+<script>
+(function(){
+"use strict";
+const $ = function(id){return document.getElementById(id);};
+const input=$("message-input"), send=$("send"), messages=$("messages"), scroll=$("chat-scroll");
+let conversationId=null, busy=false, controller=null, serverDone=false, followBottom=true;
+const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const assistantIcon='<svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0116 0v2M4 11H3v6h3v-6zm16 0h1v6h-3v-6zM18 17v2h-6"/></svg>';
+const userIcon='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"/><path d="M6 20v-2a6 6 0 0112 0v2"/></svg>';
+scroll.addEventListener("scroll",function(){followBottom=scroll.scrollHeight-scroll.scrollTop-scroll.clientHeight<90;});
+function bottom(){if(followBottom)scroll.scrollTop=scroll.scrollHeight;}
+window.addEventListener("resize",function(){followBottom=true;bottom();});
+function resize(){input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px";}
+input.addEventListener("input",function(){resize();if(!busy)send.disabled=!input.value.trim();});
+function setBusy(value){
+ busy=value; $("new-chat").disabled=value;$("mobile-new").disabled=value;
+ send.classList.toggle("stop",value);$("send-label").textContent=value?"停止":"发送";
+ $("send-icon").innerHTML=value?'<rect x="7" y="7" width="10" height="10" rx="1"/>':'<path d="M12 19V5M6 11l6-6 6 6"/>';
+ send.disabled=value?serverDone:!input.value.trim();
+}
+function addMessage(role,text){
+ const row=document.createElement("div");row.className="message "+role;
+ const avatar=document.createElement("div");avatar.className="message-avatar";avatar.innerHTML=role==="user"?userIcon:assistantIcon;
+ const body=document.createElement("div");body.className="message-body";
+ const meta=document.createElement("div");meta.className="message-meta";
+ const name=document.createElement("span");name.textContent=role==="user"?"您":"青禾客服";
+ const time=document.createElement("span");time.textContent=new Date().toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+ meta.append(name,time);
+ const bubble=document.createElement("div");bubble.className="bubble";bubble.textContent=text;
+ body.append(meta,bubble);row.append(avatar,body);messages.append(row);bottom();
+ return {row:row,body:body,bubble:bubble};
+}
+function formatCompleted(bubble){
+ const text=bubble.textContent,pattern=/\*\*([^*\n]+)\*\*/g;
+ const fragment=document.createDocumentFragment();let match,index=0;
+ while((match=pattern.exec(text))!==null){
+  fragment.append(document.createTextNode(text.slice(index,match.index)));
+  const strong=document.createElement("strong");strong.textContent=match[1];fragment.append(strong);
+  index=match.index+match[0].length;
+ }
+ fragment.append(document.createTextNode(text.slice(index)));bubble.replaceChildren(fragment);
+}
+function addNote(view,text){const note=document.createElement("div");note.className="message-note";note.textContent=text;view.body.append(note);bottom();}
+function painter(bubble){
+ let queue="",frame=null,last=performance.now(),finishResolve=null,finished=false;
+ function tick(now){
+  const count=reducedMotion?queue.length:Math.min(8,Math.floor((now-last)/16));
+  if(count>0&&queue){bubble.textContent+=queue.slice(0,count);queue=queue.slice(count);last=now;bottom();}
+  if(queue){frame=requestAnimationFrame(tick);}
+  else{frame=null;if(finished&&finishResolve)finishResolve();}
+ }
+ return {
+  push:function(text){queue+=text;if(frame===null){last=performance.now()-16;frame=requestAnimationFrame(tick);}},
+  finish:function(){finished=true;return new Promise(function(resolve){finishResolve=resolve;if(!queue)resolve();});},
+  flush:function(){if(frame!==null)cancelAnimationFrame(frame);frame=null;bubble.textContent+=queue;queue="";if(finishResolve)finishResolve();bottom();}
+ };
+}
+function newChat(){
+ if(busy)return;
+ conversationId=null;messages.replaceChildren();$("welcome").hidden=false;
+ $("conversation-title").textContent="有什么可以帮您？";$("session-label").textContent="新的开始";
+ $("status").textContent="很高兴为您服务";input.value="";resize();setBusy(false);followBottom=true;input.focus();
+}
+$("new-chat").addEventListener("click",newChat);$("mobile-new").addEventListener("click",newChat);
+document.querySelectorAll("[data-question]").forEach(function(button){button.addEventListener("click",function(){input.value=button.dataset.question;submit();});});
+input.addEventListener("keydown",function(event){if(event.key==="Enter"&&!event.shiftKey&&!event.isComposing){event.preventDefault();if(!busy)submit();}});
+$("chat-form").addEventListener("submit",function(event){
+ event.preventDefault();
+ if(busy){if(controller&&!serverDone)controller.abort();return;}
+ submit();
+});
+async function submit(){
+ const text=input.value.trim();if(!text||busy)return;
+ const isFirst=!conversationId;
+ $("welcome").hidden=true;
+ if(!messages.children.length){const date=document.createElement("div");date.className="date-divider";date.textContent="今天 · "+new Date().toLocaleDateString("zh-CN",{month:"long",day:"numeric"});messages.append(date);}
+ followBottom=true;addMessage("user",text);
+ if(isFirst)$("conversation-title").textContent=text;
+ input.value="";resize();serverDone=false;setBusy(true);
+ const view=addMessage("assistant","");view.bubble.classList.add("typing");
+ const paint=painter(view.bubble);controller=new AbortController();let reader=null,receivedDone=false;
+ $("status").textContent="正在认真读您的问题…";
+ function consume(block){
+  let name="message";const data=[];
+  block.split("\n").forEach(function(line){if(line.startsWith("event:"))name=line.slice(6).trim();else if(line.startsWith("data:"))data.push(line.slice(5).trimStart());});
+  if(!data.length)return;
+  const payload=JSON.parse(data.join("\n"));
+  if(name==="meta"){conversationId=payload.conversation_id;$("session-label").textContent="本次对话已连接";}
+  if(name==="token"){if(typeof payload.text!=="string")throw new Error("回复格式异常，请稍后重试。");paint.push(payload.text);$("status").textContent="正在回复您…";}
+  if(name==="done"){receivedDone=payload.finish_reason==="stop";if(receivedDone){serverDone=true;setBusy(true);}}
+  if(name==="error")throw new Error(payload.message||"回复中断了，请重新发送。");
+ }
+ try{
+  const response=await fetch("/chat",{method:"POST",headers:{"Content-Type":"application/json","Accept":"text/event-stream"},body:JSON.stringify({message:text,conversation_id:conversationId}),signal:controller.signal});
+  if(!response.ok){
+   let detail=null;try{detail=(await response.json()).detail;}catch(_){}
+   if(response.status===404){conversationId=null;$("session-label").textContent="会话已过期";throw new Error("上次会话已过期。请开启新对话，或重新发送并补充相关信息。");}
+   const description=typeof detail==="string"?detail:(detail&&typeof detail.message==="string"?detail.message:null);
+   throw new Error(description||"暂时无法发送，请稍后重试。");
+  }
+  if(!response.body)throw new Error("浏览器不支持流式读取，请换用新版浏览器。");
+  reader=response.body.getReader();const decoder=new TextDecoder("utf-8");let buffer="";
+  while(true){
+   const chunk=await reader.read();
+   buffer+=chunk.done?decoder.decode():decoder.decode(chunk.value,{stream:true});
+   buffer=buffer.replace(/\r\n/g,"\n");
+   let boundary;
+   while((boundary=buffer.indexOf("\n\n"))!==-1){consume(buffer.slice(0,boundary));buffer=buffer.slice(boundary+2);}
+   if(chunk.done)break;
+  }
+  if(buffer.trim())consume(buffer);
+  if(!receivedDone)throw new Error("连接中断了，本轮未完成，请重新发送。");
+  serverDone=true;setBusy(true);$("status").textContent="正在显示完整回复…";
+  await paint.finish();view.bubble.classList.remove("typing");formatCompleted(view.bubble);bottom();
+  $("status").textContent="我在这里，您可以继续说";
+ }catch(error){
+  if(controller)controller.abort();
+  paint.flush();view.bubble.classList.remove("typing");view.row.classList.add("error");
+  if(!view.bubble.textContent)view.bubble.textContent=error.name==="AbortError"?"已停止本次回复。":"这次没有完成回复。";
+  addNote(view,error.name==="AbortError"?"已停止，本轮不会加入对话上下文。":error.message+" 本轮未加入对话上下文。");
+  $("status").textContent=error.name==="AbortError"?"已停止，随时可以重新发送":"发送未完成，请重试";
+  if(!input.value)input.value=text;resize();
+ }finally{
+  if(reader){try{reader.releaseLock();}catch(_){}}
+  controller=null;setBusy(false);input.focus();bottom();
+ }
+}
+})();
+</script>
+</body>
+</html>
+

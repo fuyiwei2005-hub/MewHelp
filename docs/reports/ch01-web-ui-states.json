@@ -1,0 +1,7 @@
+{
+  "expired_session_message": true,
+  "user_text_is_not_html": true,
+  "stop_button_cancels": true,
+  "bold_text_rendered_safely": true,
+  "page_errors": []
+}

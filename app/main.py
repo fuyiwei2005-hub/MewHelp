@@ -3,9 +3,10 @@ from contextlib import asynccontextmanager
 
 import httpx
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 
 from app.chat import SessionResponse, chat_events
-from app.config import Settings
+from app.config import ROOT, Settings
 from app.context import ContextTooLarge, estimate_tokens, prepare_messages
 from app.gateway import ModelGateway, OpenAICompatibleGateway, UpstreamError, UpstreamTimeout
 from app.prompts import render_extraction, render_system
@@ -30,6 +31,10 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
     app.state.settings = config
     app.state.store = SessionStore(config.max_sessions, config.session_ttl_seconds)
     app.state.gateway = gateway
+
+    @app.get("/", include_in_schema=False)
+    async def chat_page():
+        return FileResponse(ROOT / "app" / "web" / "index.html", media_type="text/html")
 
     @app.get("/health")
     async def health():

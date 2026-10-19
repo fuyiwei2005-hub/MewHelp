@@ -19,6 +19,16 @@ Copy-Item .env.example .env
 
 当前工作区已经配置了本地 .env。密钥不会出现在示例、测试或提交中。默认只监听本机；接口文档：[Swagger UI](http://127.0.0.1:8000/docs)。
 
+## 聊天页面
+
+服务启动后打开 [在线客服](http://127.0.0.1:8000/)。
+
+左右消息气泡，SSE 到达后逐字显示；直接追问会延续当前会话。Enter 发送，Shift + Enter 换行；支持停止回复和开启新对话。刷新页面会开始新的本地聊天视图，服务重启后原会话清空。
+
+页面与 API 同源，不需要单独启动前端，也不需要在浏览器配置模型密钥。支持手机布局，普通用户文本不作为 HTML 执行。
+
+页面按用户指定走 Vibe Coding，浏览器实际验证见 [页面验收](docs/reports/ch01-web-validation.md)。
+
 ## curl 演示
 
 另开 PowerShell，切换到项目根目录。用 UTF-8 文件传 JSON，避免 Windows 引号转义差异；使用 curl.exe 避免 PowerShell 同名别名。示例请求已在 examples/。

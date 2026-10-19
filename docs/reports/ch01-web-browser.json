@@ -1,0 +1,26 @@
+{
+  "browser": "Microsoft Edge",
+  "first_reply": "已记下订单号 WEB20261019001。杯子破损想换货，我能帮您梳理需要准备的信息。\n\n先确认两点：\n1. 杯子的破损情况是怎样的？例如杯体裂纹、缺口，还是外包装也破损。\n2. 您是否已拍好破损部位和外包装的照片？通常换货需要提供给店铺核实。\n\n我目前无法查询订单、库存或直接提交换货申请；等您补充信息后，我可以帮您整理成清晰的售后说明，便于您联系店铺处理。",
+  "second_reply": "刚才的订单号是 WEB20261019001。",
+  "incremental_render_samples": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "incremental_render_updates": 181,
+  "context_preserved": true,
+  "same_session": true,
+  "desktop_no_horizontal_overflow": true,
+  "mobile_no_horizontal_overflow": true,
+  "new_chat_resets": true,
+  "page_errors": []
+}
