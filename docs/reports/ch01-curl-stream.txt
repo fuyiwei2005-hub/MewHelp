@@ -1,14 +1,23 @@
 event: meta
-data: {"conversation_id": "e8997ab3921046f297b41864d14c1a06"}
+data: {"conversation_id": "951ad0091b7b4f27901baa83262e8afb"}
 
 event: token
-data: {"text": "我已"}
+data: {"text": "好的"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "我"}
 
 event: token
 data: {"text": "记"}
 
 event: token
-data: {"text": "下"}
+data: {"text": "下了"}
+
+event: token
+data: {"text": "："}
 
 event: token
 data: {"text": "订单"}
@@ -32,16 +41,28 @@ event: token
 data: {"text": "01"}
 
 event: token
-data: {"text": "。"}
+data: {"text": "，"}
 
 event: token
 data: {"text": "杯子"}
 
 event: token
+data: {"text": "到"}
+
+event: token
+data: {"text": "货"}
+
+event: token
 data: {"text": "破损"}
 
 event: token
-data: {"text": "需要"}
+data: {"text": "，"}
+
+event: token
+data: {"text": "您"}
+
+event: token
+data: {"text": "希望"}
 
 event: token
 data: {"text": "换"}
@@ -50,37 +71,211 @@ event: token
 data: {"text": "货"}
 
 event: token
-data: {"text": "的话"}
+data: {"text": "。\n\n"}
+
+event: token
+data: {"text": "我"}
+
+event: token
+data: {"text": "这边"}
+
+event: token
+data: {"text": "目前"}
+
+event: token
+data: {"text": "无法"}
+
+event: token
+data: {"text": "查询"}
+
+event: token
+data: {"text": "订单"}
+
+event: token
+data: {"text": "、"}
+
+event: token
+data: {"text": "物流"}
+
+event: token
+data: {"text": "或"}
+
+event: token
+data: {"text": "库存"}
 
 event: token
 data: {"text": "，"}
 
 event: token
-data: {"text": "请"}
+data: {"text": "也不能"}
 
 event: token
-data: {"text": "先"}
+data: {"text": "直接"}
 
 event: token
-data: {"text": "确认"}
+data: {"text": "为您"}
 
 event: token
-data: {"text": "两点"}
+data: {"text": "创建"}
 
 event: token
-data: {"text": "：\n\n"}
+data: {"text": "换"}
 
 event: token
-data: {"text": "1"}
+data: {"text": "货"}
 
 event: token
-data: {"text": "."}
+data: {"text": "单"}
 
 event: token
-data: {"text": " "}
+data: {"text": "。"}
 
 event: token
-data: {"text": "商品"}
+data: {"text": "建议"}
+
+event: token
+data: {"text": "您"}
+
+event: token
+data: {"text": "通过"}
+
+event: token
+data: {"text": "店铺"}
+
+event: token
+data: {"text": "的"}
+
+event: token
+data: {"text": "售后"}
+
+event: token
+data: {"text": "入口"}
+
+event: token
+data: {"text": "提交"}
+
+event: token
+data: {"text": "换"}
+
+event: token
+data: {"text": "货"}
+
+event: token
+data: {"text": "申请"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "并"}
+
+event: token
+data: {"text": "附"}
+
+event: token
+data: {"text": "上"}
+
+event: token
+data: {"text": "破损"}
+
+event: token
+data: {"text": "杯"}
+
+event: token
+data: {"text": "子的"}
+
+event: token
+data: {"text": "照片"}
+
+event: token
+data: {"text": "。\n\n"}
+
+event: token
+data: {"text": "为了"}
+
+event: token
+data: {"text": "帮"}
+
+event: token
+data: {"text": "您"}
+
+event: token
+data: {"text": "把"}
+
+event: token
+data: {"text": "后续"}
+
+event: token
+data: {"text": "沟通"}
+
+event: token
+data: {"text": "梳理"}
+
+event: token
+data: {"text": "清楚"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "请问"}
+
+event: token
+data: {"text": "破损"}
+
+event: token
+data: {"text": "是"}
+
+event: token
+data: {"text": "杯"}
+
+event: token
+data: {"text": "身"}
+
+event: token
+data: {"text": "开裂"}
+
+event: token
+data: {"text": "、"}
+
+event: token
+data: {"text": "缺口"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "还是"}
+
+event: token
+data: {"text": "其他"}
+
+event: token
+data: {"text": "情况"}
+
+event: token
+data: {"text": "？"}
+
+event: token
+data: {"text": "另外"}
+
+event: token
+data: {"text": "，"}
+
+event: token
+data: {"text": "您"}
+
+event: token
+data: {"text": "手"}
+
+event: token
+data: {"text": "头"}
+
+event: token
+data: {"text": "是否"}
+
+event: token
+data: {"text": "保留了"}
 
 event: token
 data: {"text": "外"}
@@ -92,161 +287,17 @@ event: token
 data: {"text": "和"}
 
 event: token
-data: {"text": "杯"}
+data: {"text": "快递"}
 
 event: token
-data: {"text": "体"}
+data: {"text": "面"}
 
 event: token
-data: {"text": "破损"}
+data: {"text": "单"}
 
 event: token
-data: {"text": "的情况"}
-
-event: token
-data: {"text": "是否"}
-
-event: token
-data: {"text": "方便"}
-
-event: token
-data: {"text": "拍照"}
-
-event: token
-data: {"text": "留存"}
-
-event: token
-data: {"text": "？\n"}
-
-event: token
-data: {"text": "2"}
-
-event: token
-data: {"text": "."}
-
-event: token
-data: {"text": " "}
-
-event: token
-data: {"text": "是否"}
-
-event: token
-data: {"text": "已经"}
-
-event: token
-data: {"text": "签"}
-
-event: token
-data: {"text": "收"}
-
-event: token
-data: {"text": "，"}
-
-event: token
-data: {"text": "以及"}
-
-event: token
-data: {"text": "签"}
-
-event: token
-data: {"text": "收"}
-
-event: token
-data: {"text": "日期"}
-
-event: token
-data: {"text": "是哪"}
-
-event: token
-data: {"text": "天"}
-
-event: token
-data: {"text": "？\n\n"}
-
-event: token
-data: {"text": "我"}
-
-event: token
-data: {"text": "目前"}
-
-event: token
-data: {"text": "只能"}
-
-event: token
-data: {"text": "对话"}
-
-event: token
-data: {"text": "，"}
-
-event: token
-data: {"text": "不能"}
-
-event: token
-data: {"text": "查询"}
-
-event: token
-data: {"text": "订单"}
-
-event: token
-data: {"text": "或"}
-
-event: token
-data: {"text": "直接"}
-
-event: token
-data: {"text": "办理"}
-
-event: token
-data: {"text": "换"}
-
-event: token
-data: {"text": "货"}
-
-event: token
-data: {"text": "；"}
-
-event: token
-data: {"text": "您"}
-
-event: token
-data: {"text": "提供"}
-
-event: token
-data: {"text": "这些"}
-
-event: token
-data: {"text": "信息"}
-
-event: token
-data: {"text": "后"}
-
-event: token
-data: {"text": "，"}
-
-event: token
-data: {"text": "我可以"}
-
-event: token
-data: {"text": "帮"}
-
-event: token
-data: {"text": "您"}
-
-event: token
-data: {"text": "梳理"}
-
-event: token
-data: {"text": "接下来"}
-
-event: token
-data: {"text": "该怎么"}
-
-event: token
-data: {"text": "处理"}
-
-event: token
-data: {"text": "。"}
+data: {"text": "？"}
 
 event: done
-data: {"finish_reason": "stop", "conversation_id": "e8997ab3921046f297b41864d14c1a06", "input_tokens_estimate": 880, "token_count_method": "utf8_bytes_conservative"}
+data: {"finish_reason": "stop", "conversation_id": "951ad0091b7b4f27901baa83262e8afb", "input_tokens_estimate": 880, "token_count_method": "utf8_bytes_conservative"}
 

@@ -5,18 +5,18 @@
     "structured_json": true
   },
   "first_turn": {
-    "conversation_id": "fe8ae7636d34409087df973f23a6232c",
-    "text": "好的，已记下订单号 DS20261019001。杯子破损想换货，我先帮您梳理处理路径：目前我这边不能查询订单或执行换货，需要您通过店铺订单页提交换货申请，并上传破损照片。为减少反复沟通，请再确认两点：一是杯子属于哪个商品/款式；二是破损是杯身开裂还是缺口。您提供后，我可以帮您把申请时要说清楚的信息整理好。",
-    "token_events": 96,
-    "first_token_seconds": 0.47,
-    "elapsed_seconds": 1.215
+    "conversation_id": "aee28a8d7c48454997c5e6668921cde8",
+    "text": "我记下了：订单号 DS20261019001，收到的杯子破损，想换货。\n\n为帮您梳理换货流程，请补充两点信息：\n1. 破损情况是杯身破裂、缺口，还是其他情况？是否影响正常使用？\n2. 您是否已拍照留存破损商品和外包装？\n\n另外提醒：我目前不能查询订单、物流或直接办理换货，具体换货期限和运费规则需以店铺页面或人工客服确认为准。",
+    "token_events": 101,
+    "first_token_seconds": 0.909,
+    "elapsed_seconds": 1.551
   },
   "second_turn": {
-    "conversation_id": "fe8ae7636d34409087df973f23a6232c",
-    "text": "您的订单号是 DS20261019001。",
-    "token_events": 10,
-    "first_token_seconds": 0.793,
-    "elapsed_seconds": 0.994
+    "conversation_id": "aee28a8d7c48454997c5e6668921cde8",
+    "text": "您刚才提供的订单号是：DS20261019001。",
+    "token_events": 13,
+    "first_token_seconds": 0.737,
+    "elapsed_seconds": 0.802
   },
   "extraction": {
     "order_id": "DS20261019001",

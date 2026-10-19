@@ -6,7 +6,7 @@
 
 执行：.venv/Scripts/python.exe -m pytest -q --basetemp artifacts/pytest
 
-当前结果：49 passed（2.41s）。覆盖配置预算、密钥掩码、真实模型适配层请求与 schema 校验、内存会话与裁剪、SSE、两轮与隔离、错误回滚、TTL/容量、真实 socket 增量/断流、提取错误映射、验收脚本解析。
+最终结果：51 passed（2.48s）。覆盖配置预算、密钥掩码、真实模型适配层请求与 schema 校验、内存会话与裁剪、SSE、两轮与隔离、错误回滚、TTL/容量、真实 socket 增量/断流、提取错误映射、验收脚本解析。
 
 依赖检查：.venv/Scripts/python.exe -m pip check → No broken requirements found.
 
@@ -14,8 +14,8 @@
 
 执行：.venv/Scripts/python.exe -m scripts.acceptance --show-stream
 
-- SSE：通过。首轮 96 个实时 token 事件，首片段约 0.470s，完整流约 1.215s。
-- 多轮：通过。第二轮沿用相同会话 ID，正确回答首轮订单号 DS20261019001；10 个 token 事件。
+- SSE：通过。最终首轮 101 个实时 token 事件，首片段约 0.909s，完整流约 1.551s。
+- 多轮：通过。第二轮沿用相同会话 ID，正确回答首轮订单号 DS20261019001；13 个 token 事件。
 - 结构化 JSON：通过。返回 order_id=DS20261019001、request_type=换货、expected_solution=换同款新的。
 - curl.exe -N：实际调用成功，SSE 逐事件输出，原始事件保存于 ch01-curl-stream.txt。
 - curl 提取：实际调用成功，返回上述三个固定字段。
@@ -34,5 +34,9 @@
 
 ## Code review 与最终复核
 
-本记录为评审前验证证据，独立评审与最终复核结论将在实际完成时追加。
+独立初审发现两项 Important（done 前提交、会话重复释放），均以失败测试复现后修复。535e463 经同一 reviewer 复核通过；无遗留阻断项。完整结果见 ch01-code-review.md。
+
+修复后已重启服务，重新完成三项真实 DeepSeek 验收、curl、51 项测试及 pip check。跟踪文件密钥扫描通过，.env 已忽略。
+
+本地分支 feat/ch01-chat；新建仓库无基线分支和远端，因此保留当前本地分支与运行服务，不虚构合并或 PR。
 

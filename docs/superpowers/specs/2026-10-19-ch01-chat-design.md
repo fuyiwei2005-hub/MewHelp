@@ -68,4 +68,4 @@ Prompt 用标注评估集验证，至少覆盖完整售后、缺订单、缺期�
 - https://api-docs.deepseek.com/guides/json_mode
 - https://api-docs.deepseek.com/api/list-models
 
-自审：范围对应三个验收标准；显式 JSON mode 排除工具调用；区分估算预算与精确 token、上游片段与逐 token；设计尚未获得批准，不标记 brainstorm 定稿。
+自审：范围对应三个验收标准；显式 JSON mode 排除工具调用；区分估算预算与精确 token、上游片段与逐 token；设计已获用户批准并定稿，最终实现与验证见 ch01-validation.md。
