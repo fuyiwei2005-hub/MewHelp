@@ -19,13 +19,39 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
     config = settings or Settings()
 
     @asynccontextmanager
+    async def resources(app):
+        if config.database_url:
+            from app.db import Database
+            from app.repositories import Repository
+            from app.services import ToolChatService
+            db=Database(config.database_url.get_secret_value())
+            app.state.repo=Repository(db)
+            vector_store=None
+            retriever=None
+            if config.faq_backend=="dense":
+                from app.knowledge.vector import VectorStore
+                from app.knowledge.embedding import Embedder
+                from app.knowledge.repository import KnowledgeRepository
+                from app.knowledge.retrieval import DenseRetriever
+                if config.embedding_revision=="main":raise RuntimeError("BGE-M3 revision must be pinned")
+                vector_store=await asyncio.to_thread(VectorStore,config.milvus_uri)
+                await vector_store.initialize()
+                retriever=DenseRetriever(KnowledgeRepository(db),Embedder(config.embedding_base_url,revision=config.embedding_revision),vector_store,config.embedding_revision,config.retrieval_top_k,config.retrieval_threshold)
+            app.state.tool_service=ToolChatService(config,app.state.repo,app.state.gateway,retriever)
+            try:yield
+            finally:
+                if vector_store:await vector_store.close()
+                await db.close()
+        else:yield
+
+    @asynccontextmanager
     async def lifespan(app: FastAPI):
         if gateway is not None:
-            yield
+            async with resources(app):yield
         else:
             async with httpx.AsyncClient(timeout=config.llm_timeout_seconds) as client:
                 app.state.gateway = OpenAICompatibleGateway(config, http_client=client)
-                yield
+                async with resources(app):yield
 
     app = FastAPI(title="电商智能客服 · 第 1 章", lifespan=lifespan)
     app.state.settings = config
@@ -42,6 +68,11 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
 
     @app.post("/chat")
     async def chat(payload: ChatRequest):
+        if config.database_url:
+            from app.services import ToolResponse
+            service=app.state.tool_service
+            turn=await service.prepare(payload.message,payload.conversation_id)
+            return ToolResponse(service,turn)
         store = app.state.store
         try:
             session = store.acquire(payload.conversation_id)

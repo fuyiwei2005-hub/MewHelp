@@ -29,3 +29,16 @@ def test_mysql_persistence_faq_and_idempotent_ticket():
         await db.close()
     asyncio.run(run())
 
+
+def test_faq_removes_question_particles_without_synonyms():
+    from app.config import Settings
+    from app.db import Database
+    from app.repositories import Repository
+    async def run():
+        db=Database(Settings().database_url.get_secret_value().replace("/support?","/support_test?"))
+        repo=Repository(db)
+        assert await repo.faq("退货政策是什么")
+        assert await repo.faq("邮费是多少")==[]
+        await db.close()
+    asyncio.run(run())
+

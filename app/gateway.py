@@ -62,6 +62,17 @@ class OpenAICompatibleGateway:
         except Exception:
             raise UpstreamError() from None
 
+    async def decide(self,messages,tools):
+        return await self.model.bind_tools(tools,tool_choice="auto").ainvoke(messages)
+
+    async def final_stream(self,messages,tools):
+        async for chunk in self.model.bind_tools(tools,tool_choice="none").astream(messages):
+            if chunk.tool_call_chunks:
+                raise UpstreamError()
+            reason=chunk.response_metadata.get("finish_reason")
+            if chunk.text or reason:
+                yield StreamPiece(chunk.text,reason)
+
     async def extract(self, description: str) -> AfterSales:
         try:
             result = await self.structured.ainvoke([HumanMessage(content=render_extraction(description))])

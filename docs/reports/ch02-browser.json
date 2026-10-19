@@ -1,0 +1,1330 @@
+{
+  "results": [
+    {
+      "id": "logistics",
+      "question": "订单1001的物流到哪了",
+      "tool": "query_logistics",
+      "selected": "query_logistics",
+      "status": "completed",
+      "reply": "订单 1001 的物流目前显示为“运输中”，最新位置在上海转运中心。需要说明的是，以上是演示数据，供您参考。",
+      "badges": [
+        "查询物流 · 演示数据 · 已完成"
+      ],
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "3895a903f28c4a50815fbbca1c11fcd8"
+          }
+        },
+        {
+          "event": "status",
+          "data": {
+            "message": "正在判断如何为您查询"
+          }
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "query_logistics",
+            "label": "查询物流",
+            "tool_call_id": "call_00_IIwL35UwXBAqxodKHTiD9138",
+            "demo": true
+          }
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "query_logistics",
+            "tool_call_id": "call_00_IIwL35UwXBAqxodKHTiD9138",
+            "status": "completed"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "100"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "1"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "物流"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "目前"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "显示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "“"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运输"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "中"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "”，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "最新"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "位置"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "在上海"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "转运"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "中心"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "需要"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "说明"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的是"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "以上"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "是"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "供"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "参考"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "3895a903f28c4a50815fbbca1c11fcd8",
+            "finish_reason": "stop"
+          }
+        }
+      ]
+    },
+    {
+      "id": "return_policy",
+      "question": "退货政策是什么",
+      "tool": "query_faq",
+      "selected": "query_faq",
+      "status": "completed",
+      "reply": "当前查到的是演示政策：未使用商品可在签收后 7 天内申请退货。质量问题由商家承担退货运费；非质量问题由买家承担。\n\n这是演示数据，实际政策请以正式规则为准。您也可以告诉我具体商品和退货原因，我再帮您进一步确认。",
+      "badges": [
+        "查询常见问题 · 已完成"
+      ],
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "f027049e58b7487eaf0436d0be16bf28"
+          }
+        },
+        {
+          "event": "status",
+          "data": {
+            "message": "正在判断如何为您查询"
+          }
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "query_faq",
+            "label": "查询常见问题",
+            "tool_call_id": "call_00_rHS1O8Abw19DgM5kgUqt7077",
+            "demo": false
+          }
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "query_faq",
+            "tool_call_id": "call_00_rHS1O8Abw19DgM5kgUqt7077",
+            "status": "completed"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "当前"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "查到"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的是"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "**"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "政策"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "**"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "未"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "使用"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "商品"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "可在"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "签"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "收"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "后"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " **"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "7"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "天内"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "**"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "申请"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "退货"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "质量问题"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "由"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "商家"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "承担"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "退"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "货运"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "；"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "非"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "质量问题"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "由"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "买家"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "承担"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。\n\n"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "这是"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "实际"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "政策"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "请"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "以"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "正式"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "规则"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为准"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "也可以"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "告诉我"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "具体"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "商品"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "和"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "退货"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "原因"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "我再"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "帮"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "进一步"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "确认"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "f027049e58b7487eaf0436d0be16bf28",
+            "finish_reason": "stop"
+          }
+        }
+      ]
+    },
+    {
+      "id": "keyword_miss",
+      "question": "邮费是多少",
+      "tool": "query_faq",
+      "selected": "query_faq",
+      "status": "not_found",
+      "reply": "我这边暂时没有查到邮费的具体信息，无法给您准确答复。不同商品和收货地址的运费可能不同，建议您查看商品页面的运费说明，或提供具体商品和收货地区，我再帮您进一步核实。",
+      "badges": [
+        "查询常见问题 · 未命中"
+      ],
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "d3dc43e893e740e8844a65f293dc4720"
+          }
+        },
+        {
+          "event": "status",
+          "data": {
+            "message": "正在判断如何为您查询"
+          }
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "query_faq",
+            "label": "查询常见问题",
+            "tool_call_id": "call_00_a0u4MXRjEiTN0KTHQtmt0991",
+            "demo": false
+          }
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "query_faq",
+            "tool_call_id": "call_00_a0u4MXRjEiTN0KTHQtmt0991",
+            "status": "not_found"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "我"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "这边"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "暂时"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "没有"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "查到"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "邮"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的具体"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "信息"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "无法"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "给您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "准确"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "答复"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "不同"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "商品"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "和"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "收货"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "地址"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "可能"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "不同"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "建议"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "查看"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "商品"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "页"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "面的"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "说明"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "或"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "提供"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "具体"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "商品"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "和"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "收货"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "地区"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "我再"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "帮"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "进一步"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "核实"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "d3dc43e893e740e8844a65f293dc4720",
+            "finish_reason": "stop"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ticket",
+      "question": "杯子破损了，请创建人工售后工单处理",
+      "tool": "create_ticket",
+      "selected": "create_ticket",
+      "status": "completed",
+      "reply": "已为您创建人工售后工单，工单号：T7FAE2EEEE486475CA083，当前状态为待处理。后续会有售后人员跟进处理，请您留意。",
+      "badges": [
+        "创建人工工单 · 已完成"
+      ],
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "c174a8ca92ee4c10b20407782cdc051a"
+          }
+        },
+        {
+          "event": "status",
+          "data": {
+            "message": "正在判断如何为您查询"
+          }
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "create_ticket",
+            "label": "创建人工工单",
+            "tool_call_id": "call_00_sFQvvqYWTpYRe4yuYXaI9333",
+            "demo": false
+          }
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "create_ticket",
+            "tool_call_id": "call_00_sFQvvqYWTpYRe4yuYXaI9333",
+            "status": "completed"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "已"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "创建"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "人工"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "售后"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "工"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "工"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "号"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "**"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "T"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "7"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "FA"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "E"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "2"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "EE"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "EE"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "486"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "475"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "CA"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "083"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "**"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "当前"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "状态"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "待"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "处理"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "后续"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "会有"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "售后"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "人员"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "跟进"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "处理"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "请您"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "留意"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "c174a8ca92ee4c10b20407782cdc051a",
+            "finish_reason": "stop"
+          }
+        }
+      ]
+    }
+  ],
+  "page_errors": [],
+  "checks": {
+    "correct_tools": true,
+    "keyword_miss": true,
+    "return_policy": true,
+    "tickets": true,
+    "no_errors": true
+  }
+}

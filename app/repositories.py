@@ -1,4 +1,5 @@
 import json
+import re
 from uuid import uuid4
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
@@ -44,6 +45,8 @@ class Repository:
         return result
 
     async def faq(self,keyword):
+        keyword=re.sub(r"(?:是什么|是多少|有哪些|是怎样的)[？?。！!]*$","",keyword.strip()).strip()
+        if not keyword:return []
         async with self.db.sessions() as s:
             rows=(await s.scalars(select(FAQ).where(FAQ.question.contains(keyword,autoescape=True)).order_by(FAQ.id).limit(5))).all()
             return [dict(question=r.question,answer=r.answer,category=r.category) for r in rows]
