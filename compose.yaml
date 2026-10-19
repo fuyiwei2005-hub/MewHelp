@@ -1,0 +1,22 @@
+name: ecommerce-support
+services:
+  mysql:
+    image: mysql:8.4.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?required}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-support}
+      MYSQL_USER: ${MYSQL_USER:-support}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?required}
+    ports: ["127.0.0.1:3307:3306"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql-init.sql:/docker-entrypoint-initdb.d/01-test.sql:ro
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+volumes:
+  mysql_data:
+
