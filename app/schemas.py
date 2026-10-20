@@ -7,6 +7,7 @@ class RequestModel(BaseModel):
 
 
 class ChatRequest(RequestModel):
+    product_category: Literal["通用","陶瓷杯","保温杯","小家电"] | None = None
     message: str = Field(min_length=1, max_length=32000)
     conversation_id: str | None = Field(default=None, min_length=1, max_length=64)
 

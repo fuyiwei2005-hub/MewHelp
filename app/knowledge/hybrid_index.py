@@ -13,6 +13,9 @@ class HybridIndexer:
     def __init__(self,repo,embedder,store,revision):
         self.repo,self.db,self.embedder,self.store,self.revision=repo,repo.db,embedder,store,revision
 
+    async def sync_pending(self,failpoint=None,ids=None):
+        return await self.sync(failpoint,ids)
+
     async def sync(self,failpoint=None,ids=None):
         completed=0
         async with self.repo.lock('knowledge-hybrid-sync'):

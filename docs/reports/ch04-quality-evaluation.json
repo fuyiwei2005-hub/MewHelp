@@ -1,0 +1,44 @@
+[
+  {
+    "question": "邮费是多少",
+    "expected": true,
+    "actual": {
+      "sufficient": true,
+      "supported_facts": [
+        "普通配送运费8元",
+        "订单满99元包邮"
+      ],
+      "evidence_ids": [
+        1
+      ],
+      "reason": "证据明确给出普通配送运费为8元，且订单满99元包邮，足以回答邮费是多少。"
+    },
+    "passed": true
+  },
+  {
+    "question": "退款能保证两小时到账吗",
+    "expected": false,
+    "actual": {
+      "sufficient": false,
+      "supported_facts": [
+        "未使用商品在签收后7天内可申请退货。"
+      ],
+      "evidence_ids": [
+        1
+      ],
+      "reason": "证据仅说明未使用商品签收后7天内可申请退货，未涉及退款到账时间，无法回答是否能保证两小时到账。"
+    },
+    "passed": true
+  },
+  {
+    "question": "QC-M200可以放洗碗机吗",
+    "expected": false,
+    "actual": {
+      "sufficient": false,
+      "supported_facts": [],
+      "evidence_ids": [],
+      "reason": "证据仅说明QC-M100支持洗碗机清洗，未涉及QC-M200的洗碗机适用性；不能根据其他型号推断，故不足以回答。"
+    },
+    "passed": true
+  }
+]

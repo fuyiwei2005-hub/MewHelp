@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 import httpx
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse,PlainTextResponse
 
 from app.chat import SessionResponse, chat_events
 from app.config import ROOT, Settings
@@ -25,20 +25,39 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
             from app.repositories import Repository
             from app.services import ToolChatService
             db=Database(config.database_url.get_secret_value())
-            app.state.repo=Repository(db)
             vector_store=None
-            retriever=None
-            if config.faq_backend=="dense":
-                from app.knowledge.vector import VectorStore
-                from app.knowledge.embedding import Embedder
-                from app.knowledge.repository import KnowledgeRepository
-                from app.knowledge.retrieval import DenseRetriever
-                if config.embedding_revision=="main":raise RuntimeError("BGE-M3 revision must be pinned")
-                vector_store=await asyncio.to_thread(VectorStore,config.milvus_uri)
-                await vector_store.initialize()
-                retriever=DenseRetriever(KnowledgeRepository(db),Embedder(config.embedding_base_url,revision=config.embedding_revision),vector_store,config.embedding_revision,config.retrieval_top_k,config.retrieval_threshold)
-            app.state.tool_service=ToolChatService(config,app.state.repo,app.state.gateway,retriever)
-            try:yield
+            try:
+                app.state.repo=Repository(db)
+                await db.create_tables()
+                from app.knowledge.evidence import AuditRepository
+                app.state.audit=AuditRepository(db)
+                retriever=None
+                if config.faq_backend=="dense":
+                    from app.knowledge.vector import VectorStore
+                    from app.knowledge.embedding import Embedder
+                    from app.knowledge.repository import KnowledgeRepository
+                    from app.knowledge.retrieval import DenseRetriever
+                    if config.embedding_revision=="main":raise RuntimeError("BGE-M3 revision must be pinned")
+                    vector_store=await asyncio.to_thread(VectorStore,config.milvus_uri)
+                    await vector_store.initialize()
+                    retriever=DenseRetriever(KnowledgeRepository(db),Embedder(config.embedding_base_url,revision=config.embedding_revision),vector_store,config.embedding_revision,config.retrieval_top_k,config.retrieval_threshold)
+                if config.faq_backend=="hybrid":
+                    from app.knowledge.hybrid_store import HybridStore
+                    from app.knowledge.hybrid_retrieval import HybridRetriever
+                    from app.knowledge.embedding import Embedder
+                    from app.knowledge.reranking import Reranker
+                    from app.knowledge.query import QueryUnderstanding
+                    from app.knowledge.quality import QualityGate
+                    from app.knowledge.answers import KnowledgeAnswers
+                    from app.knowledge.repository import KnowledgeRepository
+                    if config.embedding_revision=="main" or config.reranker_revision=="main":raise RuntimeError("Pin embedding and reranker revisions first")
+                    vector_store=await asyncio.to_thread(HybridStore,config.milvus_uri)
+                    await vector_store.initialize()
+                    model=app.state.gateway.model
+                    retrieval=HybridRetriever(KnowledgeRepository(db),Embedder(config.embedding_base_url,revision=config.embedding_revision),vector_store,Reranker(config.reranker_base_url,config.reranker_revision),config.embedding_revision,QueryUnderstanding(model),min_score=config.reranker_threshold,max_bytes=min(4000,max(500,config.input_budget-4000)))
+                    retriever=KnowledgeAnswers(retrieval,QualityGate(model),app.state.audit)
+                app.state.tool_service=ToolChatService(config,app.state.repo,app.state.gateway,retriever)
+                yield
             finally:
                 if vector_store:await vector_store.close()
                 await db.close()
@@ -66,12 +85,37 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
     async def health():
         return {"status": "ok"}
 
+    @app.get("/knowledge/categories")
+    async def knowledge_categories():
+        from app.knowledge.hybrid_store import PRODUCT_CATEGORIES
+        return {"categories":list(PRODUCT_CATEGORIES)}
+
+    @app.get("/knowledge/sources/{turn_id}/{number}")
+    async def knowledge_source(turn_id:str,number:int):
+        if not config.database_url:raise HTTPException(503,"知识来源暂不可用")
+        if len(turn_id)>64 or number<1 or number>10:raise HTTPException(404,"引用不存在")
+        item=await app.state.audit.get_evidence(turn_id,number)
+        if not item:raise HTTPException(404,"引用不存在")
+        from app.knowledge.sources import original_document
+        item["document_url"]=("/knowledge/documents/"+item["chunk_id"]) if original_document(ROOT/"knowledge",item.get("source_id","")) else None
+        return item
+
+    @app.get("/knowledge/documents/{chunk_id}")
+    async def knowledge_document(chunk_id:str):
+        if not config.database_url:raise HTTPException(503,"知识来源暂不可用")
+        from app.knowledge.repository import KnowledgeRepository
+        from app.knowledge.sources import original_document
+        row=await KnowledgeRepository(app.state.repo.db).get(chunk_id)
+        file=original_document(ROOT/"knowledge",row.source_id) if row else None
+        if file is None:raise HTTPException(404,"原始文档不可用，请查看引用快照")
+        return PlainTextResponse(file.read_text(encoding="utf-8-sig"))
+
     @app.post("/chat")
     async def chat(payload: ChatRequest):
         if config.database_url:
             from app.services import ToolResponse
             service=app.state.tool_service
-            turn=await service.prepare(payload.message,payload.conversation_id)
+            turn=await service.prepare(payload.message,payload.conversation_id,payload.product_category)
             return ToolResponse(service,turn)
         store = app.state.store
         try:

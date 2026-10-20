@@ -17,10 +17,16 @@ async def runtime(settings=None):
     try:
         repo=KnowledgeRepository(db)
         await db.create_tables()
-        vectors=await asyncio.to_thread(VectorStore,cfg.milvus_uri)
+        store_class=VectorStore
+        pipeline_class=KnowledgePipeline
+        if cfg.faq_backend=="hybrid":
+            from app.knowledge.hybrid_store import HybridStore
+            from app.knowledge.hybrid_index import HybridIndexer
+            store_class,pipeline_class=HybridStore,HybridIndexer
+        vectors=await asyncio.to_thread(store_class,cfg.milvus_uri)
         await vectors.initialize()
         embedder=Embedder(cfg.embedding_base_url,revision=cfg.embedding_revision)
-        pipeline=KnowledgePipeline(repo,embedder,vectors,cfg.embedding_revision)
+        pipeline=pipeline_class(repo,embedder,vectors,cfg.embedding_revision)
         yield cfg,repo,embedder,vectors,pipeline
     finally:
         if vectors:await vectors.close()

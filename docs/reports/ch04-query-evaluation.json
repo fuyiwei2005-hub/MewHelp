@@ -1,0 +1,16 @@
+[
+  {
+    "original": "邮费咋算呀",
+    "normalized": "邮费怎么计算",
+    "synonyms": [
+      "运费计算",
+      "邮费规则",
+      "运费怎么算"
+    ]
+  },
+  {
+    "original": "QC-M100不能放洗碗机吗，容量350ml？",
+    "normalized": "QC-M100 容量350ml 不能放洗碗机吗",
+    "synonyms": []
+  }
+]

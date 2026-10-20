@@ -1,0 +1,9 @@
+{
+  "scope": "UI fixture smoke only; not real RAG/model acceptance",
+  "request_category": "陶瓷杯",
+  "source_path": "商品 / QC-M100 / 清洗方式",
+  "locked_buttons": 2,
+  "selected_count": 1,
+  "restored_locked": 2,
+  "errors": []
+}

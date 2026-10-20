@@ -1,4 +1,4 @@
-import asyncio,json
+import asyncio,json,re
 from dataclasses import dataclass
 from uuid import uuid4
 from contextlib import suppress
@@ -9,6 +9,8 @@ from langchain_core.messages import SystemMessage,HumanMessage,AIMessage,ToolMes
 from langchain_core.utils.function_calling import convert_to_openai_tool
 from app.chat import event
 from app.context import estimate_tokens
+from app.gateway import StreamPiece
+from app.knowledge.quality import NEGATIVE_KNOWLEDGE
 from app.tools import ToolContext,build_tools,ToolExecutor,LABELS,failure
 
 TOOL_SYSTEM="""你是中文电商客服。需要查询订单、商品、物流、店铺政策或创建人工工单时使用提供的工具。
@@ -38,7 +40,7 @@ class ToolChatService:
         self.settings,self.repo,self.gateway,self.faq_backend=settings,repo,gateway,faq_backend
         self.busy=set()
 
-    async def prepare(self,question,cid):
+    async def prepare(self,question,cid,product_category=None):
         if cid and not await self.repo.exists(cid):raise HTTPException(404,"会话不存在。")
         cid=cid or uuid4().hex
         if cid in self.busy:raise HTTPException(409,"该会话正在回复。")
@@ -46,7 +48,9 @@ class ToolChatService:
         self.busy.add(cid)
         try:
             tid=uuid4().hex
-            ctx=ToolContext(self.repo,cid,tid,question,self.faq_backend)
+            backend=self.faq_backend
+            if hasattr(backend,"for_turn"):backend=backend.for_turn(cid,tid,question,product_category)
+            ctx=ToolContext(self.repo,cid,tid,question,backend)
             tools=build_tools(ctx)
             schema=json.dumps([convert_to_openai_tool(t) for t in tools.values()],ensure_ascii=False)
             budget=self.settings.input_budget-len(schema.encode("utf-8"))
@@ -66,7 +70,7 @@ class ToolChatService:
         self.busy.discard(turn.cid)
 
     async def events(self,turn):
-        tasks=[];stream=None;finished=False;terminal_status="cancelled"
+        tasks=[];stream=None;finished=False;terminal_status="cancelled";knowledge_result=None
         async def watch(task,queue=None):
             last=asyncio.get_running_loop().time()
             while not task.done():
@@ -83,10 +87,10 @@ class ToolChatService:
                 yield ("end",None)
             else:yield ("value",value)
         try:
-            yield event("meta",{"conversation_id":turn.cid})
+            yield event("meta",{"conversation_id":turn.cid,"turn_id":turn.tid})
             yield event("status",{"message":"正在判断如何为您查询"})
             await self.repo.append_message(turn.cid,turn.tid,"user",turn.question)
-            async with asyncio.timeout(self.settings.llm_timeout_seconds*3):
+            async with asyncio.timeout(max(self.settings.llm_timeout_seconds*3,360) if hasattr(self.faq_backend,"for_turn") else self.settings.llm_timeout_seconds*3):
                 task=asyncio.create_task(self.gateway.decide(turn.messages,list(turn.tools.values())))
                 tasks.append(task)
                 decision=None
@@ -116,10 +120,11 @@ class ToolChatService:
                                 else:result=value
                             status="failed" if not result.get("ok") else ("not_found" if result.get("matches")==[] else "completed")
                             yield event("tool_end",{"name":name,"tool_call_id":call["id"],"status":status})
+                        if call["name"]=="query_faq" and "refused" in result:knowledge_result=result
                         text=json.dumps(result,ensure_ascii=False)
                         await self.repo.append_message(turn.cid,turn.tid,"tool",text,tool_call_id=call["id"])
                         final_messages.append(ToolMessage(content=text,tool_call_id=call["id"]))
-                final_messages[0]=SystemMessage(content=FINAL_SYSTEM)
+                final_messages[0]=SystemMessage(content=FINAL_SYSTEM+"\n"+NEGATIVE_KNOWLEDGE+("\n本轮有知识证据时，只依据本轮matches及supported_facts回答，每个知识性结论必须在句尾标[reference编号]；不能使用前轮政策代替本轮证据，不能编造编号。" if knowledge_result and knowledge_result.get("citations") else ""))
                 schema=json.dumps([convert_to_openai_tool(t) for t in turn.tools.values()],ensure_ascii=False)
                 budget=self.settings.input_budget-len(schema.encode("utf-8"))
                 current=next(i for i in range(len(final_messages)-1,0,-1) if final_messages[i].type=="human")
@@ -129,7 +134,14 @@ class ToolChatService:
                     current-=stop-1
                 if estimate_tokens(final_messages)>budget:
                     raise ValueError("tool_result_exceeds_budget")
-                stream=self.gateway.final_stream(final_messages,list(turn.tools.values())).__aiter__()
+                if knowledge_result and knowledge_result.get("citations"):
+                    yield event("citations",{"turn_id":turn.tid,"items":knowledge_result["citations"]})
+                if knowledge_result and knowledge_result.get("refused"):
+                    async def refusal_stream():
+                        yield StreamPiece(knowledge_result["refusal"])
+                        yield StreamPiece(finish_reason="stop")
+                    stream=refusal_stream().__aiter__()
+                else:stream=self.gateway.final_stream(final_messages,list(turn.tools.values())).__aiter__()
                 answer=[];reason=None
                 while True:
                     task=asyncio.create_task(anext(stream));tasks.append(task)
@@ -144,6 +156,13 @@ class ToolChatService:
                     reason=piece.finish_reason or reason
                 text="".join(answer)
                 if reason!="stop" or not text.strip():raise ValueError("incomplete_response")
+                if knowledge_result and knowledge_result.get("citations"):
+                    allowed={int(c["number"]) for c in knowledge_result["citations"]}
+                    used={int(n) for n in re.findall(r"\[(\d+)\]",text)}
+                    if not used or not used<=allowed:
+                        if hasattr(self.faq_backend,"audit"):
+                            await self.faq_backend.audit.record_low(turn.question,turn.cid,turn.tid,"generation","invalid_citations","回答未提供合法的证据引用")
+                        raise ValueError("invalid_citations")
                 await self.repo.append_message(turn.cid,turn.tid,"assistant",text)
                 await self.repo.finish_turn(turn.cid,turn.tid,"completed")
                 turn.completed=True;finished=True

@@ -21,7 +21,7 @@ class ProductArgs(ToolArgs):
 
 
 class FAQArgs(ToolArgs):
-    keyword: str=Field(min_length=1,max_length=500,description="用户原话中的查询词或问题；不要把邮费改成运费")
+    keyword: str=Field(min_length=1,max_length=500,description="用户原话中的查询词或问题；工具参数保留原话；检索内部可以归一和同义扩展")
 
 
 class TicketArgs(ToolArgs):
@@ -109,7 +109,9 @@ class ToolExecutor:
         if context:context.call_id=call["id"]
         for attempt in range(1,self.attempts+1):
             try:
-                async with asyncio.timeout(self.timeout):
+                timeout=self.timeout
+                if name=="query_faq" and getattr(getattr(context,"faq_backend",None),"hybrid",False):timeout=max(timeout,300)
+                async with asyncio.timeout(timeout):
                     return await selected.ainvoke(args)
             except asyncio.CancelledError:raise
             except (TimeoutError,ConnectionError,OperationalError) as error:

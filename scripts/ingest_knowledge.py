@@ -5,11 +5,7 @@ from app.knowledge.chunking import split_markdown
 from app.knowledge.runtime import runtime
 
 
-def source_scope(folder):
-    import hashlib,os
-    if not folder.is_dir():raise ValueError("Knowledge directory does not exist")
-    canonical=os.path.normcase(str(folder.resolve()))
-    return "markdown:"+hashlib.sha256(canonical.encode()).hexdigest()+"/"
+from app.knowledge.sources import source_scope
 
 
 async def ingest(folder,failpoint=None):
