@@ -17,15 +17,15 @@ class Settings(BaseSettings):
     mysql_user: str = "support"
     mysql_database: str = "support"
     database_url: SecretStr | None = None
-    faq_backend: Literal["keyword","dense"] = "keyword"
+    faq_backend: Literal["keyword","dense"] = "dense"
     tool_timeout_seconds: float = Field(default=5, gt=0)
     tool_max_attempts: int = Field(default=2, ge=1, le=3)
     embedding_base_url: str = "http://127.0.0.1:8001/v1"
     embedding_model: str = "BAAI/bge-m3"
     embedding_revision: str = "main"
-    milvus_uri: str = "http://127.0.0.1:19530"
+    milvus_uri: str = "http://127.0.0.1:19531"
     retrieval_top_k: int = Field(default=3, ge=1, le=5)
-    retrieval_threshold: float = 0.35
+    retrieval_threshold: float = 0.65
     llm_base_url: str = "https://api.deepseek.com"
     llm_model: str = Field(min_length=1)
     llm_api_key: SecretStr

@@ -1,0 +1,4 @@
+{"id":"logistics","message":"订单1001的物流到哪了","tool":"query_logistics"}
+{"id":"policy","message":"退货政策是什么","tool":"query_faq"}
+{"id":"shipping","message":"邮费是多少","tool":"query_faq"}
+{"id":"ticket","message":"杯子破损了，请创建人工售后工单处理","tool":"create_ticket"}

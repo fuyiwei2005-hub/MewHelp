@@ -1,0 +1,442 @@
+{
+  "results": [
+    {
+      "question": "邮费是多少",
+      "reply": "您好，普通配送运费为8元，订单满99元可包邮。此为演示数据，实际运费以结算页面显示为准。",
+      "badges": [
+        "查询常见问题 · 已完成"
+      ],
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "c027133bdd9e412f9479525e4f1eaad1"
+          }
+        },
+        {
+          "event": "status",
+          "data": {
+            "message": "正在判断如何为您查询"
+          }
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "query_faq",
+            "label": "查询常见问题",
+            "tool_call_id": "call_00_waVH8NPNYdnZ7xMjulM56035",
+            "demo": false
+          }
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "query_faq",
+            "tool_call_id": "call_00_waVH8NPNYdnZ7xMjulM56035",
+            "status": "completed"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您好"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "普通"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "配送"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "8"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "元"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "满"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "99"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "元"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "可"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "包"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "邮"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "此为"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "实际"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "以"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "结算"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "页面"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "显示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为准"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "c027133bdd9e412f9479525e4f1eaad1",
+            "finish_reason": "stop"
+          }
+        }
+      ],
+      "distinct_lengths": [
+        0,
+        1,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        19,
+        21,
+        23,
+        25,
+        28,
+        30,
+        32,
+        34,
+        36,
+        39,
+        40,
+        43
+      ]
+    },
+    {
+      "question": "那买满多少免运费？",
+      "reply": "您好，根据演示政策，订单满99元即可免运费。实际规则请以结算页面显示为准。",
+      "badges": [
+        "查询常见问题 · 已完成"
+      ],
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "c027133bdd9e412f9479525e4f1eaad1"
+          }
+        },
+        {
+          "event": "status",
+          "data": {
+            "message": "正在判断如何为您查询"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您好"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "根据"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "政策"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "满"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "99"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "元"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "即可"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "免"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运费"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "实际"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "规则"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "请"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "以"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "结算"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "页面"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "显示"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为准"
+          }
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          }
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "c027133bdd9e412f9479525e4f1eaad1",
+            "finish_reason": "stop"
+          }
+        }
+      ],
+      "distinct_lengths": [
+        0,
+        2,
+        3,
+        5,
+        8,
+        10,
+        12,
+        14,
+        16,
+        19,
+        21,
+        23,
+        25,
+        27,
+        30,
+        32,
+        34,
+        36
+      ]
+    }
+  ],
+  "errors": [],
+  "checks": {
+    "shipping": true,
+    "free_shipping": true,
+    "same_conversation": true,
+    "incremental": true,
+    "done": true,
+    "no_page_errors": true
+  }
+}

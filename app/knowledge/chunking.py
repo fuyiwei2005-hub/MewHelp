@@ -45,6 +45,24 @@ def _pack(atoms,max_chars,overlap):
 
 
 def _text_chunks(text,max_chars,overlap):
+    lines=text.splitlines(keepends=True)
+    if any(re.match(r"^\s*(?:[-+*]|\d+[.)])\s+",line) for line in lines):
+        units=[];plain=[];item=[]
+        def flush_plain():
+            if plain:
+                units.extend(_text_chunks("".join(plain),max_chars,overlap));plain.clear()
+        for line in lines:
+            if re.match(r"^\s*(?:[-+*]|\d+[.)])\s+",line):
+                flush_plain()
+                if item:units.append("".join(item));item=[]
+                item.append(line)
+            elif item and (line.startswith(" ") or not line.strip()):item.append(line)
+            else:
+                if item:units.append("".join(item));item=[]
+                plain.append(line)
+        if item:units.append("".join(item))
+        flush_plain()
+        return list(_pack(units,max_chars,overlap))
     # Recursive paragraph -> sentence boundaries; atomic long units are preserved.
     paragraphs=re.split(r"(\n\s*\n)",text)
     atoms=[]

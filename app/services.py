@@ -66,7 +66,7 @@ class ToolChatService:
         self.busy.discard(turn.cid)
 
     async def events(self,turn):
-        tasks=[];stream=None;finished=False
+        tasks=[];stream=None;finished=False;terminal_status="cancelled"
         async def watch(task,queue=None):
             last=asyncio.get_running_loop().time()
             while not task.done():
@@ -120,7 +120,14 @@ class ToolChatService:
                         await self.repo.append_message(turn.cid,turn.tid,"tool",text,tool_call_id=call["id"])
                         final_messages.append(ToolMessage(content=text,tool_call_id=call["id"]))
                 final_messages[0]=SystemMessage(content=FINAL_SYSTEM)
-                if estimate_tokens(final_messages)>self.settings.input_budget:
+                schema=json.dumps([convert_to_openai_tool(t) for t in turn.tools.values()],ensure_ascii=False)
+                budget=self.settings.input_budget-len(schema.encode("utf-8"))
+                current=next(i for i in range(len(final_messages)-1,0,-1) if final_messages[i].type=="human")
+                while estimate_tokens(final_messages)>budget and current>1:
+                    stop=next(i for i in range(2,len(final_messages)) if final_messages[i].type=="human")
+                    del final_messages[1:stop]
+                    current-=stop-1
+                if estimate_tokens(final_messages)>budget:
                     raise ValueError("tool_result_exceeds_budget")
                 stream=self.gateway.final_stream(final_messages,list(turn.tools.values())).__aiter__()
                 answer=[];reason=None
@@ -139,10 +146,11 @@ class ToolChatService:
                 if reason!="stop" or not text.strip():raise ValueError("incomplete_response")
                 await self.repo.append_message(turn.cid,turn.tid,"assistant",text)
                 await self.repo.finish_turn(turn.cid,turn.tid,"completed")
-                yield event("done",{"conversation_id":turn.cid,"finish_reason":"stop"})
                 turn.completed=True;finished=True
+                yield event("done",{"conversation_id":turn.cid,"finish_reason":"stop"})
         except asyncio.CancelledError:raise
         except Exception:
+            terminal_status="failed"
             yield event("error",{"code":"turn_failed","message":"本轮未完整完成，请稍后重试；已创建的工单会保留。"})
         finally:
             with anyio.CancelScope(shield=True):
@@ -153,7 +161,7 @@ class ToolChatService:
                 if stream:
                     with suppress(Exception):await stream.aclose()
                 if not finished:
-                    with suppress(Exception):await self.repo.finish_turn(turn.cid,turn.tid,"cancelled")
+                    with suppress(Exception):await self.repo.finish_turn(turn.cid,turn.tid,terminal_status)
 
 
 class ToolResponse(StreamingResponse):

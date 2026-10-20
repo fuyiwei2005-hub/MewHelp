@@ -1,0 +1,39 @@
+{
+  "scope": "synthetic labeled staging evaluation, isolated support_test database",
+  "statistics": {
+    "run_id": "ce86681e037f4fd5b733d477eeb12946",
+    "published": 1,
+    "duplicates": 1,
+    "conflicts": 2
+  },
+  "rows": [
+    {
+      "questions": [
+        "运费多少？"
+      ],
+      "answer": "8元。",
+      "status": "conflict"
+    },
+    {
+      "questions": [
+        "运费多少？"
+      ],
+      "answer": "10元。",
+      "status": "conflict"
+    },
+    {
+      "questions": [
+        "退货期限？"
+      ],
+      "answer": "7天内。",
+      "status": "published"
+    },
+    {
+      "questions": [
+        "几天能退？"
+      ],
+      "answer": "7 天内。",
+      "status": "duplicate"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{"question":"配送需要多少钱","expected":"8元"}
+{"question":"签收后几天可以申请退货","expected":"7天"}
+{"question":"如何申请发票","expected":"发票"}
+{"question":"今天北京会下雨吗","expected":null}
+{"question":"Python快速排序怎么写","expected":null}
+{"question":"世界上最高的山是哪座","expected":null}

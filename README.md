@@ -130,3 +130,60 @@ POST /after-sales/extract 请求：
 
 本章为本地功能验收原型，部署、多进程持久化、用户鉴权和真实订单操作不在本章范围。
 
+
+## 第二、三章：数据库、工具和知识库
+
+第二章浏览器入口仍为 http://127.0.0.1:8000/ ，工具状态和工具徽章随 SSE 更新。数据库路径保存完整 user/assistant/tool 消息；仅已完成回合进入上下文，工具结果与申请通过 tool_call_id 对齐。请保持单 worker。
+
+~~~powershell
+docker compose up -d
+.\.venv\Scripts\python -m scripts.init_db
+.\.venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+~~~
+
+.env 的 DATABASE_URL 使用 mysql+asyncmy；MySQL 在本机 3307。FAQ_BACKEND=keyword 可重现第二章基线：退货政策命中，邮费未命中。订单/商品/物流为随机演示数据，人工工单真实写 MySQL。
+
+第三章使用相同聊天接口及 query_faq 契约，仅替换工具内部检索实现。先下载 BAAI/bge-m3 官方权重（脚本完成后把模型提交号写入本地 .env），启动 Milvus 和本地嵌入服务，再建库：
+
+~~~powershell
+docker compose -f compose.milvus.yaml up -d
+.\.venv\Scripts\python -m scripts.download_model
+.\.venv\Scripts\python -m uvicorn app.embedding_server:app --host 127.0.0.1 --port 8001
+# 另一个终端：
+.\.venv\Scripts\python -m scripts.ingest_knowledge
+.\.venv\Scripts\python -m scripts.acceptance_knowledge
+~~~
+
+在 .env 设置 FAQ_BACKEND=dense 后重启聊天服务；浏览器问“邮费是多少”。Milvus 仅 dense COSINE Top-K；MySQL 回查原文及 hash/状态，服务故障不退回 LIKE。embedding_text 只包含 category、questions、answer。原文、元数据、向量同步状态存 knowledge_chunks。
+
+恢复演示：故意在 Milvus 写成功、MySQL 回填之前中断，随后原命令重跑；按 chunk 主键覆盖向量并补齐回填。
+
+~~~powershell
+.\.venv\Scripts\python -m scripts.ingest_knowledge --failpoint after_milvus_upsert
+.\.venv\Scripts\python -m scripts.ingest_knowledge
+.\.venv\Scripts\python -m scripts.acceptance_knowledge
+~~~
+
+合成客服对话挖掘示例（只发送固定白名单种子给配置的模型，--no-sync 先留待向量化）：
+
+~~~powershell
+.\.venv\Scripts\python -m scripts.mine_knowledge --demo-only --no-sync --batch-size 1
+.\.venv\Scripts\python -m scripts.mine_knowledge --demo-only --no-sync --show-schedule
+# 持续运行，每天上海时间02:00，单实例与数据库锁：
+.\.venv\Scripts\python -m scripts.mine_knowledge --demo-only --watch
+~~~
+
+省略 --demo-only 会处理全量已完成历史，并发送给 .env 的模型供应商；本次尚未执行该模式。定时进程需保持运行。暂存表 knowledge_staging 保存证据和去重状态，knowledge_jobs 保存快照及游标。冲突问答隔离处理，不覆盖既有答案。
+
+过程记录：dev-notes/ch02.md、dev-notes/ch03.md。第三章真实依赖验收状态以 docs/reports/ch03-validation.md 为准。
+
+
+第三章实际验收：78项测试通过、依赖检查通过；两个故障点恢复成功，最终pending为0；真实浏览器两轮及curl流式通过。BGE-M3当前使用CPU，检索阈值0.65由6条独立标注小样本校准。Milvus本机端口19531，健康检查19091。
+
+~~~powershell
+.\.venv\Scripts\python -m scripts.acceptance_tools --backend dense
+.\.venv\Scripts\python -m scripts.evaluate_knowledge
+.\.venv\Scripts\python -m scripts.evaluate_mining
+~~~
+
+完整交付与故障恢复证据见 docs/reports/ch03-validation.md。

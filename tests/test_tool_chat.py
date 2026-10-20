@@ -53,3 +53,36 @@ def test_multiple_calls_are_not_executed():
         service.release(turn)
     asyncio.run(run())
 
+
+def test_done_frame_survives_immediate_close():
+    from app.services import ToolChatService
+    async def run():
+        repo=Repo();service=ToolChatService(Settings(_env_file=None,llm_api_key="test",llm_model="fake"),repo,Gateway([]))
+        turn=await service.prepare("你好",None)
+        stream=service.events(turn)
+        async for frame in stream:
+            if "event: done" in frame:break
+        await stream.aclose()
+        assert repo.states==["completed"]
+        assert turn.completed
+    asyncio.run(run())
+
+
+def test_server_error_is_failed_not_cancelled():
+    from app.services import ToolChatService
+    class Broken(Gateway):
+        async def decide(self,messages,tools):raise ValueError("model failed")
+    async def run():
+        repo=Repo();service=ToolChatService(Settings(_env_file=None,llm_api_key="test",llm_model="fake"),repo,Broken([]))
+        turn=await service.prepare("你好",None)
+        output="".join([frame async for frame in service.events(turn)])
+        assert "event: error" in output
+        assert repo.states==["failed"]
+    asyncio.run(run())
+
+
+def test_token_budget_counts_tool_arguments():
+    from app.context import estimate_tokens
+    short=AIMessage(content="",tool_calls=[dict(name="create_ticket",args={"description":"a"},id="c",type="tool_call")])
+    long=AIMessage(content="",tool_calls=[dict(name="create_ticket",args={"description":"a"*2000},id="c",type="tool_call")])
+    assert estimate_tokens([long])-estimate_tokens([short])>=1999

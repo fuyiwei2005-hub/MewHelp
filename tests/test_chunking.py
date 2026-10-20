@@ -44,3 +44,10 @@ def test_ids_are_repeatable_and_long_sentence_not_cut():
     assert a[0].id==b[0].id
     assert a[0].answer=="长句"*100+"。"
 
+
+def test_multisentence_list_item_is_atomic():
+    from app.knowledge.chunking import split_markdown
+    text='# 售后\n## 注意\n- 第一项要拍照片。还要保留包装。\n- 第二项联系人工。然后提交申请。'
+    chunks=split_markdown('list',text,max_chars=10,overlap=0)
+    assert any('第一项要拍照片。还要保留包装。' in c.answer for c in chunks)
+    assert any('第二项联系人工。然后提交申请。' in c.answer for c in chunks)
