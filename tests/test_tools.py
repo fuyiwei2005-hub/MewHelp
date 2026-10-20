@@ -33,3 +33,16 @@ def test_only_transient_failures_are_retried():
         assert result["ok"] and calls==["a","a"]
     asyncio.run(run())
 
+
+
+def test_hybrid_failure_has_one_deadline_without_second_attempt():
+    from app.tools import ToolContext,build_tools,ToolExecutor
+    class Backend:
+        hybrid=True
+        calls=0
+        async def query(self,keyword):self.calls+=1;raise TimeoutError()
+    async def run():
+        backend=Backend();tools=build_tools(ToolContext(None,'c','t','配送',backend))
+        result=await ToolExecutor(tools,attempts=2).execute(dict(name='query_faq',args={'keyword':'配送'},id='c'))
+        assert not result['ok'] and backend.calls==1
+    asyncio.run(run())

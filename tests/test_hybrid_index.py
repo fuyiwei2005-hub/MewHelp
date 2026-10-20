@@ -55,3 +55,24 @@ def test_hybrid_has_independent_checkpoint_and_recovers_after_upsert():
         finally:
             await store.drop_test_collection();await store.close();await db.close()
     asyncio.run(run())
+
+
+def test_existing_hybrid_schema_rejects_wrong_function_type():
+    import pytest
+    from pymilvus import FunctionType
+    from app.config import Settings
+    from app.knowledge.hybrid_store import HybridStore
+    async def run():
+        store=HybridStore(Settings().milvus_uri,collection='test_hybrid_'+uuid4().hex)
+        try:
+            await store.initialize()
+            describe=store.client.describe_collection
+            def incompatible(*args,**kw):
+                details=describe(*args,**kw)
+                details['functions'][0]['type']=0
+                return details
+            store.client.describe_collection=incompatible
+            with pytest.raises(ValueError,match='BM25'):await store.initialize()
+        finally:
+            await store.drop_test_collection();await store.close()
+    asyncio.run(run())

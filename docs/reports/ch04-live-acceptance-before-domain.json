@@ -1,0 +1,44 @@
+{
+  "model": {
+    "turn_id": "a79ee3fbb10643e2acf867e2ebc7e447",
+    "answer": "支持。根据演示商品资料，QC-M100支持洗碗机清洗，建议放在上层篮架[1]。",
+    "tools": [
+      "query_faq"
+    ],
+    "token_frames": 24,
+    "citations": [
+      {
+        "number": 1,
+        "chunk_id": "25b67613154f4d6b0ea10e99e7e8a5e974d63abf5bd0f86addb21e0acf156d30",
+        "section_path": "第四章演示商品手册 / QC-M100 / 清洗方式",
+        "url": "/knowledge/sources/a79ee3fbb10643e2acf867e2ebc7e447/1"
+      }
+    ]
+  },
+  "shipping": {
+    "turn_id": "1f446c66dd1c42d9952fbafd00d89b90",
+    "answer": "抱歉，当前知识库没有足够可靠的依据回答这个问题。我不能据此承诺或推断，建议补充商品信息或联系人工客服。",
+    "tools": [
+      "query_faq"
+    ],
+    "token_frames": 1,
+    "citations": []
+  },
+  "unknown": {
+    "turn_id": "deeebb3e2295459da4e8f975d68bf466",
+    "answer": "抱歉，当前知识库没有足够可靠的依据回答这个问题。我不能据此承诺或推断，建议补充商品信息或联系人工客服。",
+    "tools": [
+      "query_faq"
+    ],
+    "token_frames": 1,
+    "citations": [],
+    "pool": [
+      {
+        "question": "火星配送费用是多少？",
+        "entry": "retrieval",
+        "reason_code": "low_score",
+        "reason": "检索证据不足或置信度低"
+      }
+    ]
+  }
+}

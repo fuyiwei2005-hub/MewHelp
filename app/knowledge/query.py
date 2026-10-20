@@ -14,15 +14,31 @@ class QueryPlan:
 
 
 def preserve_query(original,candidate):
-    models=re.findall(r'[A-Za-z][A-Za-z0-9]*[-_][A-Za-z0-9_-]+',original)
-    numbers=re.findall(r'\d+(?:\.\d+)?',original)
-    negative=lambda text:bool(re.search(r'不能|不支持|不可以|不可|禁止|不得|不要|没有|不含|不超过|不低于',text))
-    if not candidate or len(candidate)>500 or any(m.lower() not in candidate.lower() for m in models) or any(n not in candidate for n in numbers) or negative(original)!=negative(candidate):return original
+    from collections import Counter
+    def models(text):return Counter(m.upper() for m in re.findall(r'[A-Za-z][A-Za-z0-9]*[-_][A-Za-z0-9_-]+',text))
+    def quantities(text):return Counter(re.sub(r"\s+","",m).lower() for m in re.findall(r"\d+(?:\.\d+)?\s*(?:ml|毫升|l|升|w|瓦|v|伏|℃|%|元|个月|月|天|小时|分钟|年|克|公斤)?",text,re.I))
+    def relations(text):
+        mapping={'不超过':'<=','不高于':'<=','最多':'<=','小于等于':'<=','≤':'<=','<=':'<=','不低于':'>=','不少于':'>=','至少':'>=','大于等于':'>=','≥':'>=','>=':'>=','超过':'>','大于':'>','高于':'>','小于':'<','低于':'<','少于':'<'}
+        pattern='('+'|'.join(sorted(mapping,key=len,reverse=True))+r')\s*(\d+(?:\.\d+)?)\s*(ml|毫升|l|升|w|瓦|v|伏|元|天|个月|月|小时|分钟)?'
+        return Counter((mapping[op],number,(unit or '').lower()) for op,number,unit in re.findall(pattern,text,re.I))
+    def negatives(text):
+        result=[]
+        for _,tail in re.findall(r'(不能|不支持|不可以|不可|禁止|不得|不要|没有|不含)([^，。？！?；;]+)',text):
+            tail=re.split(r'但是|但|而|然后',tail)[0]
+            tail=re.sub(r'(吗|呢|吧|么|是否|可以|能否|清洗)+$','',tail)
+            tail=tail.replace('放入微波炉','微波').replace('放微波炉','微波').replace('微波炉','微波').replace('放洗碗机','洗碗机').replace('机洗','洗碗机')
+            result.append(re.sub(r'\s+','',tail))
+        return Counter(result)
+    if sum(models(original).values())>1 or sum(quantities(original).values())-sum(models(original).values())>1:return original
+    if not candidate or len(candidate)>500 or models(original)!=models(candidate) or quantities(original)!=quantities(candidate) or relations(original)!=relations(candidate) or negatives(original)!=negatives(candidate):return original
     return candidate
 
 
 def query_plan(original,data):
-    normalized=preserve_query(original,str(data.get('normalized','')).strip())
+    candidate=str(data.get('normalized','')).strip()
+    # Known storefront terminology is canonicalized only on the query side.
+    candidate=re.sub(r'邮费|快递费(?:用)?','运费',candidate)
+    normalized=preserve_query(original,candidate)
     synonyms=[]
     for value in data.get('synonyms',[]):
         if not isinstance(value,str):continue

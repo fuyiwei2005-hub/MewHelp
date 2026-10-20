@@ -1,0 +1,63 @@
+{
+  "model": {
+    "turn_id": "0f4c2906da144c91a545d32d908b99fa",
+    "answer": "根据演示商品资料，QC-M100 支持洗碗机清洗，建议放在上层篮架。[1]",
+    "token_frames": 22,
+    "tools": [
+      "query_faq"
+    ],
+    "citations": [
+      {
+        "number": 1,
+        "chunk_id": "25b67613154f4d6b0ea10e99e7e8a5e974d63abf5bd0f86addb21e0acf156d30",
+        "section_path": "第四章演示商品手册 / QC-M100 / 清洗方式",
+        "url": "/knowledge/sources/0f4c2906da144c91a545d32d908b99fa/1"
+      }
+    ]
+  },
+  "shipping": {
+    "turn_id": "067563bf4fca4f74bbda23d59e023681",
+    "answer": "根据演示政策，普通配送运费为8元，订单满99元包邮。[1]普通配送支持中国大陆大部分地区，偏远地区是否支持配送需联系商家确认。[3]",
+    "token_frames": 39,
+    "tools": [
+      "query_faq"
+    ],
+    "citations": [
+      {
+        "number": 1,
+        "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
+        "section_path": "配送政策 / 运费规则",
+        "url": "/knowledge/sources/067563bf4fca4f74bbda23d59e023681/1"
+      },
+      {
+        "number": 3,
+        "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
+        "section_path": "配送政策 / 配送范围",
+        "url": "/knowledge/sources/067563bf4fca4f74bbda23d59e023681/3"
+      },
+      {
+        "number": 2,
+        "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
+        "section_path": "售后政策 / 退货运输费用",
+        "url": "/knowledge/sources/067563bf4fca4f74bbda23d59e023681/2"
+      }
+    ]
+  },
+  "unknown": {
+    "turn_id": "11bc7ff971cd48a8a9e3ea448d98dd47",
+    "answer": "抱歉，当前知识库没有足够可靠的依据回答这个问题。我不能据此承诺或推断，建议补充商品信息或联系人工客服。",
+    "token_frames": 1,
+    "tools": [
+      "query_faq"
+    ],
+    "citations": [],
+    "pool": [
+      {
+        "question": "火星配送费用是多少？",
+        "entry": "retrieval",
+        "reason_code": "low_score",
+        "reason": "检索证据不足或置信度低"
+      }
+    ]
+  }
+}

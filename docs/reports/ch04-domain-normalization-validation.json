@@ -1,0 +1,7 @@
+{
+  "scope": "The final query-only storefront synonym normalization changes no normalized/lexical plans in the completed 30-case benchmark; original run manifest preserved.",
+  "cases_checked": 30,
+  "changed_cases": [],
+  "query_sha256": "f11e11f02a51c0fc7bdb8432f6f3bcbc2c844d27f9b813d24ebf1d86e253b091",
+  "benchmark_run_id": "637083afb20f0018f67b8611ffe1f04c51ab7583cb6392cd07a490db16f14ce4"
+}

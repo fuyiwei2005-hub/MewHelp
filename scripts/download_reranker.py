@@ -23,4 +23,10 @@ except Exception as error:
  from scripts.hub_download import verified_get_download
  path=verified_get_download(info,selected,'artifacts/models/bge-reranker-v2-m3')
 write_manifest(Path(path),info.sha)
+env=Path('.env')
+if env.exists():
+ import re
+ text=env.read_text(encoding='utf-8-sig')
+ text=re.sub(r'^RERANKER_REVISION=.*\n?','',text,flags=re.M)
+ env.write_text(text+'\nRERANKER_REVISION='+info.sha+'\n',encoding='utf-8')
 print('RERANKER_READY '+info.sha,flush=True)

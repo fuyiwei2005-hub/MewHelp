@@ -187,3 +187,36 @@ docker compose -f compose.milvus.yaml up -d
 ~~~
 
 完整交付与故障恢复证据见 docs/reports/ch03-validation.md。
+
+## 第四章：混合检索、重排和评估
+
+本机端口已改为聊天18000、嵌入18001、重排18002（Windows保留了旧端口段）。MySQL3307、Milvus19531不变。启动三个服务时分别保持终端运行：
+
+~~~powershell
+docker compose up -d
+docker compose -f compose.milvus.yaml up -d
+.\.venv\Scripts\python -m scripts.download_reranker
+.\.venv\Scripts\python -m uvicorn app.embedding_server:app --host 127.0.0.1 --port 18001
+# 第二个终端，官方权重下载完成后：
+.\.venv\Scripts\python -m uvicorn app.reranker_server:app --host 127.0.0.1 --port 18002
+# 第三个终端：
+.\.venv\Scripts\python -m scripts.prepare_ch04
+.\.venv\Scripts\python -m scripts.calibrate_hybrid --apply
+# 在.env设FAQ_BACKEND=hybrid，然后启动聊天服务
+.\.venv\Scripts\python -m uvicorn app.main:app --host 127.0.0.1 --port 18000
+~~~
+
+下载脚本固定官方revision并生成哈希manifest；嵌入模型仍用第三章已下载的BGE-M3。重排使用bge-reranker-v2-m3，CPU也可运行，但首次加载与每轮处理较慢。四章集合knowledge_hybrid_v4独立于旧dense集合；新增同步台账保证旧embedded记录也能迁移。品类白名单过滤在Milvus两路检索前执行，选择品类同时包含通用知识。
+
+浏览器打开 http://127.0.0.1:18000/ ，选择陶瓷杯，问“QC-M100支持洗碗机清洗吗？”；再问“邮费是多少？”；问“火星配送费用是多少？”验证证据不足拒答。点击[1]查看当轮原文快照和章节路径；👍/👎仅在浏览器本地保存并锁定，没有后端反馈写入。
+
+~~~powershell
+curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch04-chat-demo.json" http://127.0.0.1:18000/chat
+.\.venv\Scripts\python -m pytest -q
+.\.venv\Scripts\python -m pip check
+.\.venv\Scripts\python -m scripts.evaluate_hybrid --output docs/reports/ch04-comparison
+~~~
+
+四策略各在相同30条测试题上运行，另12条校准题独立（含6条通用政策题）；固定语料63个商品章节。报告包含Recall@10/50、MRR@10、原子声明Faithfulness、回答覆盖率、拒答率、错误与逐桶结果。拒答不计Faithfulness满分，判定失败保留。断点续跑要求相同语料、品类、索引状态、预算、模型和实现版本；变化时另给--output。保留早期失败报告作为返工证据，不当作最终报告。
+
+知识回答按引用单元验证后输出原始模型片段；不合法或无引用事实不发送，因此首段会等待一个完整引用单元。先进行证据充分性自评，最终实际payload超预算则整块裁掉低排名证据并重新自评；不足时拒答并写low_confidence_questions，原文/会话/入口/原因/时间可追查。真实验收数字与限制见docs/reports/ch04-validation.md，阶段记录dev-notes/ch04.md。

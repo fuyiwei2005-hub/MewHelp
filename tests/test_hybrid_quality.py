@@ -58,3 +58,50 @@ def test_knowledge_answer_refuses_missing_evidence_and_records_entry():
         assert result['refused'] and result['matches']==[]
         assert audit.rows[0][0]=='火星配送多少钱' and audit.rows[0][3]=='retrieval'
     asyncio.run(run())
+
+def test_budget_prunes_whole_evidence_then_reassesses_before_snapshot():
+    from app.knowledge.answers import KnowledgeAnswers
+    from app.knowledge.quality import Assessment
+    from app.knowledge.hybrid_retrieval import EvidenceBundle
+    from app.knowledge.query import QueryPlan
+    class Retrieval:
+        async def retrieve(self,*args):
+            return EvidenceBundle(QueryPlan('问题','问题',[]),[dict(number=n,chunk_id=str(n),question='问',answer='答',category='类',section_path='章节',source_id='x',content_hash='h') for n in [1,2]],[])
+    class Gate:
+        def __init__(self):self.calls=[]
+        async def assess(self,question,evidence):
+            self.calls.append([r['number'] for r in evidence])
+            return Assessment(sufficient=True,supported_facts=['答'],evidence_ids=[r['number'] for r in evidence],reason='有证据')
+    class Audit:
+        def __init__(self):self.saved=[]
+        async def save_evidence(self,cid,tid,snapshots):self.saved=snapshots
+        async def record_low(self,*args):raise AssertionError('Sufficient reduced evidence must not refuse')
+    async def run():
+        gate=Gate();audit=Audit();bound=KnowledgeAnswers(Retrieval(),gate,audit).for_turn('c','t','问题',None)
+        bound.set_budget(lambda payload:len(payload['matches'])<=1)
+        result=await bound.query('问题')
+        assert not result['refused'] and [r['number'] for r in audit.saved]==[1]
+        assert gate.calls==[[1,2],[1]]
+    asyncio.run(run())
+
+
+def test_single_whole_block_over_budget_refuses_without_freezing_snapshot():
+    from app.knowledge.answers import KnowledgeAnswers
+    from app.knowledge.quality import Assessment
+    from app.knowledge.hybrid_retrieval import EvidenceBundle
+    from app.knowledge.query import QueryPlan
+    class Retrieval:
+        async def retrieve(self,*args):return EvidenceBundle(QueryPlan('问','问',[]),[dict(number=1,chunk_id='a',question='问',answer='答',category='类',section_path='章')],[])
+    class Gate:
+        async def assess(self,*args):return Assessment(sufficient=True,supported_facts=['答'],evidence_ids=[1],reason='足够')
+    class Audit:
+        low=[]
+        async def save_evidence(self,*args):raise AssertionError('Over-budget snapshot must not be frozen')
+        async def record_low(self,*args):self.low.append(args)
+    async def run():
+        audit=Audit();bound=KnowledgeAnswers(Retrieval(),Gate(),audit).for_turn('c','t','问',None)
+        bound.set_budget(lambda payload:False)
+        result=await bound.query('问')
+        assert result['refused'] and result['reason_code']=='context_budget'
+        assert audit.low[0][3]=='generation'
+    asyncio.run(run())

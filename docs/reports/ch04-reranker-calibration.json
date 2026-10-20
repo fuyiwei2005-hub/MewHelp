@@ -1,0 +1,157 @@
+{
+  "model": "BAAI/bge-reranker-v2-m3",
+  "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+  "dataset_sha256": "12bc563328599467d88fcbab28eb174fb127123dd5998996c99d2d61b6b3ff7f",
+  "calibration_only": true,
+  "objective": "Preserve positive recall, then maximize balanced accuracy; final sufficiency gate handles uncertain evidence",
+  "cases": [
+    {
+      "case_id": "ch04-01",
+      "question": "QC-M100的基本参数是什么？",
+      "answerable": true,
+      "top_score": 0.997683846013168
+    },
+    {
+      "case_id": "ch04-07",
+      "question": "QC-M100脏了咋洗，能丢洗碗机里不？",
+      "answerable": true,
+      "top_score": 0.9987697512873577
+    },
+    {
+      "case_id": "ch04-13",
+      "question": "QC-M100的容量是多少？使用时有什么明确限制？",
+      "answerable": true,
+      "top_score": 0.9955659716903092
+    },
+    {
+      "case_id": "ch04-19",
+      "question": "QC-M100盒里有哪些配件，制造缺陷保障多久？",
+      "answerable": true,
+      "top_score": 0.9966575506729599
+    },
+    {
+      "case_id": "ch04-25",
+      "question": "QC-M100怎么清洗，支持洗碗机吗？",
+      "answerable": false,
+      "top_score": 0.970276439405937
+    },
+    {
+      "case_id": "ch04-31",
+      "question": "QC-Z999可以放洗碗机吗？",
+      "answerable": false,
+      "top_score": 0.8913454027062112
+    },
+    {
+      "case_id": "cal-policy-shipping",
+      "question": "普通快递的收费和包邮门槛分别是什么？",
+      "answerable": true,
+      "top_score": 0.7376752192336511
+    },
+    {
+      "case_id": "cal-policy-returns",
+      "question": "签收后未使用，申请退货需要满足哪些要求？",
+      "answerable": true,
+      "top_score": 0.9895779839612693
+    },
+    {
+      "case_id": "cal-policy-return-cost",
+      "question": "不是质量原因退回商品，寄回费用由谁承担？",
+      "answerable": true,
+      "top_score": 0.9914948755552249
+    },
+    {
+      "case_id": "cal-policy-hours",
+      "question": "几点可以找人工，晚上可以怎么办？",
+      "answerable": true,
+      "top_score": 0.632057351546314
+    },
+    {
+      "case_id": "cal-policy-invoice",
+      "question": "电子票据需要在哪里填写哪些资料？",
+      "answerable": true,
+      "top_score": 0.5575392206465586
+    },
+    {
+      "case_id": "cal-policy-unknown",
+      "question": "店铺会员积分兑换现金的比例是什么？",
+      "answerable": false,
+      "top_score": 1.88844395123874e-05
+    }
+  ],
+  "trials": [
+    {
+      "threshold": 0.05,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.1,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.2,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.3,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.4,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.5,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.6,
+      "balanced_accuracy": 0.611111111111111,
+      "true_positive_rate": 0.8888888888888888,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.7,
+      "balanced_accuracy": 0.5555555555555556,
+      "true_positive_rate": 0.7777777777777778,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.8,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 0.6666666666666666,
+      "true_negative_rate": 0.3333333333333333
+    },
+    {
+      "threshold": 0.9,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 0.6666666666666666,
+      "true_negative_rate": 0.6666666666666666
+    },
+    {
+      "threshold": 0.95,
+      "balanced_accuracy": 0.6666666666666666,
+      "true_positive_rate": 0.6666666666666666,
+      "true_negative_rate": 0.6666666666666666
+    },
+    {
+      "threshold": 0.99,
+      "balanced_accuracy": 0.7777777777777778,
+      "true_positive_rate": 0.5555555555555556,
+      "true_negative_rate": 1.0
+    }
+  ],
+  "selected_threshold": 0.5,
+  "note": "Sigmoid relevance score is not a calibrated probability; tiny demonstration set."
+}

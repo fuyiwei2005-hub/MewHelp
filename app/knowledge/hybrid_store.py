@@ -33,13 +33,25 @@ class HybridStore:
             details=self.client.describe_collection(self.collection)
             fields={f['name']:f for f in details['fields']}
             if not {'chunk_id','embedding','text','bm25_sparse','content_hash','product_category'}<=fields.keys():raise ValueError('Hybrid schema mismatch')
+            expected={'chunk_id':DataType.VARCHAR,'embedding':DataType.FLOAT_VECTOR,'text':DataType.VARCHAR,'bm25_sparse':DataType.SPARSE_FLOAT_VECTOR,'content_hash':DataType.VARCHAR,'product_category':DataType.VARCHAR}
+            if any(fields[name].get('type')!=kind for name,kind in expected.items()):raise ValueError('Hybrid field type mismatch')
+            if not fields['chunk_id'].get('is_primary'):raise ValueError('Hybrid primary key mismatch')
+            if any(int(fields[name].get('params',{}).get('max_length',0))<size for name,size in {'chunk_id':64,'text':65535,'content_hash':64,'product_category':64}.items()):raise ValueError('Hybrid field capacity mismatch')
             if fields['embedding'].get('params',{}).get('dim') not in (1024,'1024'):raise ValueError('Dense dimension mismatch')
             functions=details.get('functions',[])
-            if not any(f.get('name')=='text_bm25' and f.get('input_field_names')==['text'] and f.get('output_field_names')==['bm25_sparse'] for f in functions):raise ValueError('Missing native BM25 function')
+            if not any(f.get('name')=='text_bm25' and f.get('type')==FunctionType.BM25 and f.get('input_field_names')==['text'] and f.get('output_field_names')==['bm25_sparse'] for f in functions):raise ValueError('Missing native BM25 function')
             params=fields['text'].get('params',{})
             analyzer=params.get('analyzer_params',{})
             if isinstance(analyzer,str):analyzer=json.loads(analyzer)
             if analyzer.get('type')!='chinese':raise ValueError('Chinese analyzer required')
+            if str(params.get('enable_analyzer','')).lower()!='true':raise ValueError('Text analyzer must be enabled')
+            indexes={}
+            for name in self.client.list_indexes(self.collection):
+                item=self.client.describe_index(self.collection,name)
+                indexes[item['field_name']]=item
+            for field,metric,kind in [('embedding','COSINE','AUTOINDEX'),('bm25_sparse','BM25','SPARSE_INVERTED_INDEX')]:
+                item=indexes.get(field,{})
+                if item.get('metric_type')!=metric or item.get('index_type')!=kind:raise ValueError('Hybrid index metric/type mismatch')
             self.client.load_collection(self.collection)
         await asyncio.to_thread(setup)
 

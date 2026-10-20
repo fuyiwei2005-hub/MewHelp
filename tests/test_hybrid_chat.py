@@ -66,3 +66,30 @@ def test_startup_failure_closes_database(monkeypatch):
     with pytest.raises(RuntimeError,match='initialization failed'):
         with TestClient(create_app(cfg,gateway=object())):pass
     assert db.closed
+
+
+def test_hybrid_timeout_refuses_and_enters_system_pool(monkeypatch):
+    from app.services import ToolChatService
+    from app.knowledge.answers import KnowledgeAnswers
+    from app.tools import ToolExecutor,failure
+    class Repo:
+        async def exists(self,cid):return False
+        async def ensure_conversation(self,cid):pass
+        async def append_message(self,*args,**kw):pass
+        async def finish_turn(self,*args):pass
+    class Gateway:
+        async def decide(self,*args):return AIMessage(content='',tool_calls=[dict(name='query_faq',args={'keyword':'配送'},id='c',type='tool_call')])
+        async def final_stream(self,*args):raise AssertionError('System failure must refuse locally');yield
+    class Audit:
+        rows=[]
+        async def record_low(self,*args):self.rows.append(args)
+    async def unavailable(self,call):return failure('tool_unavailable','暂不可用')
+    monkeypatch.setattr(ToolExecutor,'execute',unavailable)
+    async def run():
+        audit=Audit();backend=KnowledgeAnswers(None,None,audit)
+        service=ToolChatService(Settings(_env_file=None,llm_model='fake',llm_api_key='test'),Repo(),Gateway(),backend)
+        turn=await service.prepare('配送多少钱',None)
+        frames=''.join([frame async for frame in service.events(turn)])
+        assert 'event: done' in frames and '暂时无法完成可靠查询' in frames
+        assert audit.rows[0][3:5]==('system_error','tool_unavailable')
+    asyncio.run(run())

@@ -1,0 +1,120 @@
+{
+  "model": "BAAI/bge-reranker-v2-m3",
+  "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+  "dataset_sha256": "ecf3cb41f638c091710ba365b2fd0baaca5112d8f02761be37f4856b45d7a310",
+  "calibration_only": true,
+  "cases": [
+    {
+      "case_id": "ch04-01",
+      "question": "QC-M100的基本参数是什么？",
+      "answerable": true,
+      "top_score": 0.9987474544216863
+    },
+    {
+      "case_id": "ch04-07",
+      "question": "QC-M100脏了咋洗，能丢洗碗机里不？",
+      "answerable": true,
+      "top_score": 0.9987697512873577
+    },
+    {
+      "case_id": "ch04-13",
+      "question": "QC-M100的容量是多少？使用时有什么明确限制？",
+      "answerable": true,
+      "top_score": 0.9953604468928451
+    },
+    {
+      "case_id": "ch04-19",
+      "question": "QC-M100盒里有哪些配件，制造缺陷保障多久？",
+      "answerable": true,
+      "top_score": 0.9966575506729599
+    },
+    {
+      "case_id": "ch04-25",
+      "question": "QC-M100怎么清洗，支持洗碗机吗？",
+      "answerable": false,
+      "top_score": 0.9760794605086403
+    },
+    {
+      "case_id": "ch04-31",
+      "question": "QC-Z999可以放洗碗机吗？",
+      "answerable": false,
+      "top_score": 0.8913454027062112
+    }
+  ],
+  "trials": [
+    {
+      "threshold": 0.05,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.1,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.2,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.3,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.4,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.5,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.6,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.7,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.8,
+      "balanced_accuracy": 0.5,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.0
+    },
+    {
+      "threshold": 0.9,
+      "balanced_accuracy": 0.75,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.5
+    },
+    {
+      "threshold": 0.95,
+      "balanced_accuracy": 0.75,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 0.5
+    },
+    {
+      "threshold": 0.99,
+      "balanced_accuracy": 1.0,
+      "true_positive_rate": 1.0,
+      "true_negative_rate": 1.0
+    }
+  ],
+  "selected_threshold": 0.99,
+  "note": "Sigmoid relevance score is not a calibrated probability; tiny demonstration set."
+}

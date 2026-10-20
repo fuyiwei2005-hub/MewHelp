@@ -73,7 +73,7 @@ def build_tools(ctx: ToolContext):
 
     @tool(args_schema=FAQArgs)
     async def query_faq(keyword: str)->dict:
-        """查询退货、运费、发票等店铺政策与常见问题。keyword使用用户原话的词或问题，不做同义改写。"""
+        """查询商品型号参数、使用、清洗、保修，以及退货、运费、发票等店铺政策与常见问题；这些知识问题应查询本工具。keyword使用用户原话的词或问题，不做同义改写。"""
         if keyword not in ctx.raw_question:
             return failure("nonliteral_keyword","请使用用户原话中的关键词查询。")
         if ctx.faq_backend is not None:
@@ -107,7 +107,9 @@ class ToolExecutor:
             return failure("invalid_arguments","工具参数无效，请补充正确信息。")
         context=getattr(self.tools,"context",None)
         if context:context.call_id=call["id"]
-        for attempt in range(1,self.attempts+1):
+        hybrid=name=="query_faq" and getattr(getattr(context,"faq_backend",None),"hybrid",False)
+        attempts=1 if hybrid else self.attempts
+        for attempt in range(1,attempts+1):
             try:
                 timeout=self.timeout
                 if name=="query_faq" and getattr(getattr(context,"faq_backend",None),"hybrid",False):timeout=max(timeout,300)
@@ -116,7 +118,7 @@ class ToolExecutor:
             except asyncio.CancelledError:raise
             except (TimeoutError,ConnectionError,OperationalError) as error:
                 retryable=not isinstance(error,OperationalError) or error.orig.args[0] in (1205,1213,2006,2013)
-                if not retryable or attempt==self.attempts:
+                if not retryable or attempt==attempts:
                     return failure("tool_unavailable","查询暂时无法完成，请稍后重试。")
                 if self.on_retry:await self.on_retry(name,attempt+1)
                 await asyncio.sleep(0.2)
