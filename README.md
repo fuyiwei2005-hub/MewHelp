@@ -156,7 +156,7 @@ docker compose -f compose.milvus.yaml up -d
 
 在 .env 设置 FAQ_BACKEND=dense 后重启聊天服务；浏览器问“邮费是多少”。Milvus 仅 dense COSINE Top-K；MySQL 回查原文及 hash/状态，服务故障不退回 LIKE。embedding_text 只包含 category、questions、answer。原文、元数据、向量同步状态存 knowledge_chunks。
 
-恢复演示：故意在 Milvus 写成功、MySQL 回填之前中断，随后原命令重跑；按 chunk 主键覆盖向量并补齐回填。
+恢复演示：先修改knowledge目录中的一份Markdown内容，产生新的待向量化块，再故意在Milvus写成功、MySQL回填之前中断，随后原命令重跑；按chunk主键覆盖向量并补齐回填。没有待处理块时不会触发该中断点。
 
 ~~~powershell
 .\.venv\Scripts\python -m scripts.ingest_knowledge --failpoint after_milvus_upsert
