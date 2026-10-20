@@ -52,4 +52,3 @@ async def embeddings(payload: EmbeddingRequest):
         try:vectors=await asyncio.to_thread(encode)
         except ValueError as error:raise HTTPException(413,str(error)) from None
     return {"object":"list","model":"BAAI/bge-m3","revision":app.state.revision,"data":[{"object":"embedding","index":i,"embedding":vector} for i,vector in enumerate(vectors)]}
-

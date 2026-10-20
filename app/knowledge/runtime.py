@@ -25,4 +25,3 @@ async def runtime(settings=None):
     finally:
         if vectors:await vectors.close()
         await db.close()
-

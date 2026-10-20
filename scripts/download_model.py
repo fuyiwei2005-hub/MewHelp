@@ -16,4 +16,3 @@ p=Path(".env");text=p.read_text(encoding="utf-8-sig")
 text=re.sub(r"^EMBEDDING_REVISION=.*\n?","",text,flags=re.M)
 p.write_text(text+"\nEMBEDDING_REVISION="+revision+"\n",encoding="utf-8")
 print("MODEL_READY "+str(path),flush=True)
-

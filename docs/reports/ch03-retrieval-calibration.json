@@ -1,87 +1,87 @@
-{
-  "model": "BAAI/bge-m3",
-  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
-  "cases": [
-    {
-      "question": "配送需要多少钱",
-      "expected": "8元",
-      "score": 0.7133759260177612,
-      "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
-      "answer": "【演示政策】普通配送运费8元，订单满99元包邮。"
-    },
-    {
-      "question": "签收后几天可以申请退货",
-      "expected": "7天",
-      "score": 0.802180290222168,
-      "chunk_id": "8ac330e71b38c53a2ec4a693608ebcc6c723672a56803cfd0c2992dd6880fc36",
-      "answer": "【演示政策】未使用商品可在签收后7天内申请退货。必须保留完整包装和购买凭证。"
-    },
-    {
-      "question": "如何申请发票",
-      "expected": "发票",
-      "score": 0.7340450286865234,
-      "chunk_id": "5dced2797c4c76df5ea9b18822587e845cef6438aa7e1971bf95ef88c739f3c8",
-      "answer": "【演示FAQ】订单完成后可在订单页面申请电子发票，填写抬头和接收邮箱即可。"
-    },
-    {
-      "question": "今天北京会下雨吗",
-      "expected": null,
-      "score": 0.42245858907699585,
-      "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
-      "answer": "【演示政策】普通配送支持中国大陆大部分地区。偏远地区是否支持配送需联系商家确认。"
-    },
-    {
-      "question": "Python快速排序怎么写",
-      "expected": null,
-      "score": 0.31634142994880676,
-      "chunk_id": "fa0c9810b2a5d76099d89ee569223bddc1b3b86ce66b85fd8a7c7d7b95fc9bfb",
-      "answer": "人工工单创建后状态为待处理。工单表示问题已登记，不代表退款、退货或换货已执行。"
-    },
-    {
-      "question": "世界上最高的山是哪座",
-      "expected": null,
-      "score": 0.2313762605190277,
-      "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
-      "answer": "【演示政策】普通配送支持中国大陆大部分地区。偏远地区是否支持配送需联系商家确认。"
-    }
-  ],
-  "metrics": [
-    {
-      "threshold": 0.35,
-      "correct": 5,
-      "total": 6
-    },
-    {
-      "threshold": 0.4,
-      "correct": 5,
-      "total": 6
-    },
-    {
-      "threshold": 0.45,
-      "correct": 6,
-      "total": 6
-    },
-    {
-      "threshold": 0.5,
-      "correct": 6,
-      "total": 6
-    },
-    {
-      "threshold": 0.55,
-      "correct": 6,
-      "total": 6
-    },
-    {
-      "threshold": 0.6,
-      "correct": 6,
-      "total": 6
-    },
-    {
-      "threshold": 0.65,
-      "correct": 6,
-      "total": 6
-    }
-  ],
-  "selected_threshold": 0.65,
-  "scope": "Small labeled calibration set, not production quality guarantee"
+{
+  "model": "BAAI/bge-m3",
+  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "cases": [
+    {
+      "question": "配送需要多少钱",
+      "expected": "8元",
+      "score": 0.7133759260177612,
+      "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
+      "answer": "【演示政策】普通配送运费8元，订单满99元包邮。"
+    },
+    {
+      "question": "签收后几天可以申请退货",
+      "expected": "7天",
+      "score": 0.802180290222168,
+      "chunk_id": "8ac330e71b38c53a2ec4a693608ebcc6c723672a56803cfd0c2992dd6880fc36",
+      "answer": "【演示政策】未使用商品可在签收后7天内申请退货。必须保留完整包装和购买凭证。"
+    },
+    {
+      "question": "如何申请发票",
+      "expected": "发票",
+      "score": 0.7340450286865234,
+      "chunk_id": "5dced2797c4c76df5ea9b18822587e845cef6438aa7e1971bf95ef88c739f3c8",
+      "answer": "【演示FAQ】订单完成后可在订单页面申请电子发票，填写抬头和接收邮箱即可。"
+    },
+    {
+      "question": "今天北京会下雨吗",
+      "expected": null,
+      "score": 0.42245858907699585,
+      "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
+      "answer": "【演示政策】普通配送支持中国大陆大部分地区。偏远地区是否支持配送需联系商家确认。"
+    },
+    {
+      "question": "Python快速排序怎么写",
+      "expected": null,
+      "score": 0.31634142994880676,
+      "chunk_id": "fa0c9810b2a5d76099d89ee569223bddc1b3b86ce66b85fd8a7c7d7b95fc9bfb",
+      "answer": "人工工单创建后状态为待处理。工单表示问题已登记，不代表退款、退货或换货已执行。"
+    },
+    {
+      "question": "世界上最高的山是哪座",
+      "expected": null,
+      "score": 0.2313762605190277,
+      "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
+      "answer": "【演示政策】普通配送支持中国大陆大部分地区。偏远地区是否支持配送需联系商家确认。"
+    }
+  ],
+  "metrics": [
+    {
+      "threshold": 0.35,
+      "correct": 5,
+      "total": 6
+    },
+    {
+      "threshold": 0.4,
+      "correct": 5,
+      "total": 6
+    },
+    {
+      "threshold": 0.45,
+      "correct": 6,
+      "total": 6
+    },
+    {
+      "threshold": 0.5,
+      "correct": 6,
+      "total": 6
+    },
+    {
+      "threshold": 0.55,
+      "correct": 6,
+      "total": 6
+    },
+    {
+      "threshold": 0.6,
+      "correct": 6,
+      "total": 6
+    },
+    {
+      "threshold": 0.65,
+      "correct": 6,
+      "total": 6
+    }
+  ],
+  "selected_threshold": 0.65,
+  "scope": "Small labeled calibration set, not production quality guarantee"
 }

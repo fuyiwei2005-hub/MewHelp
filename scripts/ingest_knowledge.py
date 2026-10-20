@@ -31,4 +31,3 @@ if __name__=="__main__":
     parser.add_argument("--failpoint",choices=["after_mysql_commit","after_milvus_upsert"])
     args=parser.parse_args()
     asyncio.run(ingest(args.folder,args.failpoint))
-

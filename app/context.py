@@ -27,4 +27,3 @@ def prepare_messages(system: str, history: list[BaseMessage], user: str,
     while estimate_tokens([first, *kept, last]) > input_budget:
         del kept[:2]
     return [first, *kept, last]
-

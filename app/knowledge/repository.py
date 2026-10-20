@@ -74,4 +74,3 @@ class KnowledgeRepository:
         async with self.db.sessions() as s:
             rows=(await s.scalars(select(KnowledgeChunk).where(KnowledgeChunk.id.in_(ids),KnowledgeChunk.is_active==True,KnowledgeChunk.embedding_status=="embedded",KnowledgeChunk.embedding_revision==revision))).all()
             return {row.id:row for row in rows}
-

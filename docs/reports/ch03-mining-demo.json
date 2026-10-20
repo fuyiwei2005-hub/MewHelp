@@ -1,50 +1,50 @@
-{
-  "scope": "exact synthetic seed only",
-  "stages": [
-    {
-      "status": "published",
-      "questions": [
-        "退货期限是多久？"
-      ],
-      "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
-      "evidence": [
-        {
-          "quote": "演示店铺未使用商品可在签收后7天内申请退货。",
-          "message_id": 2
-        }
-      ]
-    }
-  ],
-  "chunks": [
-    {
-      "id": "262ba41f52f02289400e9b5fe6e5954180034392f47b7ab2fbe1ffde27034524",
-      "questions": [
-        "退货期限是多久？"
-      ],
-      "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
-      "status": "pending"
-    }
-  ],
-  "jobs": [
-    {
-      "phase": "completed",
-      "cursor": 2,
-      "cutoff": 34,
-      "statistics": {
-        "conflicts": 0,
-        "published": 1,
-        "duplicates": 0
-      }
-    },
-    {
-      "phase": "completed",
-      "cursor": 34,
-      "cutoff": 34,
-      "statistics": {
-        "conflicts": 0,
-        "published": 0,
-        "duplicates": 0
-      }
-    }
-  ]
+{
+  "scope": "exact synthetic seed only",
+  "stages": [
+    {
+      "status": "published",
+      "questions": [
+        "退货期限是多久？"
+      ],
+      "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
+      "evidence": [
+        {
+          "quote": "演示店铺未使用商品可在签收后7天内申请退货。",
+          "message_id": 2
+        }
+      ]
+    }
+  ],
+  "chunks": [
+    {
+      "id": "262ba41f52f02289400e9b5fe6e5954180034392f47b7ab2fbe1ffde27034524",
+      "questions": [
+        "退货期限是多久？"
+      ],
+      "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
+      "status": "pending"
+    }
+  ],
+  "jobs": [
+    {
+      "phase": "completed",
+      "cursor": 2,
+      "cutoff": 34,
+      "statistics": {
+        "conflicts": 0,
+        "published": 1,
+        "duplicates": 0
+      }
+    },
+    {
+      "phase": "completed",
+      "cursor": 34,
+      "cutoff": 34,
+      "statistics": {
+        "conflicts": 0,
+        "published": 0,
+        "duplicates": 0
+      }
+    }
+  ]
 }

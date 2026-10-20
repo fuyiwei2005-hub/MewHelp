@@ -174,4 +174,3 @@ class ToolResponse(StreamingResponse):
             with anyio.CancelScope(shield=True):
                 with suppress(Exception):await self.body_iterator.aclose()
             self.service.release(self.turn)
-

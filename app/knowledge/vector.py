@@ -30,4 +30,3 @@ class VectorStore:
 
     async def close(self):
         await asyncio.to_thread(self.client.close)
-

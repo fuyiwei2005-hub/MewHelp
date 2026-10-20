@@ -50,4 +50,3 @@ class Settings(BaseSettings):
     @property
     def input_budget(self) -> int:
         return self.token_budget - self.max_output_tokens - self.token_margin
-

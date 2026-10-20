@@ -141,4 +141,3 @@ def split_markdown(source_id,text,max_chars=600,overlap=80):
             critical=any(term in answer for term in ("必须","不得","例外","不支持","key-clause"))
             chunks.append(Chunk(key,source_id,category,questions,answer,path,ctype,critical))
     return [replace(c,prev_chunk_id=chunks[i-1].id if i else None,next_chunk_id=chunks[i+1].id if i+1<len(chunks) else None) for i,c in enumerate(chunks)]
-

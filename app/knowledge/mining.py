@@ -169,4 +169,3 @@ class MiningService:
             stats={"published":published,"duplicates":sum(r.status=="duplicate" for r in stages),"conflicts":len(conflicts)}
             job=await s.get(KnowledgeJob,run_id);job.phase="completed";job.statistics=stats
             return {"run_id":run_id,**stats}
-

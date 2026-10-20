@@ -25,4 +25,3 @@ class KnowledgePipeline:
                 for row,id in zip(batch,returned,strict=True):
                     completed+=int(await self.repo.mark_embedded(row.id,row.content_hash,id,self.revision))
         return {"processed":len(pending),"embedded":completed}
-

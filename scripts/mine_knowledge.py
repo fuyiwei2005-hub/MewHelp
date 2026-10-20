@@ -51,4 +51,3 @@ if __name__=="__main__":
     if args.batch_size<1:parser.error("batch-size must be positive")
     if args.watch or args.show_schedule:scheduler(args.batch_size,args.run_now,args.show_schedule,args.demo_only,args.no_sync)
     else:asyncio.run(once(args.batch_size,args.demo_only,args.no_sync))
-

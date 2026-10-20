@@ -26,4 +26,3 @@ class Embedder:
         if any(len(v)!=1024 or not all(isinstance(x,(int,float)) and math.isfinite(x) for x in v) for v in vectors):
             raise ValueError("Invalid dense embedding")
         return vectors
-

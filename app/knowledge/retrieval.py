@@ -21,4 +21,3 @@ class DenseRetriever:
             return {"ok":True,"matches":matches}
         except Exception:
             return failure("knowledge_unavailable","知识库暂时无法查询，请稍后重试。")
-
