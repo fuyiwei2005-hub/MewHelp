@@ -1,108 +1,108 @@
-{
-  "model": "BAAI/bge-m3",
-  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
-  "cases": [
-    {
-      "question": "邮费是多少",
-      "expected": "8元",
-      "passed": true,
-      "result": {
-        "ok": true,
-        "matches": [
-          {
-            "question": "运费规则",
-            "answer": "【演示政策】普通配送运费8元，订单满99元包邮。",
-            "category": "配送政策"
-          }
-        ]
-      },
-      "vector_hits": [
-        {
-          "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
-          "score": 0.6981414556503296,
-          "content_hash": "64100a47773dd5f46d06e7c9f2b7b88e73bad2fd785d0a36690e816087c38f4f"
-        },
-        {
-          "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
-          "score": 0.5472514033317566,
-          "content_hash": "ecb772c7ebb9867b1cb6bb6b94f9b5ae7b5ef26567a33ecbe9a75e68bb353428"
-        },
-        {
-          "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
-          "score": 0.4912659525871277,
-          "content_hash": "5efca4a5b218afdeda01dc988ea1114ac4a7a338f6f6a30904f209d1934637dc"
-        }
-      ]
-    },
-    {
-      "question": "买满多少免运费",
-      "expected": "99",
-      "passed": true,
-      "result": {
-        "ok": true,
-        "matches": [
-          {
-            "question": "运费规则",
-            "answer": "【演示政策】普通配送运费8元，订单满99元包邮。",
-            "category": "配送政策"
-          }
-        ]
-      },
-      "vector_hits": [
-        {
-          "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
-          "score": 0.6831930875778198,
-          "content_hash": "64100a47773dd5f46d06e7c9f2b7b88e73bad2fd785d0a36690e816087c38f4f"
-        },
-        {
-          "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
-          "score": 0.5598065257072449,
-          "content_hash": "5efca4a5b218afdeda01dc988ea1114ac4a7a338f6f6a30904f209d1934637dc"
-        },
-        {
-          "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
-          "score": 0.5524308085441589,
-          "content_hash": "ecb772c7ebb9867b1cb6bb6b94f9b5ae7b5ef26567a33ecbe9a75e68bb353428"
-        }
-      ]
-    },
-    {
-      "question": "退货期限是多久",
-      "expected": "7天",
-      "passed": true,
-      "result": {
-        "ok": true,
-        "matches": [
-          {
-            "question": "退货期限是多久？",
-            "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
-            "category": "售后"
-          },
-          {
-            "question": "退货条件",
-            "answer": "【演示政策】未使用商品可在签收后7天内申请退货。必须保留完整包装和购买凭证。",
-            "category": "售后政策"
-          }
-        ]
-      },
-      "vector_hits": [
-        {
-          "chunk_id": "262ba41f52f02289400e9b5fe6e5954180034392f47b7ab2fbe1ffde27034524",
-          "score": 0.7586524486541748,
-          "content_hash": "15cb09da784cc04bdc50fd04bc1ab9bee5a926290bab8cccff2badd975514203"
-        },
-        {
-          "chunk_id": "1375de60059755532ed9c57020320176d5e9ac9e4e3e7a0f18aa0169b51578b7",
-          "score": 0.7483094334602356,
-          "content_hash": "a49dc20230dd6724c9dae53ed9318a56bb27bb177de1d5a8210c066b9c28963a"
-        },
-        {
-          "chunk_id": "8ac330e71b38c53a2ec4a693608ebcc6c723672a56803cfd0c2992dd6880fc36",
-          "score": 0.7483094334602356,
-          "content_hash": "a49dc20230dd6724c9dae53ed9318a56bb27bb177de1d5a8210c066b9c28963a"
-        }
-      ]
-    }
-  ],
-  "pending": 0
+{
+  "model": "BAAI/bge-m3",
+  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "cases": [
+    {
+      "question": "邮费是多少",
+      "expected": "8元",
+      "passed": true,
+      "result": {
+        "ok": true,
+        "matches": [
+          {
+            "question": "运费规则",
+            "answer": "【演示政策】普通配送运费8元，订单满99元包邮。",
+            "category": "配送政策"
+          }
+        ]
+      },
+      "vector_hits": [
+        {
+          "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
+          "score": 0.6981414556503296,
+          "content_hash": "64100a47773dd5f46d06e7c9f2b7b88e73bad2fd785d0a36690e816087c38f4f"
+        },
+        {
+          "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
+          "score": 0.5472514033317566,
+          "content_hash": "ecb772c7ebb9867b1cb6bb6b94f9b5ae7b5ef26567a33ecbe9a75e68bb353428"
+        },
+        {
+          "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
+          "score": 0.4912659525871277,
+          "content_hash": "5efca4a5b218afdeda01dc988ea1114ac4a7a338f6f6a30904f209d1934637dc"
+        }
+      ]
+    },
+    {
+      "question": "买满多少免运费",
+      "expected": "99",
+      "passed": true,
+      "result": {
+        "ok": true,
+        "matches": [
+          {
+            "question": "运费规则",
+            "answer": "【演示政策】普通配送运费8元，订单满99元包邮。",
+            "category": "配送政策"
+          }
+        ]
+      },
+      "vector_hits": [
+        {
+          "chunk_id": "cd137085e18b5d78c5d1ad84a75c5a1e6861a94e5cc1f2d281716a5555f39e74",
+          "score": 0.6831930875778198,
+          "content_hash": "64100a47773dd5f46d06e7c9f2b7b88e73bad2fd785d0a36690e816087c38f4f"
+        },
+        {
+          "chunk_id": "7759af136f43c6f05fa48a1b3738afcbd650135199db21174719580b0cf43747",
+          "score": 0.5598065257072449,
+          "content_hash": "5efca4a5b218afdeda01dc988ea1114ac4a7a338f6f6a30904f209d1934637dc"
+        },
+        {
+          "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
+          "score": 0.5524308085441589,
+          "content_hash": "ecb772c7ebb9867b1cb6bb6b94f9b5ae7b5ef26567a33ecbe9a75e68bb353428"
+        }
+      ]
+    },
+    {
+      "question": "退货期限是多久",
+      "expected": "7天",
+      "passed": true,
+      "result": {
+        "ok": true,
+        "matches": [
+          {
+            "question": "退货期限是多久？",
+            "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
+            "category": "售后"
+          },
+          {
+            "question": "退货条件",
+            "answer": "【演示政策】未使用商品可在签收后7天内申请退货。必须保留完整包装和购买凭证。",
+            "category": "售后政策"
+          }
+        ]
+      },
+      "vector_hits": [
+        {
+          "chunk_id": "262ba41f52f02289400e9b5fe6e5954180034392f47b7ab2fbe1ffde27034524",
+          "score": 0.7586524486541748,
+          "content_hash": "15cb09da784cc04bdc50fd04bc1ab9bee5a926290bab8cccff2badd975514203"
+        },
+        {
+          "chunk_id": "1375de60059755532ed9c57020320176d5e9ac9e4e3e7a0f18aa0169b51578b7",
+          "score": 0.7483094334602356,
+          "content_hash": "a49dc20230dd6724c9dae53ed9318a56bb27bb177de1d5a8210c066b9c28963a"
+        },
+        {
+          "chunk_id": "8ac330e71b38c53a2ec4a693608ebcc6c723672a56803cfd0c2992dd6880fc36",
+          "score": 0.7483094334602356,
+          "content_hash": "a49dc20230dd6724c9dae53ed9318a56bb27bb177de1d5a8210c066b9c28963a"
+        }
+      ]
+    }
+  ],
+  "pending": 0
 }
