@@ -1,0 +1,32 @@
+{
+  "scope": "Real browser against upstream LLM, MySQL, Milvus, BGE and official PG checkpointer; no route mocks",
+  "ticketCid": "481ee756d26c40a9a92a67d36a0e4973",
+  "refundCid": "de0111fd97ba47cc9fde63f98042eea3",
+  "writes": [
+    {
+      "conversation_id": "481ee756d26c40a9a92a67d36a0e4973",
+      "kind": "ticket",
+      "reason": null,
+      "confirmed": true
+    },
+    {
+      "conversation_id": "de0111fd97ba47cc9fde63f98042eea3",
+      "kind": "refund",
+      "reason": "不想要了",
+      "confirmed": true
+    }
+  ],
+  "source": "售后政策 / 退货条件",
+  "errors": [],
+  "streams": [],
+  "database_counts": {
+    "complaint": {
+      "tickets": 1,
+      "refunds": 0
+    },
+    "refund": {
+      "tickets": 0,
+      "refunds": 1
+    }
+  }
+}

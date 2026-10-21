@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-21",
+  "pytest": {
+    "passed": 137,
+    "failed": 0,
+    "seconds": 17.52,
+    "command": "python -m pytest -q --basetemp artifacts/pytest-ch06-final-verified"
+  },
+  "pip_check": "No broken requirements found.",
+  "real_workflow_checks": "7/7",
+  "language": {
+    "test_cases": 18,
+    "json_parse": 18,
+    "intent": 18,
+    "reference": 18
+  },
+  "gate_evaluation": "2/3; conservative refusal of used-15-day example retained",
+  "restart": "3/3",
+  "browser": {
+    "js_errors": 0,
+    "confirmed_write_requests": 2,
+    "complaint_tickets": 1,
+    "complaint_refunds": 0,
+    "refund_tickets": 0,
+    "refund_applications": 1
+  },
+  "review": "No remaining Critical/Important after six Important findings fixed; frontend excluded",
+  "delivery": "http://127.0.0.1:18000"
+}

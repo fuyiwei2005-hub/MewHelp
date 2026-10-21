@@ -118,3 +118,31 @@ def test_durable_interrupt_can_resume_after_crash_before_mysql_paused_audit():
         body=''.join([x async for x in service.events(resumed)]);await service.release(resumed)
         assert 'event: done' in body
     asyncio.run(run())
+
+
+def test_disconnect_immediately_after_meta_is_audited_cancelled():
+    import asyncio
+    from app.workflow.service import WorkflowService
+    async def run():
+        d=deps();business=Business();d.business_repo=business
+        service=WorkflowService(d.cfg,business,d.gateway,None,InMemorySaver(),deps=d,lock_factory=lock)
+        turn=await service.prepare('你好');stream=service.events(turn)
+        assert 'event: meta' in await anext(stream)
+        await stream.aclose();await service.release(turn)
+        assert (await d.repo.run(turn.cid,turn.tid))['status']=='cancelled'
+    asyncio.run(run())
+
+
+def test_immediate_disconnect_of_next_turn_does_not_cancel_previous_completed_turn():
+    import asyncio
+    from app.workflow.service import WorkflowService
+    async def run():
+        d=deps();business=Business();d.business_repo=business
+        service=WorkflowService(d.cfg,business,d.gateway,None,InMemorySaver(),deps=d,lock_factory=lock)
+        previous=await service.prepare('你好');body=''.join([x async for x in service.events(previous)]);await service.release(previous)
+        assert 'event: done' in body
+        turn=await service.prepare('谢谢',previous.cid);stream=service.events(turn)
+        await anext(stream);await stream.aclose();await service.release(turn)
+        assert (await d.repo.run(previous.cid,previous.tid))['status']=='completed'
+        assert (await d.repo.run(turn.cid,turn.tid))['status']=='cancelled'
+    asyncio.run(run())

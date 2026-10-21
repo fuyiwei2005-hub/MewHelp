@@ -98,8 +98,8 @@ class WorkflowService:
 
     async def events(self,turn):
         finished=False;terminal='cancelled';stream=None;task=None
-        yield event('meta',{'conversation_id':turn.cid,'turn_id':turn.tid})
         try:
+            yield event('meta',{'conversation_id':turn.cid,'turn_id':turn.tid})
             if turn.replay is not None:
                 if turn.replay.get('citations'):yield event('citations',{'items':turn.replay['citations']})
                 yield event('token',{'text':turn.replay.get('answer','')})
@@ -142,7 +142,7 @@ class WorkflowService:
                 if not finished:
                     with suppress(Exception):
                         snapshot=await self.graph.aget_state(self.config(turn.cid))
-                        await self.deps.repo.audit(snapshot.values or turn.initial,terminal)
+                        await self.deps.repo.audit(snapshot.values if snapshot.values.get('turn_id')==turn.tid else turn.initial,terminal)
 
     async def action(self,cid,offer_id,kind,reason=None):
         if not await self.business.exists(cid):raise HTTPException(404,'会话不存在。')

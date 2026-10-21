@@ -1,0 +1,6 @@
+{
+  "scope": "UI fixture only, not real model or checkpoint acceptance",
+  "writes": 2,
+  "selections": 1,
+  "errors": []
+}

@@ -1,0 +1,1013 @@
+{
+  "stopped_pid": 39620,
+  "before": {
+    "frames": [
+      {
+        "event": "meta",
+        "data": {
+          "conversation_id": "159cdbca90a74d50891ab39960334fbf",
+          "turn_id": "ec58e05b6bee41999aee1aecda97b98b"
+        },
+        "seconds": 0.11
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "normalize"
+        },
+        "seconds": 0.129
+      },
+      {
+        "event": "normalization",
+        "data": {
+          "original": "这个能退吗",
+          "resolved": "这个能退吗",
+          "retrieval_query": "这个能退吗"
+        },
+        "seconds": 0.777
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "intent"
+        },
+        "seconds": 0.782
+      },
+      {
+        "event": "intent",
+        "data": {
+          "intent": "退款退货",
+          "confidence": 0.95
+        },
+        "seconds": 1.38
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "select_order"
+        },
+        "seconds": 1.382
+      },
+      {
+        "event": "order_selection",
+        "data": {
+          "type": "order_selection",
+          "selection_id": "850f86eaf18264a26b28bd4251a01dbeb862d5bce3da509cd863d2225e430d0c",
+          "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+          "orders": [
+            {
+              "ok": true,
+              "demo": true,
+              "amount": 99,
+              "status": "已签收",
+              "product": "陶瓷杯",
+              "order_id": "1001",
+              "condition": "未知，需以用户确认和平台核验为准",
+              "ordered_at": "2026-10-17T01:37:44.116381+00:00",
+              "delivered_at": "2026-10-19T01:37:44.116381+00:00",
+              "product_category": "陶瓷杯"
+            },
+            {
+              "ok": true,
+              "demo": true,
+              "amount": 59,
+              "status": "已支付",
+              "product": "陶瓷杯",
+              "order_id": "1002",
+              "condition": "未知，需以用户确认和平台核验为准",
+              "ordered_at": "2026-10-19T01:37:44.116381+00:00",
+              "delivered_at": null,
+              "product_category": "陶瓷杯"
+            },
+            {
+              "ok": true,
+              "demo": true,
+              "amount": 129,
+              "status": "已签收",
+              "product": "陶瓷杯",
+              "order_id": "1003",
+              "condition": "未知，需以用户确认和平台核验为准",
+              "ordered_at": "2026-10-04T01:37:44.116381+00:00",
+              "delivered_at": "2026-10-06T01:37:44.116381+00:00",
+              "product_category": "陶瓷杯"
+            }
+          ],
+          "message": "请选择本次申请对应的演示订单。"
+        },
+        "seconds": 1.418
+      },
+      {
+        "event": "paused",
+        "data": {
+          "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+          "reason": "order_selection"
+        },
+        "seconds": 1.418
+      }
+    ],
+    "text": "",
+    "meta": {
+      "conversation_id": "159cdbca90a74d50891ab39960334fbf",
+      "turn_id": "ec58e05b6bee41999aee1aecda97b98b"
+    },
+    "nodes": [
+      "normalize",
+      "intent",
+      "select_order"
+    ],
+    "tools": []
+  },
+  "restored_state": {
+    "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+    "status": "paused",
+    "actions": [],
+    "order_selection": {
+      "type": "order_selection",
+      "selection_id": "850f86eaf18264a26b28bd4251a01dbeb862d5bce3da509cd863d2225e430d0c",
+      "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+      "orders": [
+        {
+          "ok": true,
+          "demo": true,
+          "amount": 99,
+          "status": "已签收",
+          "product": "陶瓷杯",
+          "order_id": "1001",
+          "condition": "未知，需以用户确认和平台核验为准",
+          "ordered_at": "2026-10-17T01:37:44.116381+00:00",
+          "delivered_at": "2026-10-19T01:37:44.116381+00:00",
+          "product_category": "陶瓷杯"
+        },
+        {
+          "ok": true,
+          "demo": true,
+          "amount": 59,
+          "status": "已支付",
+          "product": "陶瓷杯",
+          "order_id": "1002",
+          "condition": "未知，需以用户确认和平台核验为准",
+          "ordered_at": "2026-10-19T01:37:44.116381+00:00",
+          "delivered_at": null,
+          "product_category": "陶瓷杯"
+        },
+        {
+          "ok": true,
+          "demo": true,
+          "amount": 129,
+          "status": "已签收",
+          "product": "陶瓷杯",
+          "order_id": "1003",
+          "condition": "未知，需以用户确认和平台核验为准",
+          "ordered_at": "2026-10-04T01:37:44.116381+00:00",
+          "delivered_at": "2026-10-06T01:37:44.116381+00:00",
+          "product_category": "陶瓷杯"
+        }
+      ],
+      "message": "请选择本次申请对应的演示订单。"
+    }
+  },
+  "after": {
+    "frames": [
+      {
+        "event": "meta",
+        "data": {
+          "conversation_id": "159cdbca90a74d50891ab39960334fbf",
+          "turn_id": "ec58e05b6bee41999aee1aecda97b98b"
+        },
+        "seconds": 0.229
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "select_order"
+        },
+        "seconds": 0.282
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "query_order",
+          "order_id": "1001"
+        },
+        "seconds": 0.36
+      },
+      {
+        "event": "tool_start",
+        "data": {
+          "name": "query_order",
+          "label": "查询订单",
+          "tool_call_id": "order-ec58e05b6bee41999aee1aecda97b98b"
+        },
+        "seconds": 0.361
+      },
+      {
+        "event": "tool_end",
+        "data": {
+          "name": "query_order",
+          "tool_call_id": "order-ec58e05b6bee41999aee1aecda97b98b",
+          "status": "completed"
+        },
+        "seconds": 0.368
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "expand"
+        },
+        "seconds": 0.458
+      },
+      {
+        "event": "queries",
+        "data": {
+          "queries": [
+            "已签收商品申请退货退款的资格条件和期限要求是什么",
+            "陶瓷杯类商品退款是否有例外条件或特殊规定",
+            "已签收订单退款如何申请，退货运费由谁承担"
+          ]
+        },
+        "seconds": 1.526
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "retrieve",
+          "expanded": true
+        },
+        "seconds": 1.545
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "confidence_gate"
+        },
+        "seconds": 47.426
+      },
+      {
+        "event": "gate",
+        "data": {
+          "sufficient": true,
+          "reason": "证据明确给出了退货期限（签收后7天内）、商品状态条件（未使用、保留完整包装）、凭证要求（购买凭证）、运费承担区分（质量/非质量问题）以及破损情形下的凭证与核实条件，足以列出相关政策条件并供用户确认。订单是否最终符合由主Agent判断。",
+          "evidence_ids": [
+            1,
+            2,
+            5,
+            6
+          ]
+        },
+        "seconds": 49.312
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_decide",
+          "step": 1
+        },
+        "seconds": 49.36
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_final"
+        },
+        "seconds": 49.811
+      },
+      {
+        "event": "citations",
+        "data": {
+          "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+          "items": [
+            {
+              "number": 1,
+              "chunk_id": "8ac330e71b38c53a2ec4a693608ebcc6c723672a56803cfd0c2992dd6880fc36",
+              "section_path": "售后政策 / 退货条件",
+              "url": "/knowledge/sources/ec58e05b6bee41999aee1aecda97b98b/1"
+            },
+            {
+              "number": 5,
+              "chunk_id": "b18227a1f0247a4d97461c4d5a5670ec8e92ce261f8a213a084ff1e22f482dc9",
+              "section_path": "售后手册 / 商品破损处理",
+              "url": "/knowledge/sources/ec58e05b6bee41999aee1aecda97b98b/5"
+            },
+            {
+              "number": 6,
+              "chunk_id": "fa0c9810b2a5d76099d89ee569223bddc1b3b86ce66b85fd8a7c7d7b95fc9bfb",
+              "section_path": "售后手册 / 人工工单",
+              "url": "/knowledge/sources/ec58e05b6bee41999aee1aecda97b98b/6"
+            },
+            {
+              "number": 2,
+              "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
+              "section_path": "售后政策 / 退货运输费用",
+              "url": "/knowledge/sources/ec58e05b6bee41999aee1aecda97b98b/2"
+            }
+          ]
+        },
+        "seconds": 49.811
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "订单"
+        },
+        "seconds": 50.687
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "100"
+        },
+        "seconds": 50.687
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "1"
+        },
+        "seconds": 50.687
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "（"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "陶瓷"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "杯"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "99"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "元"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "）"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "目前"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "为"
+        },
+        "seconds": 50.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "已"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "签"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "收"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "签"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "收"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "后"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "2"
+        },
+        "seconds": 50.689
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "天"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "。"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "按"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "【"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "演示"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "政策"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "】，"
+        },
+        "seconds": 50.69
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "未"
+        },
+        "seconds": 50.691
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "使用"
+        },
+        "seconds": 50.691
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "商品"
+        },
+        "seconds": 50.691
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "可在"
+        },
+        "seconds": 50.691
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "签"
+        },
+        "seconds": 50.692
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "收"
+        },
+        "seconds": 50.692
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "后"
+        },
+        "seconds": 50.692
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "7"
+        },
+        "seconds": 50.692
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "天内"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "申请"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "退货"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "并"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "需"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "保留"
+        },
+        "seconds": 50.693
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "完整"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "包装"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "和"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "购买"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "凭证"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "["
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "1"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "]"
+        },
+        "seconds": 50.694
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "。"
+        },
+        "seconds": 50.891
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "由于"
+        },
+        "seconds": 50.892
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "商品"
+        },
+        "seconds": 50.893
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "状态"
+        },
+        "seconds": 50.893
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "未知"
+        },
+        "seconds": 50.893
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.894
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "需"
+        },
+        "seconds": 50.894
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "以"
+        },
+        "seconds": 50.894
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "你的"
+        },
+        "seconds": 50.895
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "确认"
+        },
+        "seconds": 50.895
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "和"
+        },
+        "seconds": 50.895
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "平台"
+        },
+        "seconds": 50.895
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "核"
+        },
+        "seconds": 50.895
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "验"
+        },
+        "seconds": 50.895
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "为准"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "无法"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "承诺"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "审核"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "结果"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "；"
+        },
+        "seconds": 50.896
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "若"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "为"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "质量问题"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "退"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "货运"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "费"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "由"
+        },
+        "seconds": 50.897
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "商家"
+        },
+        "seconds": 50.898
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "承担"
+        },
+        "seconds": 50.898
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 50.899
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "非"
+        },
+        "seconds": 50.899
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "质量问题"
+        },
+        "seconds": 50.899
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "由"
+        },
+        "seconds": 50.9
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "你"
+        },
+        "seconds": 50.9
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "承担"
+        },
+        "seconds": 50.9
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "["
+        },
+        "seconds": 50.901
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "2"
+        },
+        "seconds": 50.901
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "]"
+        },
+        "seconds": 50.901
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "。"
+        },
+        "seconds": 50.901
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "log"
+        },
+        "seconds": 50.906
+      },
+      {
+        "event": "actions",
+        "data": {
+          "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+          "items": [
+            {
+              "id": "b2c7fe265b316fe436d1c3e130d7c0d500b7242583dd06218bd533c03ff6fee5",
+              "turn_id": "ec58e05b6bee41999aee1aecda97b98b",
+              "kind": "refund",
+              "payload": {
+                "order_id": "1001",
+                "question": "这个能退吗",
+                "reasons": [
+                  "不想要了",
+                  "质量问题",
+                  "运输破损",
+                  "发错商品",
+                  "少件漏发",
+                  "其他"
+                ],
+                "demo": true
+              },
+              "status": "pending",
+              "result": null
+            }
+          ]
+        },
+        "seconds": 50.967
+      },
+      {
+        "event": "done",
+        "data": {
+          "conversation_id": "159cdbca90a74d50891ab39960334fbf",
+          "finish_reason": "stop"
+        },
+        "seconds": 50.979
+      }
+    ],
+    "text": "订单1001（陶瓷杯，99元）目前为已签收，签收后2天。按【演示政策】，未使用商品可在签收后7天内申请退货，并需保留完整包装和购买凭证[1]。由于商品状态未知，需以你的确认和平台核验为准，无法承诺审核结果；若为质量问题，退货运费由商家承担，非质量问题由你承担[2]。",
+    "meta": {
+      "conversation_id": "159cdbca90a74d50891ab39960334fbf",
+      "turn_id": "ec58e05b6bee41999aee1aecda97b98b"
+    },
+    "nodes": [
+      "select_order",
+      "query_order",
+      "expand",
+      "retrieve",
+      "confidence_gate",
+      "agent_decide",
+      "agent_final",
+      "log"
+    ],
+    "tools": [
+      "query_order"
+    ]
+  },
+  "checks": {
+    "saved_card_restored": true,
+    "completed": true,
+    "order_then_agent": true
+  }
+}

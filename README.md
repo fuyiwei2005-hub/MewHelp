@@ -220,3 +220,36 @@ curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch04-chat-
 四策略各在相同30条测试题上运行，另12条校准题独立（含6条通用政策题）；固定语料63个商品章节。报告包含Recall@10/50、MRR@10、原子声明Faithfulness、回答覆盖率、拒答率、错误与逐桶结果。拒答不计Faithfulness满分，判定失败保留。断点续跑要求相同语料、品类、索引状态、预算、模型和实现版本；变化时另给--output。保留早期失败报告作为返工证据，不当作最终报告。
 
 知识回答按引用单元验证后输出原始模型片段；不合法或无引用事实不发送，因此首段会等待一个完整引用单元。先进行证据充分性自评，最终实际payload超预算则整块裁掉低排名证据并重新自评；不足时拒答并写low_confidence_questions，原文/会话/入口/原因/时间可追查。真实验收数字与限制见docs/reports/ch04-validation.md，阶段记录dev-notes/ch04.md。
+
+
+## 第五、六章：持久化Workflow与正式分流
+
+先运行第二至四章的MySQL、Milvus、BGE-M3（18001）、bge-reranker-v2-m3（18002）并完成既有索引，`.env`使用`FAQ_BACKEND=hybrid`。新增检查点配置见`.env.example`，密码与连接串必须一致。业务记录仍在MySQL，独立PostgreSQL仅保存LangGraph检查点及同会话锁。
+
+```powershell
+docker compose -f compose.checkpoint.yaml up -d
+.\.venv\Scripts\python -m scripts.init_workflow
+.\.venv\Scripts\python -m scripts.serve_workflow --port 18000
+```
+
+Windows使用上述专用启动器，确保psycopg异步使用Selector事件循环。Compose默认官方`postgres:16-alpine`；本机下载缓慢，实际验收用已缓存的`CHECKPOINT_IMAGE=pgvector/pgvector:pg16`创建全新独立实例与卷，只使用PostgreSQL16，不启用扩展或连接其他项目实例。旧的一轮Function Calling模式仍可通过原`app.main:app`入口回归，专用Workflow启动器会显式开启新流程。
+
+```powershell
+# 祛魅：不使用LangGraph的Python裸循环
+.\.venv\Scripts\python -m scripts.bare_agent
+# 实际SSE：物流、强制政策检索、多步ReAct、投诉选择、退款选单
+curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch05-logistics.json" http://127.0.0.1:18000/chat
+curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch05-policy.json" http://127.0.0.1:18000/chat
+curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch05-complex.json" http://127.0.0.1:18000/chat
+curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch05-complaint.json" http://127.0.0.1:18000/chat
+curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch06-refund.json" http://127.0.0.1:18000/chat
+# 真实整体验收与正式意图/指代标注评估
+.\.venv\Scripts\python -m scripts.acceptance_workflow --base-url http://127.0.0.1:18000
+.\.venv\Scripts\python -m scripts.evaluate_router
+.\.venv\Scripts\python -m pytest -q --basetemp artifacts/pytest-delivery
+.\.venv\Scripts\python -m pip check
+```
+
+浏览器打开`http://127.0.0.1:18000`。问“我要投诉”，两个按钮分别操作；“转人工”仅前端模拟客服小猫，“建工单”确认后才调用原工具。问“这个能退吗”，点击演示订单卡片继续流程，退款原因从下拉选；退款申请只写本地演示记录，不执行真实退款。不点击按钮可继续聊天，新消息使旧订单选择过期；刷新页面会从检查点恢复当前待选卡片。
+
+当前只支持演示用户`demo-user`和1001/1002/1003三张演示订单，尚不包含真实身份认证/订单API/付款退款/真人坐席。新喵喵优选知识资料仍暂存，未混入当前演示知识；用户待补章节不影响本章流程验收。证据缺失仍会拒答；小样本闸评估保留“已使用15天”保守拒答误差。阶段记录见`dev-notes/ch05.md`、`dev-notes/ch06.md`，真实验收与限制见`docs/reports/ch05-validation.md`、`docs/reports/ch06-validation.md`。
