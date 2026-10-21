@@ -21,10 +21,10 @@ async def run_bare(call,execute,messages,schemas,max_steps=6,token_budget=24000)
             try:args=json.loads(function['arguments'])
             except (ValueError,TypeError):args=None
             key=(name,json.dumps(args,sort_keys=True,ensure_ascii=False))
-            if key in seen:return dict(answer=FALLBACK,trace=trace,stop_reason='repeated_call')
-            seen.add(key)
+            if index==0 and key in seen:return dict(answer=FALLBACK,trace=trace,stop_reason='repeated_call')
             if index:result={'ok':False,'error':{'code':'one_tool_per_step'}}
             else:
+                seen.add(key)
                 result=await execute(dict(name=name,args=args,id=item['id']))
                 trace.append({'step':step+1,'tool':name,'call_id':item['id']})
             messages.append({'role':'tool','tool_call_id':item['id'],'content':json.dumps(result,ensure_ascii=False)})

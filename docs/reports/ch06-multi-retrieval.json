@@ -1,0 +1,79 @@
+{
+  "reason": "",
+  "candidates": 31,
+  "unique": 31,
+  "evidence": [
+    {
+      "chunk_id": "8ac330e71b38c53a2ec4a693608ebcc6c723672a56803cfd0c2992dd6880fc36",
+      "question": "退货条件",
+      "answer": "【演示政策】未使用商品可在签收后7天内申请退货。必须保留完整包装和购买凭证。",
+      "category": "售后政策",
+      "product_category": "通用",
+      "section_path": "售后政策 / 退货条件",
+      "source_id": "markdown:d043ad89ba48b781fff59626f4c6e8d89d48b8be30e27094a8ca132c5d3776ce/returns.md",
+      "content_hash": "a49dc20230dd6724c9dae53ed9318a56bb27bb177de1d5a8210c066b9c28963a",
+      "score": 0.9821273975819665,
+      "number": 1
+    },
+    {
+      "chunk_id": "b18227a1f0247a4d97461c4d5a5670ec8e92ce261f8a213a084ff1e22f482dc9",
+      "question": "商品破损处理",
+      "answer": "必须先拍摄破损部位和外包装照片，并保存购买凭证。请联系商家说明商品名称和破损情况。是否换货应以商家核实结果为准。",
+      "category": "售后手册",
+      "product_category": "通用",
+      "section_path": "售后手册 / 商品破损处理",
+      "source_id": "markdown:d043ad89ba48b781fff59626f4c6e8d89d48b8be30e27094a8ca132c5d3776ce/manual.md",
+      "content_hash": "a564fb5915c7ef9008f7f62dea4f1ae882c58351575a5ab9022267220f3f8017",
+      "score": 0.022534104993959435,
+      "number": 3
+    },
+    {
+      "chunk_id": "cb1aae9b9e74001fc27c96ec939da9a9a087ddda8ce1ce53f4dae678629a1ce8",
+      "question": "售后保障",
+      "answer": "【演示商品 QC-M100】制造缺陷保障15天；磕碰损坏不在此范围。",
+      "category": "第四章演示商品手册 / QC-M100",
+      "product_category": "陶瓷杯",
+      "section_path": "第四章演示商品手册 / QC-M100 / 售后保障",
+      "source_id": "markdown:d043ad89ba48b781fff59626f4c6e8d89d48b8be30e27094a8ca132c5d3776ce/ch04-products.md",
+      "content_hash": "a674dc9ee86fcee7ba7fe6c9a32d5c4c5b2aaf83e600482c49b41a819516efc2",
+      "score": 0.007668156630167824,
+      "number": 5
+    },
+    {
+      "chunk_id": "fa0c9810b2a5d76099d89ee569223bddc1b3b86ce66b85fd8a7c7d7b95fc9bfb",
+      "question": "人工工单",
+      "answer": "人工工单创建后状态为待处理。工单表示问题已登记，不代表退款、退货或换货已执行。",
+      "category": "售后手册",
+      "product_category": "通用",
+      "section_path": "售后手册 / 人工工单",
+      "source_id": "markdown:d043ad89ba48b781fff59626f4c6e8d89d48b8be30e27094a8ca132c5d3776ce/manual.md",
+      "content_hash": "4c739cd1deea808f020f1d1177593685c40e8d6b30cebadecf40081d4f910382",
+      "score": 0.006212495684841504,
+      "number": 6
+    },
+    {
+      "chunk_id": "8f2816bef242fd81da1a0c534c1de18418adc1ac0be6bea5c46442ee56c62697",
+      "question": "退货运输费用",
+      "answer": "【演示政策】质量问题由商家承担退货运费，非质量问题由买家承担。不得将申请成功等同于退款已经到账。",
+      "category": "售后政策",
+      "product_category": "通用",
+      "section_path": "售后政策 / 退货运输费用",
+      "source_id": "markdown:d043ad89ba48b781fff59626f4c6e8d89d48b8be30e27094a8ca132c5d3776ce/returns.md",
+      "content_hash": "ecb772c7ebb9867b1cb6bb6b94f9b5ae7b5ef26567a33ecbe9a75e68bb353428",
+      "score": 0.008951337473399469,
+      "number": 4
+    },
+    {
+      "chunk_id": "262ba41f52f02289400e9b5fe6e5954180034392f47b7ab2fbe1ffde27034524",
+      "question": "退货期限是多久？",
+      "answer": "演示店铺未使用商品可在签收后7天内申请退货。",
+      "category": "售后",
+      "product_category": "通用",
+      "section_path": "历史对话",
+      "source_id": "conversation:262ba41f52f02289400e9b5fe6e5954180034392f47b7ab2fbe1ffde27034524",
+      "content_hash": "15cb09da784cc04bdc50fd04bc1ab9bee5a926290bab8cccff2badd975514203",
+      "score": 0.07793231140205595,
+      "number": 2
+    }
+  ]
+}

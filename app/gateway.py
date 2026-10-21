@@ -63,10 +63,12 @@ class OpenAICompatibleGateway:
             raise UpstreamError() from None
 
     async def decide(self,messages,tools):
-        return await self.model.bind_tools(tools,tool_choice="auto").ainvoke(messages)
+        model=self.model.bind_tools(tools,tool_choice="auto",parallel_tool_calls=False) if tools else self.model
+        return await model.ainvoke(messages)
 
     async def final_stream(self,messages,tools):
-        async for chunk in self.model.bind_tools(tools,tool_choice="none").astream(messages):
+        model=self.model.bind_tools(tools,tool_choice="none") if tools else self.model
+        async for chunk in model.astream(messages):
             if chunk.tool_call_chunks:
                 raise UpstreamError()
             reason=chunk.response_metadata.get("finish_reason")

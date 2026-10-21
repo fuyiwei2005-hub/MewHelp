@@ -1,0 +1,17 @@
+name: ecommerce-support-checkpoint
+services:
+  postgres:
+    image: ${CHECKPOINT_IMAGE:-postgres:16-alpine}
+    environment:
+      POSTGRES_USER: checkpoint
+      POSTGRES_DB: checkpoint
+      POSTGRES_PASSWORD: ${CHECKPOINT_PASSWORD:?required}
+    ports: ["127.0.0.1:16432:5432"]
+    volumes: ["checkpoint_pg:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U checkpoint -d checkpoint"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+volumes:
+  checkpoint_pg:

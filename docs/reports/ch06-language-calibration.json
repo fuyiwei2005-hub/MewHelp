@@ -1,0 +1,84 @@
+{
+  "model": "deepseek-flash",
+  "split": "calibration",
+  "dataset_sha256": "432f3ebf00aa757bc3ca9ca0fc5762c989265757fb5fc9ce71edc771e81bc1a6",
+  "n": 4,
+  "json_parse_rate": 1.0,
+  "intent_accuracy": 1.0,
+  "reference_accuracy": 1.0,
+  "core_switch_all_correct": true,
+  "cases": [
+    {
+      "id": "cal-1",
+      "question": "退货以后钱去哪了",
+      "expected_intent": "退款退货",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "退货以后钱去哪了",
+        "retrieval_query": "退货后退款退到哪里",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "退款退货",
+        "confidence": 0.96
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "cal-2",
+      "question": "订单1001多少钱",
+      "expected_intent": "订单",
+      "expected_order": "1001",
+      "resolution": {
+        "resolved_question": "订单1001多少钱",
+        "retrieval_query": "订单1001多少钱",
+        "referenced_order_id": "1001"
+      },
+      "classification": {
+        "intent": "订单",
+        "confidence": 0.97
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "cal-3",
+      "question": "杯子多少毫升",
+      "expected_intent": "商品咨询",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "杯子多少毫升",
+        "retrieval_query": "杯子容量多少毫升",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "商品咨询",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "cal-4",
+      "question": "我想申请人工投诉处理",
+      "expected_intent": "投诉",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "我想申请人工投诉处理",
+        "retrieval_query": "申请人工投诉处理",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "投诉",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    }
+  ]
+}

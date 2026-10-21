@@ -37,6 +37,7 @@ class ToolContext:
     raw_question: str
     faq_backend: object=None
     call_id: str=""
+    order_backend: object=None
 
 
 class Registry(dict):
@@ -56,6 +57,8 @@ def build_tools(ctx: ToolContext):
     @tool(args_schema=OrderArgs)
     async def query_order(order_id: str)->dict:
         """查询订单概要和状态。仅演示随机数据，不是真实电商接口。"""
+        if ctx.order_backend is not None:
+            return (await ctx.order_backend.user_order(order_id)) or failure("order_not_found","未找到可查询的本人演示订单。")
         r=rng()
         return dict(ok=True,demo=True,order_id=order_id,status=r.choice(["已支付","已发货","已签收"]),amount=r.choice([59,99,129]),product="陶瓷杯")
 

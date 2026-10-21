@@ -9,7 +9,7 @@ description = "Streaming ecommerce support with FastAPI and LangChain"
 requires-python = ">=3.13"
 dependencies = [
   "fastapi==0.147.0", "langchain-openai==1.7.2", "langchain-core==1.6.12",
-  "pydantic-settings==2.16.0", "uvicorn>=0.30,<1", "httpx==0.28.1", "sqlalchemy[asyncio]==2.0.55", "asyncmy==0.2.16", "cryptography==50.0.2", "APScheduler==3.11.3", "FlagEmbedding==1.4.2", "pymilvus==3.0.2"
+  "pydantic-settings==2.16.0", "uvicorn>=0.30,<1", "httpx==0.28.1", "sqlalchemy[asyncio]==2.0.55", "asyncmy==0.2.16", "cryptography==50.0.2", "APScheduler==3.11.3", "FlagEmbedding==1.4.2", "pymilvus==3.0.2", "langgraph==1.2.16", "langgraph-checkpoint-postgres==3.2.0", "psycopg[binary,pool]==3.3.6"
 ]
 
 [project.optional-dependencies]

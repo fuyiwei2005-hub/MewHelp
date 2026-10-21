@@ -1,5 +1,5 @@
 import asyncio
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager,AsyncExitStack
 
 import httpx
 from fastapi import FastAPI, HTTPException
@@ -26,6 +26,7 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
             from app.services import ToolChatService
             db=Database(config.database_url.get_secret_value())
             vector_store=None
+            stack=AsyncExitStack()
             try:
                 app.state.repo=Repository(db)
                 await db.create_tables()
@@ -57,8 +58,16 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
                     retrieval=HybridRetriever(KnowledgeRepository(db),Embedder(config.embedding_base_url,revision=config.embedding_revision),vector_store,Reranker(config.reranker_base_url,config.reranker_revision),config.embedding_revision,QueryUnderstanding(model),min_score=config.reranker_threshold,max_bytes=min(4000,max(500,config.input_budget-4000)))
                     retriever=KnowledgeAnswers(retrieval,QualityGate(model),app.state.audit)
                 app.state.tool_service=ToolChatService(config,app.state.repo,app.state.gateway,retriever)
+                if config.workflow_enabled:
+                    from app.workflow.checkpoints import checkpoint_context
+                    from app.workflow.service import WorkflowService
+                    saver=await stack.enter_async_context(checkpoint_context(config))
+                    service=WorkflowService(config,app.state.repo,app.state.gateway,retriever,saver)
+                    await service.deps.repo.seed()
+                    app.state.workflow_service=service
                 yield
             finally:
+                await stack.aclose()
                 if vector_store:await vector_store.close()
                 await db.close()
         else:yield
@@ -112,6 +121,10 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
 
     @app.post("/chat")
     async def chat(payload: ChatRequest):
+        if config.workflow_enabled:
+            from app.workflow.service import WorkflowResponse
+            service=app.state.workflow_service
+            return WorkflowResponse(service,await service.prepare(payload.message,payload.conversation_id,payload.product_category))
         if config.database_url:
             from app.services import ToolResponse
             service=app.state.tool_service
@@ -146,6 +159,8 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
         except UpstreamError as error:
             raise HTTPException(502, {"code": error.code, "message": error.message}) from None
 
+    from app.workflow.api import install_routes
+    install_routes(app)
     return app
 
 

@@ -19,3 +19,10 @@ def general_faq(question):
 def route(intent,question):
     if intent in ('退款退货','售后'):return 'knowledge' if general_faq(question) else 'refund'
     return {'商品咨询':'knowledge','物流':'agent','订单':'agent','投诉':'complaint','闲聊':'smalltalk'}.get(intent,'other')
+
+
+def policy_query(question,intent):
+    # Order identity selects the order; eligibility constraints remain in retrieval.
+    import re
+    content=re.sub(r'订单(?:号)?[:：\s]*[A-Za-z0-9-]+','商品',question)
+    return ('售后维修政策与条件：' if intent=='售后' else '退货申请政策与条件：')+content

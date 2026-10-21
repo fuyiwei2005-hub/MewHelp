@@ -17,6 +17,16 @@ class Settings(BaseSettings):
     mysql_user: str = "support"
     mysql_database: str = "support"
     database_url: SecretStr | None = None
+    checkpoint_image: str = "postgres:16-alpine"
+    workflow_enabled: bool = False
+    checkpoint_database_url: SecretStr | None = None
+    checkpoint_password: SecretStr | None = None
+    intent_model: str | None = None
+    intent_small_model: str | None = None
+    intent_threshold: float = Field(default=0.75,ge=0,le=1)
+    agent_max_steps: int = Field(default=6,ge=1,le=12)
+    agent_token_budget: int = Field(default=24000,ge=1024)
+    workflow_timeout_seconds: float = Field(default=480,gt=0)
     faq_backend: Literal["keyword","dense","hybrid"] = "dense"
     tool_timeout_seconds: float = Field(default=5, gt=0)
     tool_max_attempts: int = Field(default=2, ge=1, le=3)

@@ -1,0 +1,300 @@
+{
+  "model": "deepseek-flash",
+  "split": "test",
+  "dataset_sha256": "432f3ebf00aa757bc3ca9ca0fc5762c989265757fb5fc9ce71edc771e81bc1a6",
+  "n": 16,
+  "json_parse_rate": 1.0,
+  "intent_accuracy": 1.0,
+  "reference_accuracy": 1.0,
+  "core_switch_all_correct": true,
+  "cases": [
+    {
+      "id": "switch-1002-refund",
+      "question": "这个能退吗",
+      "expected_intent": "退款退货",
+      "expected_order": "1002",
+      "resolution": {
+        "resolved_question": "订单1002能退吗",
+        "retrieval_query": "订单1002能退吗",
+        "referenced_order_id": "1002"
+      },
+      "classification": {
+        "intent": "退款退货",
+        "confidence": 0.97
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "switch-1002-logistics",
+      "question": "先不退了，它物流现在在哪",
+      "expected_intent": "物流",
+      "expected_order": "1002",
+      "resolution": {
+        "resolved_question": "订单1002先不退了，它物流现在在哪",
+        "retrieval_query": "订单1002物流现在在哪 不退货 查询物流状态",
+        "referenced_order_id": "1002"
+      },
+      "classification": {
+        "intent": "物流",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "switch-1002-order",
+      "question": "订单1002现在是什么状态",
+      "expected_intent": "订单",
+      "expected_order": "1002",
+      "resolution": {
+        "resolved_question": "订单1002现在是什么状态",
+        "retrieval_query": "订单1002当前状态",
+        "referenced_order_id": "1002"
+      },
+      "classification": {
+        "intent": "订单",
+        "confidence": 0.97
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "switch-1003-refund",
+      "question": "这个能退吗",
+      "expected_intent": "退款退货",
+      "expected_order": "1003",
+      "resolution": {
+        "resolved_question": "订单1003可以退吗",
+        "retrieval_query": "订单1003可以退货吗",
+        "referenced_order_id": "1003"
+      },
+      "classification": {
+        "intent": "退款退货",
+        "confidence": 0.96
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "switch-1003-logistics",
+      "question": "先不退了，它物流现在在哪",
+      "expected_intent": "物流",
+      "expected_order": "1003",
+      "resolution": {
+        "resolved_question": "订单1003的物流现在在哪",
+        "retrieval_query": "订单1003 物流现在到哪了",
+        "referenced_order_id": "1003"
+      },
+      "classification": {
+        "intent": "物流",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "switch-1003-order",
+      "question": "订单1003现在是什么状态",
+      "expected_intent": "订单",
+      "expected_order": "1003",
+      "resolution": {
+        "resolved_question": "订单1003现在是什么状态",
+        "retrieval_query": "订单1003 当前状态",
+        "referenced_order_id": "1003"
+      },
+      "classification": {
+        "intent": "订单",
+        "confidence": 0.96
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "complete-faq",
+      "question": "退货政策是什么",
+      "expected_intent": "退款退货",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "退货政策是什么",
+        "retrieval_query": "退货政策是什么",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "退款退货",
+        "confidence": 0.95
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "complete-logistics",
+      "question": "退款先不办了，帮我查订单1003的物流",
+      "expected_intent": "物流",
+      "expected_order": "1003",
+      "resolution": {
+        "resolved_question": "退款先不办了，帮我查订单1003的物流",
+        "retrieval_query": "查询订单1003物流",
+        "referenced_order_id": "1003"
+      },
+      "classification": {
+        "intent": "物流",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "complaint",
+      "question": "我要投诉快递一直不给送",
+      "expected_intent": "投诉",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "我要投诉快递一直不给送",
+        "retrieval_query": "投诉快递一直不派送",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "投诉",
+        "confidence": 0.99
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "repair",
+      "question": "饮水机坏了，我要申请维修",
+      "expected_intent": "售后",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "饮水机坏了，我要申请维修",
+        "retrieval_query": "饮水机坏了 申请维修",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "售后",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "product",
+      "question": "QC-M200能放进洗碗机清洗吗",
+      "expected_intent": "商品咨询",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "QC-M200能放进洗碗机清洗吗",
+        "retrieval_query": "QC-M200 可以洗碗机清洗吗",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "商品咨询",
+        "confidence": 0.98
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "coref-product",
+      "question": "它可以放洗碗机吗",
+      "expected_intent": "商品咨询",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "QC-M200可以放洗碗机吗",
+        "retrieval_query": "QC-M200 可以放洗碗机清洗吗",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "商品咨询",
+        "confidence": 0.97
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "ambiguous",
+      "question": "那个能退吗",
+      "expected_intent": "退款退货",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "那个能退吗",
+        "retrieval_query": "那个能退吗",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "退款退货",
+        "confidence": 0.86
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "unknown-a",
+      "question": "三角星期的量子发票怎么孵化",
+      "expected_intent": "其他",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "三角星期的量子发票怎么孵化",
+        "retrieval_query": "三角星期的量子发票怎么孵化",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "其他",
+        "confidence": 0.2
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "unknown-b",
+      "question": "能把月亮变成方形的猫吗",
+      "expected_intent": "其他",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "能把月亮变成方形的猫吗",
+        "retrieval_query": "能把月亮变成方形的猫吗",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "其他",
+        "confidence": 0.3
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    },
+    {
+      "id": "greeting",
+      "question": "谢谢你",
+      "expected_intent": "闲聊",
+      "expected_order": null,
+      "resolution": {
+        "resolved_question": "谢谢你",
+        "retrieval_query": "谢谢你",
+        "referenced_order_id": null
+      },
+      "classification": {
+        "intent": "闲聊",
+        "confidence": 0.99
+      },
+      "parse_ok": true,
+      "intent_ok": true,
+      "reference_ok": true
+    }
+  ]
+}
