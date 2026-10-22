@@ -22,22 +22,22 @@
 Files: create app/memory/__init__.py、tokens.py、layers.py；modify app/config.py；tests/test_memory_budget.py、test_memory_layers.py。
 Interfaces: TokenCounter.text(value)->int、messages(values)->int；ContextBudget.calculate(cfg,prefix_tokens,summary_tokens=0)->BudgetPlan(history,layer1,layer2)；partition(messages,summary_upto,layer1_from,plan,counter)->LayerView(window,layer1_from,layer2_tokens,events)。
 
-- [ ] 写失败测试：中文与ASCII不同计数、metadata/tool_calls计入；5650/3954/1695；小窗口报警；摘要增加导致历史余量减少；整轮移动不改原文、中层用户不动、客服60字、工具一行配对、超大最新整轮借用/拒绝。
+- [x] 写失败测试：中文与ASCII不同计数、metadata/tool_calls计入；5650/3954/1695；小窗口报警；摘要增加导致历史余量减少；整轮移动不改原文、中层用户不动、客服60字、工具一行配对、超大最新整轮借用/拒绝。
 ```python
 plan=ContextBudget.calculate(demo_cfg,prefix_tokens=900)
 assert (plan.history,plan.layer1,plan.layer2)==(5650,3954,1695)
 assert original_messages==before
 assert all(m.content==raw.content for m,raw in recent_pairs)
 ```
-- [ ] 运行对应pytest确认缺实现失败；新增可配置窗口/固定项/系数和旧步骤别名。
+- [x] 运行对应pytest确认缺实现失败；新增可配置窗口/固定项/系数和旧步骤别名。
 ```python
 available=cfg.model_context_window-max(cfg.system_prefix_tokens,prefix_tokens)-cfg.rerank_top_k*cfg.evidence_chunk_tokens-max(cfg.summary_reserve_tokens,summary_tokens)-cfg.max_output_tokens-cfg.context_safety_tokens-cfg.max_user_input_tokens-cfg.agent_max_steps*(cfg.tool_result_max_tokens+cfg.tool_call_max_tokens)
 history=min(cfg.history_target_turns*cfg.steady_round_tokens,available)
 layer2=history*3//10
 layer1=history-layer2-1
 ```
-- [ ] LangChain trim_messages仅用于临时窗口，按turn_id恢复完整轮边界；配对校验拒绝孤立tool。
-- [ ] 跑预算/层单测，记录任务并提交。
+- [x] LangChain trim_messages仅用于临时窗口，按turn_id恢复完整轮边界；配对校验拒绝孤立tool。
+- [x] 跑预算/层单测，记录任务并提交。
 
 ## Task 2：MySQL迁移、稳定消息ID与摘要仓储
 

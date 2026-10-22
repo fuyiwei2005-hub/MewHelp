@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Literal, Self
 
-from pydantic import Field, SecretStr, model_validator
+from pydantic import Field, SecretStr, model_validator, AliasChoices
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,7 +24,24 @@ class Settings(BaseSettings):
     intent_model: str | None = None
     intent_small_model: str | None = None
     intent_threshold: float = Field(default=0.75,ge=0,le=1)
-    agent_max_steps: int = Field(default=6,ge=1,le=12)
+    agent_max_steps: int = Field(default=6,ge=1,le=12,validation_alias=AliasChoices('max_agent_steps','agent_max_steps'))
+    model_context_window: int = Field(default=128000,ge=1024)
+    max_user_input_tokens: int = Field(default=2000,ge=1)
+    tool_result_max_tokens: int = Field(default=1200,ge=64)
+    tool_call_max_tokens: int = Field(default=150,ge=16)
+    rerank_top_k: int = Field(default=10,ge=1,le=10)
+    evidence_chunk_tokens: int = Field(default=250,ge=32)
+    system_prefix_tokens: int = Field(default=1050,ge=1)
+    summary_reserve_tokens: int = Field(default=1000,ge=1)
+    context_safety_tokens: int = Field(default=1000,ge=1)
+    history_target_turns: int = Field(default=32,ge=1)
+    steady_round_tokens: int = Field(default=2000,ge=1)
+    cjk_token_factor: float = Field(default=1.0,ge=.5,le=4)
+    ascii_chars_per_token: float = Field(default=4.0,ge=1,le=8)
+    context_log_path: str = 'log/app.log'
+    summary_workers: int = Field(default=1,ge=1,le=4)
+    summary_timeout_seconds: float = Field(default=60,gt=0)
+    summary_max_attempts: int = Field(default=3,ge=1,le=5)
     agent_token_budget: int = Field(default=24000,ge=1024)
     workflow_timeout_seconds: float = Field(default=480,gt=0)
     faq_backend: Literal["keyword","dense","hybrid"] = "dense"
