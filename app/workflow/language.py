@@ -32,7 +32,7 @@ def order_ids(text):return set(re.findall(r'(?:订单(?:号)?[:：\s]*|order_id[
 def guard_resolution(question,history,data):
     result=Resolution.model_validate(data)
     explicit=order_ids(question)
-    trusted=' '.join(str(m.get('content','')) for m in history if m.get('role') in ('user','tool'))
+    trusted=' '.join(str(m.get('content','')) for m in history if m.get('role') in ('user','tool') or (m.get('role')=='summary' and m.get('validated') is True))
     allowed=explicit|order_ids(trusted)
     pronoun=bool(re.search(r'它|这[个件单款]|那[个件单款]|刚才|上述|上面|前面',question))
     if not pronoun or explicit:result.resolved_question=question
@@ -68,27 +68,33 @@ def guard_resolution(question,history,data):
 class Language:
     def __init__(self,strong,small=None,threshold=.75):self.strong,self.small,self.threshold=strong,small,threshold
 
-    async def _json(self,model,schema,prompt,budget=None):
+    async def _json(self,model,schema,prompt,budget=None,request_context=None):
         prompt=prompt+'\nJSON Schema：'+json.dumps(schema.model_json_schema(),ensure_ascii=False)
-        size=size_of(prompt)
-        if budget:budget.reserve(size)
+        ctx=request_context or {};counter=ctx.get('counter')
+        size=counter.text(prompt)+11 if counter else size_of(prompt)
+        if counter and size+ctx['cfg'].max_output_tokens+ctx['cfg'].context_safety_tokens>ctx['cfg'].model_context_window:raise ValueError('上下文预算不足：语言节点请求超出窗口')
+        if budget:budget.reserve(size,output=ctx['cfg'].max_output_tokens if counter else 1024)
+        if ctx.get('logger'):ctx['logger'].event('history_model_ctx',conversation_id=ctx['conversation_id'],turn_id=ctx['turn_id'],phase=ctx.get('phase'),messages=[{'role':'user','content':prompt}],tokens=size)
         result=await model.with_structured_output(schema,method='json_mode',include_raw=True).ainvoke(prompt)
         raw=result['raw']
         if budget:budget.charge(size,raw)
+        if ctx.get('logger'):ctx['logger'].event('token_calibration',conversation_id=ctx['conversation_id'],turn_id=ctx['turn_id'],phase=ctx.get('phase'),estimate=size,actual=raw.usage_metadata)
         if result['parsing_error'] or raw.response_metadata.get('finish_reason')!='stop':raise ValueError('invalid_structured_response')
         return schema.model_validate_json(raw.content)
 
-    async def resolve(self,question,history,budget=None):
-        result=await self._json(self.strong,Resolution,RESOLVE_PROMPT+'\n本轮：'+question+'\n历史：'+json.dumps(history,ensure_ascii=False),budget)
+    async def resolve(self,question,history,budget=None,summaries=None,request_context=None):
+        history=[*history,*[dict(role='summary',content=s['content'],validated=True) for s in (summaries or [])]]
+        result=await self._json(self.strong,Resolution,RESOLVE_PROMPT+'\n本轮：'+question+'\n历史：'+json.dumps(history,ensure_ascii=False),budget,request_context)
         return guard_resolution(question,history,result.model_dump())
 
-    async def classify(self,question,budget=None):
+    async def classify(self,question,budget=None,history=None,summaries=None,request_context=None):
         prompt=INTENT_PROMPT+'\n当前问题：'+question
-        result=await self._json(self.small or self.strong,Intent,prompt,budget)
-        if self.small and result.confidence<self.threshold:result=await self._json(self.strong,Intent,prompt,budget)
+        if history is not None:prompt+='\n共用历史上下文：'+json.dumps(dict(summaries=summaries or [],window=history),ensure_ascii=False)
+        result=await self._json(self.small or self.strong,Intent,prompt,budget,request_context)
+        if self.small and result.confidence<self.threshold:result=await self._json(self.strong,Intent,prompt,budget,request_context)
         if result.confidence<self.threshold:result=Intent(intent='其他',confidence=result.confidence)
         return result
 
-    async def expand(self,question,order,budget=None):
-        try:return await self._json(self.strong,Queries,EXPAND_PROMPT+'\n当前问题：'+question+'\n订单：'+json.dumps(order,ensure_ascii=False),budget)
+    async def expand(self,question,order,budget=None,request_context=None):
+        try:return await self._json(self.strong,Queries,EXPAND_PROMPT+'\n当前问题：'+question+'\n订单：'+json.dumps(order,ensure_ascii=False),budget,request_context)
         except (ValueError,KeyError,TypeError):return Queries(queries=[question[:500]])

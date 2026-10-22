@@ -1,6 +1,12 @@
-from typing import TypedDict
+from typing import TypedDict,Annotated
+from langchain_core.messages import AnyMessage
+from langgraph.graph.message import add_messages
 
 class WorkflowState(TypedDict,total=False):
+    messages:Annotated[list[AnyMessage],add_messages]
+    memory_enabled:bool
+    context_view:dict
+    completed_turn_ids:list[str]
     conversation_id:str
     turn_id:str
     raw_question:str

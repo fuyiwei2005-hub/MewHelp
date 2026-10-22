@@ -20,6 +20,7 @@ async def validated_citation_stream(source,allowed):
     try:
         async for piece in iterator:
             reason=piece.finish_reason or reason
+            if piece.usage:yield StreamPiece(usage=piece.usage)
             if not piece.text:continue
             queue.append(piece.text);buffer+=piece.text
             if len(buffer.encode('utf-8'))>32768:raise CitationError('uncited_unit_too_large')

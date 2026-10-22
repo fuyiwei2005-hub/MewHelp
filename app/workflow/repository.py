@@ -85,12 +85,15 @@ class WorkflowRepository:
             row.result=result;row.status='done';return result
 
     async def audit(self,state,status='completed'):
+        if state.get('memory_enabled'):
+            from app.memory.repository import MemoryRepository
+            await MemoryRepository(self.db).finish_turn(state['conversation_id'],state['turn_id'],status if status in ('completed','failed','cancelled') else 'pending')
         async with self.db.sessions() as s,s.begin():
             row=await s.scalar(select(WorkflowRun).where(WorkflowRun.turn_id==state['turn_id']).with_for_update())
             if not row:raise ValueError('unknown_turn')
             data=dict(row.data)
             if status=='completed' and not data.get('projected'):
-                for item in state.get('turn_messages',[]):
+                for item in ([] if state.get('memory_enabled') else state.get('turn_messages',[])):
                     if item.get('tool_call_id') and await s.scalar(select(Message.id).where(Message.conversation_id==row.conversation_id,Message.turn_id==row.turn_id,Message.tool_call_id==item['tool_call_id'])):continue
                     s.add(Message(conversation_id=row.conversation_id,turn_id=row.turn_id,role=item['role'],content=item.get('content') or '',tool_calls=item.get('tool_calls'),tool_call_id=item.get('tool_call_id'),turn_status='completed'))
                 data['projected']=True

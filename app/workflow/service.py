@@ -37,7 +37,13 @@ class WorkflowService:
             strong=gateway.model if not cfg.intent_model else OpenAICompatibleGateway(cfg.model_copy(update={'llm_model':cfg.intent_model})).model
             small=OpenAICompatibleGateway(cfg.model_copy(update={'llm_model':cfg.intent_small_model})).model if cfg.intent_small_model else None
             deps=SimpleNamespace(cfg=cfg,repo=WorkflowRepository(business.db),audit=AuditRepository(business.db),language=Language(strong,small,cfg.intent_threshold),retriever=knowledge.retriever,multi=MultiQueryRetriever(knowledge.retriever),gate=knowledge.gate,gateway=gateway,business_repo=business,knowledge_parent=knowledge)
-        self.deps=deps;self.graph=build_graph(deps,saver)
+        self.deps=deps;self.memory=None
+        if hasattr(business,'db'):
+            from app.memory.manager import ContextManager
+            from .common import tools_for
+            tools=tools_for(dict(conversation_id='startup',turn_id='startup',resolved_question='',memory_enabled=True),deps)
+            self.memory=ContextManager(cfg,business.db,list(tools.values()));deps.memory=self.memory
+        self.graph=build_graph(deps,saver)
 
     def config(self,cid):return {'configurable':{'thread_id':cid},'recursion_limit':100}
 
@@ -56,21 +62,28 @@ class WorkflowService:
         finally:self.busy.discard(turn.cid)
 
     async def prepare(self,question,cid=None,category=None):
+        if self.memory and self.memory.counter.text(question)>self.cfg.max_user_input_tokens:raise HTTPException(413,'当前问题超过输入预算，请缩短后重试。')
         if cid and not await self.business.exists(cid):raise HTTPException(404,'会话不存在。')
         cid=cid or uuid4().hex;lock=await self.acquire(cid)
         try:
             await self.business.ensure_conversation(cid)
             snapshot=await self.graph.aget_state(self.config(cid))
             history=snapshot.values.get('history',[]) if snapshot.values else await self.deps.repo.mysql_history(cid)
-            # Retain complete turns, reserving room for the current request and instructions.
+            # Legacy mode retains its old behavior; memory mode prepares an independent view.
             history=list(history)
-            while history and len(json.dumps(history,ensure_ascii=False).encode())>self.cfg.input_budget//2:
+            while self.memory is None and history and len(json.dumps(history,ensure_ascii=False).encode())>self.cfg.input_budget//2:
                 first=history.pop(0).get('turn_id')
                 while history and first and history[0].get('turn_id')==first:history.pop(0)
                 while history and history[0]['role']!='user':history.pop(0)
             await self.deps.repo.expire_selections(cid)
             tid=uuid4().hex;await self.deps.repo.start(cid,tid,question)
             initial=dict(conversation_id=cid,turn_id=tid,raw_question=question,history=history,turn_messages=[dict(role='user',content=question)],trace=[],usage={'tokens':0,'calls':0},product_category=category,confirmed_actions=await self.deps.repo.confirmed_actions(cid))
+            if self.memory:
+                try:initial.update(await self.memory.prepare(snapshot,cid,tid,question))
+                except ValueError as error:
+                    await self.deps.repo.audit(dict(initial,memory_enabled=True),'failed')
+                    if '上下文预算不足' in str(error):raise HTTPException(413,str(error)) from None
+                    raise
             return Turn(cid,tid,initial,lock,initial)
         except BaseException:
             await self.release(Turn(cid,'',None,lock,{}));raise

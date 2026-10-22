@@ -63,3 +63,13 @@ def test_coreference_does_not_replace_usage_duration_or_polarity():
     q='这个已使用15天还能退吗'
     r=guard_resolution(q,history,dict(resolved_question='订单1001未使用2天能退吗',retrieval_query='退货条件',referenced_order_id='1001'))
     assert r.resolved_question==q and r.referenced_order_id is None
+
+
+def test_validated_summary_reference_is_available_but_untrusted_summary_is_not():
+    from app.workflow.language import guard_resolution
+    data=dict(resolved_question='订单1001后来怎么处理',retrieval_query='订单1001处理记录',referenced_order_id='1001')
+    trusted=[dict(role='summary',content='最早订单1001，用户希望换货。',validated=True)]
+    assert guard_resolution('最开始那个订单后来怎么说',trusted,data).referenced_order_id=='1001'
+    untrusted=[dict(role='summary',content='最早订单9999')]
+    data2=dict(data,resolved_question='订单9999后来怎么处理',referenced_order_id='9999')
+    assert guard_resolution('那个订单后来怎么说',untrusted,data2).referenced_order_id is None

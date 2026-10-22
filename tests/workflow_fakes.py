@@ -38,14 +38,14 @@ class Audit:
 
 class Language:
     def __init__(self):self.calls=[]
-    async def resolve(self,q,history,budget=None):
+    async def resolve(self,q,history,budget=None,**kwargs):
         self.calls.append('resolve');ids=order_ids(q)
         return Resolution(resolved_question=q,retrieval_query=q,referenced_order_id=next(iter(ids)) if len(ids)==1 else None)
-    async def classify(self,q,budget=None):
+    async def classify(self,q,budget=None,**kwargs):
         self.calls.append('classify')
         value='投诉' if '投诉' in q else ('退款退货' if '退' in q else ('物流' if '物流' in q else '商品咨询'))
         return Intent(intent=value,confidence=.98)
-    async def expand(self,q,order,budget=None):self.calls.append('expand');return Queries(queries=['退货条件','退货运费'])
+    async def expand(self,q,order,budget=None,**kwargs):self.calls.append('expand');return Queries(queries=['退货条件','退货运费'])
 
 class Retrieval:
     def __init__(self):self.calls=[]

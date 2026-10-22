@@ -26,6 +26,7 @@ class UpstreamTimeout(UpstreamError):
 class StreamPiece:
     text: str = ""
     finish_reason: str | None = None
+    usage: dict | None = None
 
 
 class ModelGateway(Protocol):
@@ -68,12 +69,12 @@ class OpenAICompatibleGateway:
 
     async def final_stream(self,messages,tools):
         model=self.model.bind_tools(tools,tool_choice="none") if tools else self.model
-        async for chunk in model.astream(messages):
+        async for chunk in model.astream(messages,stream_usage=True):
             if chunk.tool_call_chunks:
                 raise UpstreamError()
             reason=chunk.response_metadata.get("finish_reason")
-            if chunk.text or reason:
-                yield StreamPiece(chunk.text,reason)
+            if chunk.text or reason or chunk.usage_metadata:
+                yield StreamPiece(chunk.text,reason,chunk.usage_metadata)
 
     async def extract(self, description: str) -> AfterSales:
         try:

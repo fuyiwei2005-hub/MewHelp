@@ -11,15 +11,21 @@ from .language import Resolution,Intent
 from .agent import build_agent
 from .prompts import AGENT_PROMPT
 from .budget import BudgetExceeded,size_of
+from app.memory.bridge import adapt_node
 
 
 def build_graph(deps,checkpointer):
+    def memory_kwargs(state,phase,history=False):
+        if not state.get('memory_enabled'):return {}
+        value=dict(request_context=dict(conversation_id=state['conversation_id'],turn_id=state['turn_id'],phase=phase,counter=deps.memory.counter,logger=deps.memory.logger,cfg=deps.cfg))
+        if history:value.update(summaries=state['context_view']['summaries'])
+        return value
     async def normalize(state):
         log=trace(state,'normalize')
         reset=dict(evidence=[],citations=[],actions=[],suggested_actions=[],queries=[],steps=0,seen=[],order=None,answer='',stop_reason='',disposition='',refund_eligibility='unknown',status='running',trace=log)
         if is_greeting(state['raw_question']):return dict(reset,greeting=True,resolved_question=state['raw_question'],retrieval_query=state['raw_question'],intent='闲聊',confidence=1.0,route='smalltalk',order_id=None)
         b=budget(state,deps)
-        try:result=await deps.language.resolve(state['raw_question'],state.get('history',[]),budget=b)
+        try:result=await deps.language.resolve(state['raw_question'],state.get('history',[]),budget=b,**memory_kwargs(state,'resolve',True))
         except BudgetExceeded:return dict(reset,greeting=False,resolved_question=state['raw_question'],retrieval_query=state['raw_question'],order_id=None,route='other',stop_reason='token_budget',usage=usage(b))
         except Exception:result=Resolution(resolved_question=state['raw_question'],retrieval_query=state['raw_question'])
         emit('normalization',{'original':state['raw_question'],'resolved':result.resolved_question,'retrieval_query':result.retrieval_query})
@@ -27,7 +33,7 @@ def build_graph(deps,checkpointer):
 
     async def classify(state):
         log=trace(state,'intent');b=budget(state,deps)
-        try:result=await deps.language.classify(state['resolved_question'],budget=b);reason=''
+        try:result=await deps.language.classify(state['resolved_question'],budget=b,**(dict(history=state.get('history',[]),**memory_kwargs(state,'intent',True)) if state.get('memory_enabled') else {}));reason=''
         except BudgetExceeded:result=Intent(intent='其他',confidence=0);reason='token_budget'
         except Exception:result=Intent(intent='其他',confidence=0);reason='intent_unavailable'
         emit('intent',result.model_dump())
@@ -49,7 +55,7 @@ def build_graph(deps,checkpointer):
         await deps.repo.complete_offer(state['conversation_id'],offer['id'],{'order_id':oid})
         question=re.sub(r'这个|那个|这单|那单|它','订单'+oid,state['resolved_question'])
         if oid not in question:question='订单'+oid+'：'+question
-        return dict(trace=log,order_id=oid,resolved_question=question,turn_messages=[*state['turn_messages'],dict(role='user',content='已通过订单卡片选择订单'+oid)])
+        return dict(trace=log,order_id=oid,resolved_question=question,new_messages=[dict(role='user',content='已通过订单卡片选择订单'+oid)])
 
     async def query_order(state):
         log=trace(state,'query_order',order_id=state['order_id'])
@@ -58,13 +64,13 @@ def build_graph(deps,checkpointer):
         emit('tool_start',{'name':'query_order','label':'查询订单','tool_call_id':call['id']})
         result=await ToolExecutor(tools,deps.cfg.tool_timeout_seconds,deps.cfg.tool_max_attempts).execute(call)
         emit('tool_end',{'name':'query_order','tool_call_id':call['id'],'status':'completed' if result.get('ok') else 'failed'})
-        messages=[*state['turn_messages'],dict(role='assistant',content='',tool_calls=[call]),dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=call['id'])]
-        if not result.get('ok'):return dict(trace=log,turn_messages=messages,answer=FALLBACK,stop_reason='order_unavailable')
-        return dict(trace=log,turn_messages=messages,order=result)
+        messages=[dict(role='assistant',content='',tool_calls=[call]),dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=call['id'])]
+        if not result.get('ok'):return dict(trace=log,new_messages=messages,answer=FALLBACK,stop_reason='order_unavailable')
+        return dict(trace=log,new_messages=messages,order=result)
 
     async def expand(state):
         log=trace(state,'expand');b=budget(state,deps)
-        result=await deps.language.expand(state['resolved_question'],state['order'],budget=b)
+        result=await deps.language.expand(state['resolved_question'],state['order'],budget=b,**memory_kwargs(state,'expand'))
         emit('queries',result.model_dump())
         return dict(trace=log,queries=result.queries,usage=usage(b))
 
@@ -78,6 +84,7 @@ def build_graph(deps,checkpointer):
 
     async def confidence_gate(state):
         log=trace(state,'confidence_gate');assessment=None;rows=list(state.get('evidence',[]));reason=state.get('bundle_reason','');entry='retrieval';b=budget(state,deps)
+        if state.get('memory_enabled'):rows=[r for r in rows if deps.memory.counter.json(dict(number=r['number'],answer=r['answer'],section_path=r['section_path']))<=deps.cfg.evidence_chunk_tokens][:deps.cfg.rerank_top_k]
         if reason=='retrieval_unavailable':entry='system_error'
         while rows and not reason:
             try:request_messages(dict(state,evidence=rows),deps,AGENT_PROMPT,tools_for(dict(state,evidence=rows),deps))
@@ -107,7 +114,7 @@ def build_graph(deps,checkpointer):
         log=trace(state,'fixed_response');kind=state.get('route')
         answer=state.get('answer') or (COMPLAINT if kind=='complaint' else (SMALLTALK if kind=='smalltalk' else FALLBACK))
         emit('token',{'text':answer})
-        return dict(trace=log,answer=answer,turn_messages=[*state['turn_messages'],dict(role='assistant',content=answer)],suggested_actions=['handoff','ticket'] if kind=='complaint' else state.get('suggested_actions',[]),stop_reason=state.get('stop_reason') or 'fixed_response')
+        return dict(trace=log,answer=answer,new_messages=[dict(role='assistant',content=answer)],suggested_actions=['handoff','ticket'] if kind=='complaint' else state.get('suggested_actions',[]),stop_reason=state.get('stop_reason') or 'fixed_response')
 
     async def log_node(state):
         log=trace(state,'log');actions=[]
@@ -120,10 +127,10 @@ def build_graph(deps,checkpointer):
         final=dict(state,trace=log,actions=actions,status='completed')
         await deps.repo.audit(final)
         if actions:emit('actions',{'turn_id':state['turn_id'],'items':actions})
-        return dict(trace=log,actions=actions,status='completed',history=[*state.get('history',[]),*[dict(m,turn_id=state['turn_id']) for m in state['turn_messages']]])
+        return dict(trace=log,actions=actions,status='completed',history=[*state.get('history',[]),*[dict(m,turn_id=state['turn_id']) for m in state['turn_messages']]],completed_turn_ids=[*state.get('completed_turn_ids',[]),state['turn_id']])
 
     g=StateGraph(WorkflowState)
-    for name,node in [('normalize',normalize),('intent',classify),('select_order',select_order),('query_order',query_order),('expand',expand),('retrieve',retrieve),('confidence_gate',confidence_gate),('direct',direct),('agent',build_agent(deps)),('log',log_node)]:g.add_node(name,node)
+    for name,node in [('normalize',normalize),('intent',classify),('select_order',select_order),('query_order',query_order),('expand',expand),('retrieve',retrieve),('confidence_gate',confidence_gate),('direct',direct),('agent',build_agent(deps)),('log',log_node)]:g.add_node(name,node if name=='agent' else adapt_node(name,node,deps))
     g.add_edge(START,'normalize')
     g.add_conditional_edges('normalize',lambda s:'direct' if s.get('greeting') or s.get('stop_reason') else 'intent',{'direct':'direct','intent':'intent'})
     g.add_conditional_edges('intent',lambda s:{'knowledge':'retrieve','refund':'select_order','agent':'agent'}.get(s['route'],'direct'),{'retrieve':'retrieve','select_order':'select_order','agent':'agent','direct':'direct'})

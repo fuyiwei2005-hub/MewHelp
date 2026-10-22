@@ -60,17 +60,17 @@ assert (await repo.boundaries(cid))['summary_upto_msg_id']==0
 Files: app/memory/manager.py、assembly.py、logging.py；app/workflow/state.py、common.py、graph.py、agent.py、service.py、language.py、budget.py；app/gateway.py；tests/test_memory_graph.py、test_memory_assembly.py；tests/workflow_fakes.py。
 Interfaces: ContextManager.prepare(state/checkpoint,cid,tid,question)->frozen context；append_node_messages(state,new,key)->list[AnyMessage]；assemble(state,cfg,phase,tools)->list[BaseMessage]；log_event(event,**data)。
 
-- [ ] 红测试：State.messages通过add_messages只合并增量，同ID重跑不重复；两轮/恢复不丢历史；模型view压缩后checkpoint仍原文；固定system/tools逐轮相等，尾部附件在当前user后，当前ReAct调用配对；闲聊也history_ctx。
+- [x] 红测试：State.messages通过add_messages只合并增量，同ID重跑不重复；两轮/恢复不丢历史；模型view压缩后checkpoint仍原文；固定system/tools逐轮相等，尾部附件在当前user后，当前ReAct调用配对；闲聊也history_ctx。
 ```python
 assert next_state['messages'][:len(old)]==old
 assert requests[0][0].content==requests[1][0].content
 assert requests[1][user_index+1].type!='system'
 ```
-- [ ] 节点接入轻量投影取得稳定ID后返回messages增量；active-turn和completed-turn按State状态过滤，旧checkpoint一次性由MySQL迁移完整历史。旧接口模式继续可用。
-- [ ] 固定角色/红线/phase解释写一份静态system；工具定义稳定，不随路由/证据改变，执行许可仍由当前route约束。ContextManager构造L2+L1+当前原话+一条摘要/证据/事实附件+本轮ReAct。
-- [ ] 指代/意图共享HistoryContext，经过源校验的摘要实体加入指代守卫；实际request日志每次完整记录，白名单只记录不调模型。统一窗口检查与旧累积消费预算区分。
-- [ ] Gateway记录实际usage供计数校准；超限工具结果返回结构化错误，原文只存checkpoint元数据。
-- [ ] 跑新旧graph/API回归及真实固定前缀计数/上游窗口核对，记录并提交。
+- [x] 节点接入轻量投影取得稳定ID后返回messages增量；active-turn和completed-turn按State状态过滤，旧checkpoint一次性由MySQL迁移完整历史。旧接口模式继续可用。
+- [x] 固定角色/红线/phase解释写一份静态system；工具定义稳定，不随路由/证据改变，执行许可仍由当前route约束。ContextManager构造L2+L1+当前原话+一条摘要/证据/事实附件+本轮ReAct。
+- [x] 指代/意图共享HistoryContext，经过源校验的摘要实体加入指代守卫；实际request日志每次完整记录，白名单只记录不调模型。统一窗口检查与旧累积消费预算区分。
+- [x] Gateway记录实际usage供计数校准；超限工具结果返回结构化错误，原文只存checkpoint元数据。
+- [x] 跑新旧graph/API回归及真实固定前缀计数/上游窗口核对，记录并提交。
 
 ## Task 4：追加式异步摘要worker与样例评估
 

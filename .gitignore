@@ -9,3 +9,5 @@ __pycache__/
 .worktrees/
 .ruff_cache/
 artifacts/
+
+log/
