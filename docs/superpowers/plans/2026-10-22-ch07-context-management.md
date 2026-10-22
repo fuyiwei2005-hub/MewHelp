@@ -44,16 +44,16 @@ layer1=history-layer2-1
 Files: app/memory/models.py、migration.py、repository.py；app/models.py、db.py；scripts/init_memory.py；tests/test_memory_storage.py。
 Interfaces: MemoryRepository.append(cid,tid,key,message)->AnyMessage（id=messages.id）；load_messages(cid)->list[AnyMessage]；boundaries(cid)->dict；advance_layer1(cid,id)；summaries(cid)->list[dict]；enqueue(cid,from_id,upto_id,checkpoint_config)->job；claim/complete/fail/recover job。
 
-- [ ] 真实隔离MySQL失败测试：迁移两遍不丢旧消息；同message_key重复追加只一条；tool数据库标识不含payload且返回消息原文；两个会话隔离；边界不能回退；唯一范围摘要与CAS/租约。
+- [x] 真实隔离MySQL失败测试：迁移两遍不丢旧消息；同message_key重复追加只一条；tool数据库标识不含payload且返回消息原文；两个会话隔离；边界不能回退；唯一范围摘要与CAS/租约。
 ```python
 one=await repo.append(cid,tid,'user',HumanMessage(content='订单1001'))
 two=await repo.append(cid,tid,'user',HumanMessage(content='订单1001'))
 assert one.id==two.id
 assert (await repo.boundaries(cid))['summary_upto_msg_id']==0
 ```
-- [ ] 失败确认后实现显式inspect/ALTER幂等新增字段和表；旧message_key回填legacy:id。旧Repository/WorkflowRepository审计适配已有投影，不重复写；各异步任务独享Session。
-- [ ] 摘要工作项只存checkpoint定位和边界，不存完整tool；complete在短事务插新摘要+检查范围+推进summary_upto，layer1不得后退。
-- [ ] 跑真实MySQL测试与旧数据库回归，记任务并提交。
+- [x] 失败确认后实现显式inspect/ALTER幂等新增字段和表；旧message_key回填legacy:id。旧Repository/WorkflowRepository审计适配已有投影，不重复写；各异步任务独享Session。
+- [x] 摘要工作项只存checkpoint定位和边界，不存完整tool；complete在短事务插新摘要+检查范围+推进summary_upto，layer1不得后退。
+- [x] 跑真实MySQL测试与旧数据库回归，记任务并提交。
 
 ## Task 3：完整messages reducer与固定模型拼装
 

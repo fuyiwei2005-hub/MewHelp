@@ -25,14 +25,18 @@ class Conversation(Base):
     user_id: Mapped[str]=mapped_column(String(128),default="demo-user")
     status: Mapped[str]=mapped_column(Enum("open","escalated","closed"),default="open")
     created_at: Mapped[datetime]=mapped_column(DateTime,default=utcnow)
+    summary_upto_msg_id: Mapped[int]=mapped_column(default=0,server_default='0')
+    layer1_from_msg_id: Mapped[int|None]=mapped_column(nullable=True)
+    context_version: Mapped[int]=mapped_column(default=0,server_default='0')
 
 
 class Message(Base):
     __tablename__="messages"
-    __table_args__=(UniqueConstraint("conversation_id","turn_id","tool_call_id",name="uq_tool_result"),)
+    __table_args__=(UniqueConstraint("conversation_id","turn_id","tool_call_id",name="uq_tool_result"),UniqueConstraint("conversation_id","message_key",name="uq_memory_message"))
     id: Mapped[int]=mapped_column(primary_key=True,autoincrement=True)
     conversation_id: Mapped[str]=mapped_column(ForeignKey("conversations.id"),index=True)
     turn_id: Mapped[str]=mapped_column(String(64),index=True)
+    message_key: Mapped[str|None]=mapped_column(String(128),nullable=True)
     role: Mapped[str]=mapped_column(Enum("user","assistant","tool"))
     content: Mapped[str]=mapped_column(Text,default="")
     tool_calls: Mapped[list|None]=mapped_column(JSON,nullable=True)
