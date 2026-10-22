@@ -77,14 +77,14 @@ assert requests[1][user_index+1].type!='system'
 Files: app/memory/summary.py、worker.py；app/main.py生命周期；evals/ch07-summary.jsonl；scripts/evaluate_summary.py；tests/test_memory_worker.py。
 Interfaces: Summarizer.summarize(source,background)->SummaryResult；SummaryWorker.start/close/wake；run_once()->bool，按job checkpoint读源；摘要结果包含文本、源ID与事实引用。
 
-- [ ] worker红测试用可控慢summarizer证明当前SSE不等模型；相同范围不重复、并发前移不回退、失败不推进、旧摘要只背景不进本次source、重启恢复、原文批次过大按整轮拆分。
+- [x] worker红测试用可控慢summarizer证明当前SSE不等模型；相同范围不重复、并发前移不回退、失败不推进、旧摘要只背景不进本次source、重启恢复、原文批次过大按整轮拆分。
 ```python
 assert response_finished and not summary_gate.is_set()
 assert (await repo.boundaries(cid))['summary_upto_msg_id']==before
 ```
-- [ ] Prompt先造标注源数据和禁止事实：订单/手机号/未解决诉求/寒暄/数字否定；评估源引用和凭空实体、召回最早订单；摘要格式/引用校验可以单测，纯Prompt用标注评估。
-- [ ] worker在lifespan启动，持久化job+lease，每任务独享Session，LLM事务外；日志trigger/start/done/skip/failed与边界耗时完整。退出有限等待，不提交半段。
-- [ ] 真实上游标注评估、真实PG snapshot+MySQL worker集成、非阻塞验证，记录并提交。
+- [x] Prompt先造标注源数据和禁止事实：订单/手机号/未解决诉求/寒暄/数字否定；评估源引用和凭空实体、召回最早订单；摘要格式/引用校验可以单测，纯Prompt用标注评估。
+- [x] worker在lifespan启动，持久化job+lease，每任务独享Session，LLM事务外；日志trigger/start/done/skip/failed与边界耗时完整。退出有限等待，不提交半段。
+- [x] 真实上游标注评估、真实PG snapshot+MySQL worker集成、非阻塞验证，记录并提交。
 
 ## Task 5：只读会话列表/原文回载
 

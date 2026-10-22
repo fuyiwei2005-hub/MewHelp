@@ -1,0 +1,84 @@
+{
+  "model": "deepseek-flash",
+  "total": 6,
+  "passed": 6,
+  "cases": [
+    {
+      "id": "identity-placeholder",
+      "passed": true,
+      "content": "用户：产品DEMO-A，联系标识[PHONE_DEMO_A]，想换货。",
+      "facts": [
+        {
+          "source_id": "1",
+          "quote": "产品DEMO-A，联系标识[PHONE_DEMO_A]，想换货。"
+        }
+      ],
+      "missing": [],
+      "forbidden": []
+    },
+    {
+      "id": "negation",
+      "passed": true,
+      "content": "用户：DEMO-B还没有拆封，我想退货，运费问题没解决。",
+      "facts": [
+        {
+          "source_id": "1",
+          "quote": "DEMO-B还没有拆封，我想退货，运费问题没解决。"
+        }
+      ],
+      "missing": [],
+      "forbidden": []
+    },
+    {
+      "id": "chitchat",
+      "passed": true,
+      "content": "本批没有需要保留的业务事实。",
+      "facts": [],
+      "missing": [],
+      "forbidden": []
+    },
+    {
+      "id": "old-background",
+      "passed": true,
+      "content": "用户：产品DEMO-NEW尚未发货，请帮我看看能否取消。",
+      "facts": [
+        {
+          "source_id": "1",
+          "quote": "产品DEMO-NEW尚未发货，请帮我看看能否取消。"
+        }
+      ],
+      "missing": [],
+      "forbidden": []
+    },
+    {
+      "id": "unresolved",
+      "passed": true,
+      "content": "用户：我问的是DEMO-C，不是DEMO-D。；用户：水泵还是不出水，尚未解决。",
+      "facts": [
+        {
+          "source_id": "1",
+          "quote": "我问的是DEMO-C，不是DEMO-D。"
+        },
+        {
+          "source_id": "1",
+          "quote": "水泵还是不出水，尚未解决。"
+        }
+      ],
+      "missing": [],
+      "forbidden": []
+    },
+    {
+      "id": "multiple-products",
+      "passed": true,
+      "content": "用户：产品DEMO-E要退货，产品DEMO-F查物流，别搞混了。",
+      "facts": [
+        {
+          "source_id": "1",
+          "quote": "产品DEMO-E要退货，产品DEMO-F查物流，别搞混了。"
+        }
+      ],
+      "missing": [],
+      "forbidden": []
+    }
+  ]
+}

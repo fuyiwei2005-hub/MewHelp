@@ -65,6 +65,12 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
                     service=WorkflowService(config,app.state.repo,app.state.gateway,retriever,saver)
                     await service.deps.repo.seed()
                     app.state.workflow_service=service
+                    if service.memory:
+                        from app.memory.summary import Summarizer
+                        from app.memory.worker import SummaryWorker
+                        manager=service.memory
+                        worker=SummaryWorker(config,manager,service.graph,Summarizer(app.state.gateway.model,config,manager.logger,manager.counter))
+                        manager.worker=worker;worker.start();stack.push_async_callback(worker.close)
                 yield
             finally:
                 await stack.aclose()
