@@ -21,6 +21,7 @@
 .tool-trail{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0;background:#fff;border:1px solid #e3eae5;border-bottom:0;border-radius:3px 16px 0 0}.has-tools .bubble{border-top:0;border-radius:0 0 16px 16px}.tool-badge{font-size:10px;line-height:1.7;border:1px solid #dce8df;background:#f0f6f1;color:#5e8069;border-radius:6px;padding:3px 7px}.tool-badge[data-state="failed"],.tool-badge[data-state="not_found"]{background:#fcf6e9;border-color:#ecdfc7;color:#9a7a4c}
 .category-control{display:flex;gap:7px;align-items:center;color:#83998a;font-size:10px}.category-control select{max-width:145px;border:1px solid #dce7df;border-radius:7px;padding:6px 8px;background:#f8fbf9;color:#426b54;font:inherit}.composer-toolbar{gap:10px;flex-wrap:wrap}.citation{display:inline;border:0;border-radius:4px;background:#e7f1ea;color:#27644b;padding:1px 4px;margin:0 2px;font:inherit;font-size:11px;cursor:pointer}.citation:hover{background:#d3e7db}.feedback{display:flex;gap:7px;align-items:center;margin:9px 0 0 3px;color:#93a499;font-size:10px}.feedback button{border:1px solid #dfe8e2;border-radius:7px;background:transparent;padding:4px 8px;opacity:.6;cursor:pointer}.feedback button.selected{background:#dceee2;border-color:#98bea5;opacity:1}.feedback button:disabled{cursor:default}.source-dialog{border:1px solid #dce7df;border-radius:16px;max-width:min(680px,90vw);width:680px;padding:25px;color:#3b5747;box-shadow:0 20px 80px #214f3a25}.source-dialog::backdrop{background:#173b2a44;backdrop-filter:blur(3px)}.source-header{display:flex;justify-content:space-between;align-items:center;gap:15px}.source-header h2{font-size:17px;margin:0}.source-close{border:0;background:#edf3ef;border-radius:8px;padding:7px 12px;color:#456952}.source-path{font-size:12px;color:#63806b;margin:18px 0 7px}.source-state{font-size:10px;color:#a07f57}.source-text{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.9 inherit;background:#f6f9f7;border-radius:10px;padding:17px;max-height:55vh;overflow:auto}.source-link{display:inline-block;font-size:12px;color:#327556;margin-top:12px}@media(max-width:680px){.input-hint{display:none}.category-control select{max-width:135px}.source-dialog{padding:18px}}
 .workflow-actions,.order-options{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}.workflow-actions button,.order-options button,.refund-form button{border:1px solid #a9cdbd;border-radius:12px;background:#edf7f0;color:#215b42;padding:10px 14px;cursor:pointer}.workflow-actions button:disabled,.order-options button:disabled{opacity:.5;cursor:default}.order-options button{text-align:left;min-width:190px;white-space:pre-line}.refund-form{display:grid;gap:10px;padding:12px;margin-top:10px;border:1px solid #dce8df;border-radius:12px}.refund-form select{padding:10px;border-radius:8px;border:1px solid #a9cdbd}.workflow-receipt{font-size:13px;color:#26724b;margin-top:8px}
+.shell{grid-template-rows:minmax(0,1fr)}.sidebar{min-height:0;max-height:100dvh}.history-region{flex:1;min-height:0;display:flex;flex-direction:column}.sidebar{gap:24px}.current-chat{flex-shrink:0;margin-bottom:9px}#conversation-list{flex:1;overflow:auto;min-height:80px;scrollbar-width:thin;display:flex;flex-direction:column;gap:5px}.conversation-item{display:flex;flex-direction:column;gap:6px;flex-shrink:0;border:1px solid transparent;border-radius:9px;background:transparent;text-align:left;padding:12px;color:#587365;width:100%}.conversation-item:hover{background:#e5eee7}.conversation-item[aria-current="true"]{background:#dce9df;border-color:#cadfce}.conversation-item:disabled{opacity:.55}.conversation-preview{width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px}.conversation-info{display:flex;justify-content:space-between;font-size:9px;color:#8ca192}.summary-badge{color:#4e8465;background:#ecf6ed;padding:1px 5px;border-radius:4px}.sidebar-note{flex-shrink:0;margin-top:0}#mobile-conversations{display:none}@media(max-width:680px){#mobile-conversations{display:block;max-width:94px;border:1px solid #dce7df;border-radius:7px;background:#fff;color:#63826c;padding:8px;font-size:10px}.header-title{gap:7px}header{gap:7px}.header-title h1{font-size:12px}.mobile-new{white-space:nowrap;padding:8px 6px}}
 </style>
 </head>
 <body>
@@ -28,12 +29,12 @@
 <aside class="sidebar">
  <div class="brand"><div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M5 17C3 9 8 4 19 4c1 10-4 16-12 14M6 18l8-8"/><path d="M10 14v-4m0 4h4"/></svg></div><div><div class="brand-name">青禾</div><div class="brand-sub">CARE STUDIO</div></div></div>
  <button class="new-chat" id="new-chat"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>开启新对话</button>
- <div><div class="section-label">本次对话</div><div class="current-chat"><svg viewBox="0 0 24 24"><path d="M5 5h14v11H9l-4 4z"/></svg><span id="conversation-title">有什么可以帮您？</span></div></div>
+ <div class="history-region"><div class="section-label">我的会话</div><div class="current-chat"><svg viewBox="0 0 24 24"><path d="M5 5h14v11H9l-4 4z"/></svg><span id="conversation-title">有什么可以帮您？</span></div><nav id="conversation-list" aria-label="历史会话"></nav></div>
  <div class="sidebar-note"><strong>每个问题，都认真回应。</strong>购物咨询、物流疑问、售后诉求，<br>我们陪您一起理清。</div>
  <div class="sidebar-bottom"><span class="tiny-dot"></span>用心服务，安心购物</div>
 </aside>
 <main class="workspace">
- <header><div class="header-title"><div class="avatar"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0116 0v2M4 11H3v6h3v-6zm16 0h1v6h-3v-6zM18 17v2h-6"/><path d="M10 19h3"/></svg></div><div><h1>青禾在线客服</h1><p id="status" role="status">很高兴为您服务</p></div></div><div class="connection"><i></i>在线为您解答</div><button class="mobile-new" id="mobile-new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新对话</button></header>
+ <header><div class="header-title"><div class="avatar"><svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0116 0v2M4 11H3v6h3v-6zm16 0h1v6h-3v-6zM18 17v2h-6"/><path d="M10 19h3"/></svg></div><div><h1>青禾在线客服</h1><p id="status" role="status">很高兴为您服务</p></div></div><div class="connection"><i></i>在线为您解答</div><select id="mobile-conversations" aria-label="切换会话"><option value="">历史会话</option></select><button class="mobile-new" id="mobile-new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>新对话</button></header>
  <div class="chat-scroll" id="chat-scroll">
  <div class="chat-content">
  <section class="welcome" id="welcome">
@@ -61,7 +62,7 @@
 "use strict";
 const $ = function(id){return document.getElementById(id);};
 const input=$("message-input"), send=$("send"), messages=$("messages"), scroll=$("chat-scroll");
-let views=[];
+let views=[];let conversationItems=[],listRevision=0;
 let conversationId=null, busy=false, controller=null, serverDone=false, followBottom=true;
 const reducedMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const assistantIcon='<svg viewBox="0 0 24 24"><path d="M4 13v-2a8 8 0 0116 0v2M4 11H3v6h3v-6zm16 0h1v6h-3v-6zM18 17v2h-6"/></svg>';
@@ -72,7 +73,7 @@ window.addEventListener("resize",function(){followBottom=true;bottom();});
 function resize(){input.style.height="auto";input.style.height=Math.min(input.scrollHeight,120)+"px";}
 input.addEventListener("input",function(){resize();if(!busy)send.disabled=!input.value.trim();});
 function setBusy(value){
- busy=value;document.querySelectorAll("[data-workflow-enabled]").forEach(b=>b.disabled=value||b.dataset.workflowEnabled!=="true");$("product-category").disabled=value; $("new-chat").disabled=value;$("mobile-new").disabled=value;
+ busy=value;document.querySelectorAll(".conversation-item").forEach(b=>b.disabled=value);$("mobile-conversations").disabled=value;document.querySelectorAll("[data-workflow-enabled]").forEach(b=>b.disabled=value||b.dataset.workflowEnabled!=="true");$("product-category").disabled=value; $("new-chat").disabled=value;$("mobile-new").disabled=value;
  send.classList.toggle("stop",value);$("send-label").textContent=value?"停止":"发送";
  $("send-icon").innerHTML=value?'<rect x="7" y="7" width="10" height="10" rx="1"/>':'<path d="M12 19V5M6 11l6-6 6 6"/>';
  send.disabled=value?serverDone:!input.value.trim();
@@ -159,11 +160,56 @@ function painter(bubble){
   flush:function(){if(frame!==null)cancelAnimationFrame(frame);frame=null;bubble.textContent+=queue;queue="";if(finishResolve)finishResolve();bottom();}
  };
 }
+
+function renderConversations(){
+ const nav=$("conversation-list");nav.replaceChildren();const mobile=$("mobile-conversations");mobile.replaceChildren(new Option("历史会话",""));
+ for(const item of conversationItems){
+  const button=document.createElement("button");button.type="button";button.className="conversation-item";button.disabled=busy;button.dataset.conversationId=item.id;button.setAttribute("aria-current",String(item.id===conversationId));
+  const title=document.createElement("span");title.className="conversation-preview";title.textContent=item.preview||"新对话";button.title=title.textContent;
+  const info=document.createElement("span");info.className="conversation-info";const date=document.createElement("span");date.textContent=new Date(item.created_at+"Z").toLocaleDateString("zh-CN");info.append(date);
+  if(item.summarized){const badge=document.createElement("span");badge.className="summary-badge";badge.textContent="已摘要";info.append(badge);}
+  button.append(title,info);button.addEventListener("click",()=>loadConversation(item.id));nav.append(button);
+  mobile.append(new Option((item.summarized?"[已摘要] ":"")+item.preview,item.id));
+ }
+ mobile.value=conversationId||"";
+}
+async function refreshConversations(){
+ const revision=++listRevision;
+ try{const items=[];let cursor=null;
+  do{const response=await fetch("/api/conversations?limit=100"+(cursor?"&cursor="+encodeURIComponent(cursor):""));if(!response.ok)return;const page=await response.json();items.push(...page.items);cursor=page.next_cursor;}while(cursor);
+  if(revision!==listRevision)return;conversationItems=items;renderConversations();
+ }catch(_){} // Sidebar availability never blocks a conversation.
+}
+async function loadConversation(cid){
+ if(busy||!cid)return;serverDone=true;setBusy(true);
+ try{
+  const records=[];let after=0;
+  do{const response=await fetch("/api/conversations/"+encodeURIComponent(cid)+"/messages?limit=200&after_id="+after);if(!response.ok)throw new Error("历史暂时无法加载，请稍后重试。");const page=await response.json();records.push(...page.items);after=page.next_after_id;}while(after);
+  conversationId=cid;views=[];messages.replaceChildren();$("welcome").hidden=records.length>0;followBottom=true;
+  const first=records.find(m=>m.role==="user");$("conversation-title").textContent=first?first.content:"新对话";$("session-label").textContent="历史原文已回载";
+  const names={query_order:"查询订单",query_product:"查询商品",query_logistics:"查询物流",query_faq:"查询常见问题",create_ticket:"创建工单"};const calls={};
+  for(const row of records)for(const call of row.tool_calls||[]){(calls[row.turn_id]??=[]).push(names[call.name]||call.name);}
+  const visible=records.filter(m=>m.role==="user"||(m.role==="assistant"&&m.content));
+  for(const row of visible){
+   const view=addMessage(row.role,row.content);view.turnId=row.turn_id;view.conversationId=cid;view.completed=row.turn_status==="completed";view.citations=row.citations||[];
+   view.row.querySelector(".message-meta span:last-child").textContent=new Date(row.created_at+"Z").toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});
+   if(row.role==="assistant"){
+    view.actions=row.actions||[];formatCompleted(view.bubble,view);renderActions(view);attachFeedback(view);
+    if(calls[row.turn_id]?.length){view.row.classList.add("has-tools");view.trail=document.createElement("div");view.trail.className="tool-trail";for(const name of calls[row.turn_id]){const badge=document.createElement("span");badge.className="tool-badge";badge.dataset.state="completed";badge.textContent=name;view.trail.append(badge);}view.body.insertBefore(view.trail,view.bubble);}
+   }
+  }
+  const last=visible.at(-1);if(last?.role==="user"&&last.turn_status==="paused"){const view=addMessage("assistant","请选择对应订单，我会继续核对政策。");view.turnId=last.turn_id;view.conversationId=cid;}
+  input.value="";resize();renderConversations();await syncWorkflow();saveConversation();bottom();$("status").textContent="会话已恢复，您可以继续说";
+ }catch(error){$("status").textContent=error.message;}
+ finally{setBusy(false);}
+}
+$("mobile-conversations").addEventListener("change",e=>loadConversation(e.target.value));
+
 function newChat(){
  if(busy)return;
  conversationId=null;views=[];try{sessionStorage.removeItem("care.chat");}catch(_){}messages.replaceChildren();$("welcome").hidden=false;
  $("conversation-title").textContent="有什么可以帮您？";$("session-label").textContent="新的开始";
- $("status").textContent="很高兴为您服务";input.value="";resize();setBusy(false);followBottom=true;input.focus();
+ $("status").textContent="很高兴为您服务";input.value="";resize();setBusy(false);followBottom=true;input.focus();renderConversations();
 }
 $("new-chat").addEventListener("click",newChat);$("mobile-new").addEventListener("click",newChat);
 document.querySelectorAll("[data-question]").forEach(function(button){button.addEventListener("click",function(){input.value=button.dataset.question;submit();});});
@@ -250,7 +296,7 @@ async function submit(resumeView=null,resumePayload=null){
   if(!input.value&&!resuming)input.value=text;resize();
  }finally{
   if(reader){try{reader.releaseLock();}catch(_){}}
-  controller=null;setBusy(false);input.focus();bottom();
+  controller=null;setBusy(false);input.focus();bottom();refreshConversations();
  }
 }
 
@@ -303,7 +349,7 @@ async function syncWorkflow(){
  }catch(_){}
 }
 
-restoreConversation();syncWorkflow();
+restoreConversation();refreshConversations();if(conversationId)loadConversation(conversationId);
 })();
 </script>
 </body>

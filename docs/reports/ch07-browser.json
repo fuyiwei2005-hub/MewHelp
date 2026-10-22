@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "first_reply": true,
+    "new_chat_clears_view": true,
+    "two_conversations": true,
+    "old_raw_restored": true,
+    "continue_old": true,
+    "refresh_full_reload": true,
+    "sidebar_scroll_contained": true,
+    "sidebar_failure_does_not_block": true,
+    "mobile_switch_visible": true,
+    "no_script_errors": true
+  },
+  "errors": [],
+  "conversations": {
+    "first": "3f2f5f2e9fae47beaa39ea8ecb589c1a",
+    "second": "81ac502247fc4353b8b42f28e0f7f51a"
+  }
+}
