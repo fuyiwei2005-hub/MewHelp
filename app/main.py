@@ -165,6 +165,8 @@ def create_app(settings: Settings | None = None, gateway: ModelGateway | None = 
         except UpstreamError as error:
             raise HTTPException(502, {"code": error.code, "message": error.message}) from None
 
+    from app.memory.api import install_routes as install_memory_routes
+    install_memory_routes(app)
     from app.workflow.api import install_routes
     install_routes(app)
     return app

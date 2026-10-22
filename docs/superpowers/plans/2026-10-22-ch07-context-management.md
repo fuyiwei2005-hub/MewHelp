@@ -91,14 +91,14 @@ assert (await repo.boundaries(cid))['summary_upto_msg_id']==before
 Files: app/memory/api.py、repository.py；app/main.py；tests/test_memory_api.py。
 Interfaces: GET /api/conversations?cursor=&limit=；GET /api/conversations/{cid}/messages?after_id=&limit=。固定当前demo-user，跨归属返回404。
 
-- [ ] 红测试会话按创建倒序/首问预览/摘要标志/分页到全部；消息原文不变、tool只有标识、引用/动作/回合状态齐全；两接口不改变边界、不触发任务。
+- [x] 红测试会话按创建倒序/首问预览/摘要标志/分页到全部；消息原文不变、tool只有标识、引用/动作/回合状态齐全；两接口不改变边界、不触发任务。
 ```python
 assert response.json()['items'][0]['preview']=='第一问'
 assert other_user_response.status_code==404
 assert before_boundaries==after_boundaries
 ```
-- [ ] 使用短只读Session，cursor/limit校验；支持恢复待选订单和旧会话，不让页面GET创建会话。
-- [ ] API/数据库回归通过，记任务并提交。
+- [x] 使用短只读Session，cursor/limit校验；支持恢复待选订单和旧会话，不让页面GET创建会话。
+- [x] API/数据库回归通过，记任务并提交。
 
 ## Task 6：原生多会话侧栏
 
