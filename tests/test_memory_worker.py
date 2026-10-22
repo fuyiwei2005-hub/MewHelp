@@ -70,3 +70,57 @@ def test_snapshot_missing_message_does_not_advance_summary(tmp_path):
         await SummaryWorker(cfg,manager,Graph(),Summarizer()).run_once()
         assert repo.failed and not repo.completed
     asyncio.run(run())
+
+
+def test_cancelled_turn_inside_snapshot_is_excluded_from_source(tmp_path):
+    from app.config import Settings
+    from app.memory.worker import SummaryWorker
+    from app.memory.logging import ContextLogger
+    from app.memory.tokens import TokenCounter
+    async def run():
+        good=HumanMessage(content='保留的事实',id='1',additional_kwargs={'turn_id':'good'})
+        failed=HumanMessage(content='取消的输入',id='2',additional_kwargs={'turn_id':'failed'})
+        last=AIMessage(content='收到',id='3',additional_kwargs={'turn_id':'last'})
+        class Repo:
+            committed=False;paragraphs=[]
+            async def claim(self,*args):return dict(id='j',conversation_id='c',start_after=0,upto_msg_id=3,attempts=1,checkpoint_config={})
+            async def load_messages(self,*args):return [good,last]
+            async def summaries(self,*args):return self.paragraphs
+            async def complete(self,*args):self.committed=True;self.paragraphs=[{'sequence':1}];return True
+            async def fail(self,*args):pass
+        class Graph:
+            async def aget_state(self,*args):return SimpleNamespace(values={'messages':[good,failed,last]})
+        class Summarizer:
+            async def summarize(self,source,*args):
+                assert [m.id for m in source]==['1','3']
+                return SimpleNamespace(facts=[dict(source_id='1',quote=good.content)])
+        repo=Repo();manager=SimpleNamespace(repo=repo,counter=TokenCounter(),logger=ContextLogger(str(tmp_path/'failed-turn.log')))
+        await SummaryWorker(Settings(),manager,Graph(),Summarizer()).run_once()
+        assert repo.committed
+    asyncio.run(run())
+
+
+def test_single_complete_round_over_4000_tokens_uses_available_model_window(tmp_path):
+    from app.config import Settings
+    from app.memory.worker import SummaryWorker
+    from app.memory.logging import ContextLogger
+    from app.memory.tokens import TokenCounter
+    async def run():
+        source=[HumanMessage(content='商品咨询。'+'甲'*1900,id='1',additional_kwargs={'turn_id':'a'}),AIMessage(content='乙'*3500,id='2',additional_kwargs={'turn_id':'a'})]
+        class Repo:
+            committed=False;paragraphs=[]
+            async def claim(self,*args):return dict(id='j',conversation_id='c',start_after=0,upto_msg_id=2,attempts=1,checkpoint_config={})
+            async def load_messages(self,*args):return source
+            async def summaries(self,*args):return self.paragraphs
+            async def complete(self,*args):self.committed=True;self.paragraphs=[{'sequence':1}];return True
+            async def fail(self,*args):pass
+        class Graph:
+            async def aget_state(self,*args):return SimpleNamespace(values={'messages':source})
+        class Summarizer:
+            async def summarize(self,rows,*args):
+                assert [m.content for m in rows]==[m.content for m in source]
+                return SimpleNamespace(facts=[dict(source_id='1',quote='商品咨询。')])
+        repo=Repo();manager=SimpleNamespace(repo=repo,counter=TokenCounter(),logger=ContextLogger(str(tmp_path/'large.log')))
+        await SummaryWorker(Settings(),manager,Graph(),Summarizer()).run_once()
+        assert repo.committed
+    asyncio.run(run())

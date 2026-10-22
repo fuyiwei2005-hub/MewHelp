@@ -101,3 +101,36 @@ def test_oversized_current_input_returns_413_before_creating_turn(tmp_path):
             assert caught.value.status_code==413 and not service.busy
         finally:await db.close()
     asyncio.run(run())
+
+
+def test_ticket_projection_keeps_payload_in_checkpoint_and_preserves_paused_turn(tmp_path):
+    import json
+    from app.config import Settings
+    from app.db import Database
+    from app.repositories import Repository
+    from app.workflow.repository import WorkflowRepository
+    from app.workflow.service import WorkflowService
+    from workflow_fakes import deps
+    from contextlib import asynccontextmanager
+    @asynccontextmanager
+    async def lock(cfg,cid):yield
+    async def run():
+        cfg=Settings().model_copy(update={'context_log_path':str(tmp_path/'ticket.log')});db=Database(cfg.database_url.get_secret_value().replace('/support?','/support_test?'))
+        try:
+            await db.create_tables();d=deps();d.cfg=cfg;d.repo=WorkflowRepository(db);await d.repo.seed();business=Repository(db);d.business_repo=business
+            service=WorkflowService(cfg,business,d.gateway,None,InMemorySaver(),deps=d,lock_factory=lock)
+            turn=await service.prepare('我要投诉');body=''.join([f async for f in service.events(turn)]);await service.release(turn)
+            offers=(await d.repo.run(turn.cid,turn.tid))['data']['actions'];ticket=next(o for o in offers if o['kind']=='ticket')
+            paused=await service.prepare('这个能退吗',turn.cid);body=''.join([f async for f in service.events(paused)]);await service.release(paused)
+            before=await service.graph.aget_state(service.config(turn.cid));assert before.tasks
+            result=await service.action(turn.cid,ticket['id'],'ticket');assert result['ticket_no']
+            after=await service.graph.aget_state(service.config(turn.cid));assert after.config==before.config
+            rows=await service.memory.repo.load_messages(turn.cid,completed_only=False)
+            assert all(result['ticket_no'] not in m.content for m in rows if m.type=='tool')
+            recorded=await service.memory.action_graph.aget_state(service.config(turn.cid+':actions'))
+            assert any(result['ticket_no'] in m.content for m in recorded.values['messages'] if m.type=='tool')
+            next_turn=await service.prepare('你好',turn.cid);body=''.join([f async for f in service.events(next_turn)]);await service.release(next_turn)
+            snapshot=await service.graph.aget_state(service.config(turn.cid))
+            assert any(result['ticket_no'] in m.content for m in snapshot.values['messages'] if m.type=='tool')
+        finally:await db.close()
+    asyncio.run(run())

@@ -67,6 +67,11 @@ class OpenAICompatibleGateway:
         model=self.model.bind_tools(tools,tool_choice="auto",parallel_tool_calls=False) if tools else self.model
         return await model.ainvoke(messages)
 
+    async def decide_control(self,messages,tools):
+        options=dict(response_format={'type':'json_object'})
+        model=self.model.bind_tools(tools,tool_choice='auto',parallel_tool_calls=False,**options) if tools else self.model.bind(**options)
+        return await model.ainvoke(messages)
+
     async def final_stream(self,messages,tools):
         model=self.model.bind_tools(tools,tool_choice="none") if tools else self.model
         async for chunk in model.astream(messages,stream_usage=True):

@@ -37,8 +37,19 @@ class MemoryRepository:
     async def load_messages(self,cid,completed_only=True):
         async with self.db.sessions() as s:
             q=select(Message).where(Message.conversation_id==cid)
-            if completed_only:q=q.where(Message.turn_status=='completed')
+            if completed_only:
+                from app.workflow.models import WorkflowRun
+                successful=select(WorkflowRun.turn_id).where(WorkflowRun.conversation_id==cid,WorkflowRun.status=='completed')
+                q=q.where(or_(Message.turn_status=='completed',Message.turn_id.in_(successful)))
             return [from_row(r) for r in (await s.scalars(q.order_by(Message.id))).all()]
+    async def context_snapshot(self,cid):
+        # One consistent-read transaction prevents mixing old paragraphs with new coverage.
+        async with self.db.sessions() as s,s.begin():
+            row=await s.get(Conversation,cid)
+            if not row:raise ValueError('unknown_conversation')
+            bounds=dict(summary_upto_msg_id=row.summary_upto_msg_id,layer1_from_msg_id=row.layer1_from_msg_id,context_version=row.context_version)
+            paragraphs=(await s.scalars(select(ConversationSummary).where(ConversationSummary.conversation_id==cid).order_by(ConversationSummary.sequence))).all()
+            return ([dict(id=r.id,sequence=r.sequence,from_msg_id=r.from_msg_id,upto_msg_id=r.upto_msg_id,content=r.content) for r in paragraphs],bounds)
     async def boundaries(self,cid):
         async with self.db.sessions() as s:
             row=await s.get(Conversation,cid)
@@ -67,7 +78,9 @@ class MemoryRepository:
             return job_dict(row)
     async def claim(self,lease_seconds,job_id=None,max_attempts=3):
         async with self.db.sessions() as s,s.begin():
-            now=utcnow();q=select(SummaryJob).where(SummaryJob.attempts<max_attempts,or_(SummaryJob.status=='pending',and_(SummaryJob.status=='running',SummaryJob.lease_until<now))).order_by(SummaryJob.created_at).limit(1).with_for_update(skip_locked=True)
+            now=utcnow()
+            await s.execute(update(SummaryJob).where(SummaryJob.status=='running',SummaryJob.lease_until<now,SummaryJob.attempts>=max_attempts).values(status='failed',error='lease_expired_after_last_attempt',lease_until=None))
+            q=select(SummaryJob).where(SummaryJob.attempts<max_attempts,or_(SummaryJob.status=='pending',and_(SummaryJob.status=='running',SummaryJob.lease_until<now))).order_by(SummaryJob.created_at).limit(1).with_for_update(skip_locked=True)
             if job_id:q=q.where(SummaryJob.id==job_id)
             row=await s.scalar(q)
             if not row:return None

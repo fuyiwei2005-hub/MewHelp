@@ -43,6 +43,9 @@ class WorkflowService:
             from .common import tools_for
             tools=tools_for(dict(conversation_id='startup',turn_id='startup',resolved_question='',memory_enabled=True),deps)
             self.memory=ContextManager(cfg,business.db,list(tools.values()));deps.memory=self.memory
+            from langgraph.graph import StateGraph,START,END
+            from .state import WorkflowState
+            self.memory.action_graph=StateGraph(WorkflowState).add_node('capture',lambda s:{}).add_edge(START,'capture').add_edge('capture',END).compile(checkpointer=saver)
         self.graph=build_graph(deps,saver)
 
     def config(self,cid):return {'configurable':{'thread_id':cid},'recursion_limit':100}
@@ -171,11 +174,21 @@ class WorkflowService:
                 return await self.deps.repo.refund(cid,offer_id,reason)
             tid=hashlib.sha256((cid+offer_id).encode()).hexdigest()[:32]
             await self.deps.repo.start(cid,tid,'用户确认创建工单')
-            ctx=ToolContext(self.business,cid,tid,offer['payload']['description'])
+            ctx=ToolContext(self.business,cid,tid,offer['payload']['description'],lightweight_results=bool(self.memory))
             call=dict(name='create_ticket',args=offer['payload'],id=offer_id,type='tool_call')
+            projected=[]
+            if self.memory:
+                from app.memory.bridge import from_item
+                for index,item in enumerate([dict(role='user',content='确认创建工单'),dict(role='assistant',content='',tool_calls=[call])]):projected.append(await self.memory.repo.append(cid,tid,'action:'+str(index),from_item(item)))
             result=await ToolExecutor(build_tools(ctx),self.cfg.tool_timeout_seconds,self.cfg.tool_max_attempts).execute(call)
             if not result.get('ok'):raise HTTPException(503,'工单未创建，请重试。')
             state=dict(conversation_id=cid,turn_id=tid,raw_question='用户确认创建工单',turn_messages=[dict(role='user',content='确认创建工单'),dict(role='assistant',content='',tool_calls=[call]),dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=offer_id),dict(role='assistant',content='工单已创建：'+result['ticket_no'])],actions=[],answer='工单已创建：'+result['ticket_no'])
+            if self.memory:
+                from app.memory.bridge import from_item
+                for index,item in enumerate(state['turn_messages'][2:],2):projected.append(await self.memory.repo.append(cid,tid,'action:'+str(index),from_item(item)))
+                # Separate durable state avoids changing the execution cursor of a paused turn.
+                await self.memory.action_graph.ainvoke({'messages':projected},self.config(cid+':actions'))
+                state.update(memory_enabled=True,messages=projected,turn_messages=[])
             await self.deps.repo.audit(state)
             return await self.deps.repo.complete_offer(cid,offer_id,result)
         finally:await self.release(Turn(cid,'',None,lock,{}))

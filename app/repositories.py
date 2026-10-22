@@ -51,7 +51,7 @@ class Repository:
             rows=(await s.scalars(select(FAQ).where(FAQ.question.contains(keyword,autoescape=True)).order_by(FAQ.id).limit(5))).all()
             return [dict(question=r.question,answer=r.answer,category=r.category) for r in rows]
 
-    async def ticket(self,cid,call_id,description,ticket_type,turn_id=None,raw_call_id=None):
+    async def ticket(self,cid,call_id,description,ticket_type,turn_id=None,raw_call_id=None,tool_result_marker=False):
         try:
             async with self.db.sessions() as s,s.begin():
                 old=await s.scalar(select(Ticket).where(Ticket.originating_tool_call_id==call_id))
@@ -62,7 +62,7 @@ class Repository:
                 await s.execute(update(Conversation).where(Conversation.id==cid).values(status="escalated"))
                 result=dict(ticket_no=number,status="pending")
                 if turn_id:
-                    s.add(Message(conversation_id=cid,turn_id=turn_id,role="tool",content=json.dumps({"ok":True,**result},ensure_ascii=False),tool_call_id=raw_call_id))
+                    s.add(Message(conversation_id=cid,turn_id=turn_id,role="tool",content=("[工具结果 "+str(raw_call_id)+"；完整结果见checkpoint]") if tool_result_marker else json.dumps({"ok":True,**result},ensure_ascii=False),tool_call_id=raw_call_id))
                 return result
         except IntegrityError:
             async with self.db.sessions() as s:

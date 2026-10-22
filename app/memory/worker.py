@@ -1,7 +1,7 @@
 import asyncio,time
 from contextlib import suppress
-from .layers import turns,validate_protocol
-from .summary import validate_facts
+from .layers import turns,validate_protocol,repair_order
+from .summary import validate_facts,summary_request_tokens
 
 
 class SummaryWorker:
@@ -38,17 +38,19 @@ class SummaryWorker:
             messages=[m for m in snapshot.values.get('messages',[]) if m.id and job['start_after']<int(m.id)<=job['upto_msg_id']]
             # Status is authoritative in MySQL; a frozen checkpoint may precede the final audit.
             completed={m.id for m in await repo.load_messages(job['conversation_id'])}
+            messages=[m for m in messages if m.id in completed]
             expected={id for id in completed if job['start_after']<int(id)<=job['upto_msg_id']}
             if not messages or {m.id for m in messages}!=expected:raise ValueError('summary_source_missing_or_incomplete')
-            limit=min(4000,self.cfg.model_context_window-self.cfg.max_output_tokens-self.cfg.context_safety_tokens-2000)
-            source=[]
-            for group in turns(messages):
-                validate_protocol(group)
-                restored=[m.model_copy(update={'content':m.additional_kwargs['raw_result']}) if m.type=='tool' and m.additional_kwargs.get('raw_result') else m for m in group]
-                if self.manager.counter.messages(restored)>limit:raise ValueError('summary_turn_exceeds_input_budget')
-                if source and self.manager.counter.messages([*source,*restored])>limit:break
-                source.extend(restored)
             background=await repo.summaries(job['conversation_id'])
+            source=[]
+            for group in turns(repair_order(messages)):
+                validate_protocol(group)
+                candidate=[*source,*group]
+                size=summary_request_tokens(candidate,background,self.manager.counter)
+                fits=size+self.cfg.max_output_tokens+self.cfg.context_safety_tokens<=self.cfg.model_context_window
+                if source and (not fits or self.manager.counter.messages(candidate)>4000):break
+                if not fits:raise ValueError('summary_turn_exceeds_actual_model_window')
+                source=candidate
             async with asyncio.timeout(self.cfg.summary_timeout_seconds):result=await self.summarizer.summarize(source,background)
             checked=validate_facts(source,result.facts)
             upto=max(int(m.id) for m in source)

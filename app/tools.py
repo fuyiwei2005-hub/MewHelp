@@ -38,6 +38,7 @@ class ToolContext:
     faq_backend: object=None
     call_id: str=""
     order_backend: object=None
+    lightweight_results: bool=False
 
 
 class Registry(dict):
@@ -87,7 +88,8 @@ def build_tools(ctx: ToolContext):
     async def create_ticket(description: str,ticket_type: str)->dict:
         """用户明确需要人工处理时创建工单；不能执行退款换货。description用用户已提供的事实。"""
         key=hashlib.sha256((ctx.conversation_id+ctx.turn_id+ctx.call_id).encode()).hexdigest()
-        result=await ctx.repo.ticket(ctx.conversation_id,key,description,ticket_type,turn_id=ctx.turn_id,raw_call_id=ctx.call_id)
+        options={'tool_result_marker':True} if ctx.lightweight_results else {}
+        result=await ctx.repo.ticket(ctx.conversation_id,key,description,ticket_type,turn_id=ctx.turn_id,raw_call_id=ctx.call_id,**options)
         return {"ok":True,**result}
 
     return Registry(ctx,[query_order,query_product,query_logistics,query_faq,create_ticket])

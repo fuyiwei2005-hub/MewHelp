@@ -61,3 +61,17 @@ def fit_view(view,budget,counter):
     selected=trim_messages(view.window,max_tokens=budget,token_counter=counter.messages,strategy='last',start_on='human',allow_partial=False)
     ids={m.id for m in selected};groups=turns(view.window)
     return sum([g for g in groups if all(m.id in ids for m in g)],[])
+
+
+def repair_order(messages):
+    result=[]
+    for group in turns(sorted(messages,key=lambda m:int(m.id))):
+        results={m.tool_call_id:m for m in group if m.type=='tool'}
+        for m in group:
+            if m.type=='tool':continue
+            calls=getattr(m,'tool_calls',[]) or []
+            if calls and not all(c['id'] in results for c in calls):continue
+            result.append(m)
+            result.extend(results[c['id']] for c in calls)
+    return result
+

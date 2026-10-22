@@ -32,7 +32,8 @@ def build_agent(deps):
             size=(deps.memory.counter.messages(messages)+deps.memory.counter.json([convert_to_openai_tool(t) for t in tools.values()])) if state.get('memory_enabled') else estimate_tokens(messages)+size_of([convert_to_openai_tool(t) for t in tools.values()])
             b.reserve(size,output=deps.cfg.max_output_tokens)
             if state.get('memory_enabled'):deps.memory.log_model(state,'decide',messages,list(tools.values()))
-            response=await deps.gateway.decide(messages,list(tools.values()));b.charge(size,response)
+            decide_call=getattr(deps.gateway,'decide_control',deps.gateway.decide) if state.get('memory_enabled') else deps.gateway.decide
+            response=await decide_call(messages,list(tools.values()));b.charge(size,response)
             if state.get('memory_enabled'):deps.memory.record_usage(state,'decide',size,response.usage_metadata)
             if response.invalid_tool_calls:raise ValueError('invalid_tool_call')
             calls=response.tool_calls

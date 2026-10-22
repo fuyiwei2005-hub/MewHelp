@@ -19,3 +19,21 @@ def test_final_stream_preserves_usage_only_chunk_through_citation_validation():
         assert ''.join(p.text for p in pieces)=='运费10元[1]'
         assert next(p.usage for p in pieces if p.usage)['total_tokens']==60
     asyncio.run(run())
+
+
+def test_agent_control_uses_json_mode_without_changing_legacy_decide():
+    import json,httpx
+    from app.gateway import OpenAICompatibleGateway
+    from app.config import Settings
+    from langchain_core.messages import HumanMessage
+    async def run():
+        def handler(request):
+            body=json.loads(request.content)
+            assert body['response_format']=={'type':'json_object'}
+            return httpx.Response(200,json={'id':'demo','object':'chat.completion','created':1,'model':'fake','choices':[{'index':0,'message':{'role':'assistant','content':'{"disposition":"answer"}'},'finish_reason':'stop'}]})
+        cfg=Settings(_env_file=None,llm_api_key='test-only',llm_model='fake')
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            gateway=OpenAICompatibleGateway(cfg,http_client=client)
+            result=await gateway.decide_control([HumanMessage(content='Return JSON')],[])
+            assert json.loads(result.content)['disposition']=='answer'
+    asyncio.run(run())

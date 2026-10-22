@@ -72,3 +72,23 @@ def test_worker_lease_prevents_stale_commit_and_foreign_boundaries():
             assert not await repo.summaries(cid)
         finally:await db.close()
     asyncio.run(run())
+
+
+def test_expired_last_attempt_job_no_longer_blocks_conversation():
+    from app.config import Settings
+    from app.db import Database
+    from app.repositories import Repository
+    from app.memory.repository import MemoryRepository
+    from app.memory.models import SummaryJob
+    async def run():
+        db=Database(Settings().database_url.get_secret_value().replace('/support?','/support_test?'))
+        try:
+            await db.create_tables();repo=MemoryRepository(db);cid=uuid4().hex;await Repository(db).ensure_conversation(cid)
+            job=await repo.enqueue(cid,0,1,{'configurable':{'thread_id':cid}})
+            await repo.claim(-1,job['id'],max_attempts=1)
+            assert await repo.claim(60,job['id'],max_attempts=1) is None
+            async with db.sessions() as session:assert (await session.get(SummaryJob,job['id'])).status=='failed'
+            next_job=await repo.enqueue(cid,0,2,{'configurable':{'thread_id':cid}})
+            assert next_job['id']!=job['id']
+        finally:await db.close()
+    asyncio.run(run())

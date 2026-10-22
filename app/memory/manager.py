@@ -4,22 +4,10 @@ from langchain_core.messages import HumanMessage
 from .repository import MemoryRepository
 from .logging import ContextLogger
 from .tokens import ContextBudget
-from .layers import partition,fit_view,turns
+from .layers import partition,fit_view,turns,repair_order
 from .assembly import FIXED_SYSTEM,counter_for,definitions,wire
 from .bridge import as_item
 
-
-def repair_order(messages):
-    result=[]
-    for group in turns(sorted(messages,key=lambda m:int(m.id))):
-        results={m.tool_call_id:m for m in group if m.type=='tool'}
-        for m in group:
-            if m.type=='tool':continue
-            calls=getattr(m,'tool_calls',[]) or []
-            if calls and not all(c['id'] in results for c in calls):continue
-            result.append(m)
-            result.extend(results[c['id']] for c in calls)
-    return result
 
 class ContextManager:
     def __init__(self,cfg,db,tools):
@@ -33,14 +21,19 @@ class ContextManager:
     async def prepare(self,snapshot,cid,tid,question):
         if self.counter.text(question)>self.cfg.max_user_input_tokens:raise ValueError('上下文预算不足：当前输入超过MAX_USER_INPUT_TOKENS')
         old=snapshot.values.get('messages',[]) if snapshot.values else []
+        actions=[]
+        if getattr(self,'action_graph',None):
+            action_snapshot=await self.action_graph.aget_state({'configurable':{'thread_id':cid+':actions'}})
+            actions=action_snapshot.values.get('messages',[])
         rows=await self.repo.load_messages(cid,completed_only=False)
-        dbmap={m.id:m for m in rows};oldmap={m.id:m for m in old};canonical=[]
+        dbmap={m.id:m for m in rows};oldmap={m.id:m for m in old};rawmap={m.id:m for m in [*old,*actions]};canonical=[]
         for row in rows:
-            m=oldmap.get(row.id,row).model_copy(deep=True)
+            m=rawmap.get(row.id,row).model_copy(deep=True)
             m.additional_kwargs.update(row.additional_kwargs);canonical.append(m)
         completed={m.additional_kwargs['turn_id'] for m in rows if m.additional_kwargs.get('turn_status')=='completed'}
         history=repair_order([m for m in canonical if m.additional_kwargs.get('turn_id') in completed])
-        summaries=[{k:v for k,v in s.items() if k!='facts'} for s in await self.repo.summaries(cid)];bounds=await self.repo.boundaries(cid)
+        summaries,bounds=await self.repo.context_snapshot(cid)
+        summaries=[{k:v for k,v in s.items() if k!='facts'} for s in summaries]
         plan=ContextBudget.calculate(self.cfg,self.prefix_tokens,self.counter.json(summaries))
         view=partition(history,bounds['summary_upto_msg_id'],bounds['layer1_from_msg_id'],plan,self.counter)
         await self.repo.advance_layer1(cid,view.layer1_from)
