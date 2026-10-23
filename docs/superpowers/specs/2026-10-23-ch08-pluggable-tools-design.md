@@ -1,4 +1,4 @@
-# 第八章：可插拔工具系统设计（待批准）
+# 第八章：可插拔工具系统设计（已批准）
 
 日期：2026-10-23。基于第七章完整State/上下文管理，沿用FastAPI、LangGraph与现有MySQL/独立PostgreSQL。本文件是设计，不表示功能已经实现；第九、十章不混入本章。
 
@@ -85,4 +85,4 @@ Context7于2026-10-23复核：
 - https://github.com/langchain-ai/langchain-mcp-adapters/blob/main/_autodocs/api-reference/client.md ：get_tools(server_name=...)、临时会话与http传输。
 - https://github.com/modelcontextprotocol/python-sdk/blob/v1.28.0/docs/server.md ：FastMCP、Streamable HTTP与stateless设置。
 
-自审：范围限第八章，未新增真实接口或MCP写权限；动态发现与本地授权分开，避免“新增自动可用”绕过权限约束；写前interrupt且写执行无自动重试；旧投诉明确确认与新Agent预览分别保留；工具目录变化与第七章前缀预算联动。无未决占位；本书面稿待用户批准后才进入计划和实现。
+自审：范围限第八章，未新增真实接口或MCP写权限；动态发现与本地授权分开，避免“新增自动可用”绕过权限约束；写前interrupt且写执行无自动重试；旧投诉明确确认与新Agent预览分别保留；工具目录变化与第七章前缀预算联动。无未决占位；用户2026-10-23已批准方案A，现进入计划与实现。
