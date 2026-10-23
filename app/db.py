@@ -10,6 +10,7 @@ class Database:
     async def create_tables(self):
         import app.workflow.models
         import app.memory.models
+        import app.tooling.models
         from app.knowledge import models,hybrid_models  # Register knowledge tables before DDL.
         async with self.engine.begin() as connection:
             await connection.run_sync(Base.metadata.create_all)

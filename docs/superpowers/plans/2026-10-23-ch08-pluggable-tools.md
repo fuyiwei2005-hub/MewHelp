@@ -37,14 +37,14 @@ assert policy.access('mcp:unknown','create_ticket') is None
 
 Files: app/tooling/engine.py, models.py, audit.py, builtin.py; app/db.py; tests/test_tool_engine.py, test_tool_audit.py.
 Interfaces: ToolEngine(catalog,policy,audit,timeout,attempts).execute(call,context,grant=None)->dict; ExecutionGrant immutable/call+args+cid scoped, created only by confirmed server flow; audit.upsert(record) best effort.
-- [ ] Red tests: invalid type/required/bounds prevents handler, unknown tool audited, missing grant rejects write, transient read retries twice, business empty once, write timeout retry_count0, audit failure does not change successful result.
+- [x] Red tests: invalid type/required/bounds prevents handler, unknown tool audited, missing grant rejects write, transient read retries twice, business empty once, write timeout retry_count0, audit failure does not change successful result.
 ~~~python
 result=await engine.execute({'name':'create_ticket','args':args,'id':'c'},ctx)
 assert result['error']['code']=='permission_denied'
 assert await ticket_count()==0
 ~~~
-- [ ] Run targeted tests to observe missing implementation, implement real JSON Schema errors with paths, timeout/retry taxonomy, Chinese JSON projection, builtin adapters, no FK audit table.
-- [ ] Real MySQL tests verify success/validation/permission/timeout rows, same call retry one row and duration/count; run old tool tests for legacy characterization. Log Task2/commit.
+- [x] Run targeted tests to observe missing implementation, implement real JSON Schema errors with paths, timeout/retry taxonomy, Chinese JSON projection, builtin adapters, no FK audit table.
+- [x] Real MySQL tests verify success/validation/permission/timeout rows, same call retry one row and duration/count; run old tool tests for legacy characterization. Log Task2/commit.
 
 ## Task 3: Two MCP servers and per-server discovery
 
