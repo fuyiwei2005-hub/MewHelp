@@ -5,7 +5,7 @@ from app.tools import ToolContext,build_tools,ToolExecutor
 from app.knowledge.query import QueryPlan
 from app.knowledge.quality import REFUSAL,validate_assessment
 from .state import WorkflowState
-from .common import trace,emit,budget,usage,tools_for,request_messages
+from .common import trace,emit,budget,usage,tools_for,request_messages,execute_call
 from .rules import route,is_greeting,SMALLTALK,COMPLAINT,FALLBACK,REASONS,policy_query
 from .language import Resolution,Intent
 from .agent import build_agent
@@ -62,11 +62,11 @@ def build_graph(deps,checkpointer):
         ctx=ToolContext(deps.business_repo,state['conversation_id'],state['turn_id'],state['resolved_question'],order_backend=deps.repo)
         tools=build_tools(ctx);call=dict(name='query_order',args={'order_id':state['order_id']},id='order-'+state['turn_id'],type='tool_call')
         emit('tool_start',{'name':'query_order','label':'查询订单','tool_call_id':call['id']})
-        result=await ToolExecutor(tools,deps.cfg.tool_timeout_seconds,deps.cfg.tool_max_attempts).execute(call)
+        result=await execute_call(state,deps,call,tools=tools,deterministic=True)
         emit('tool_end',{'name':'query_order','tool_call_id':call['id'],'status':'completed' if result.get('ok') else 'failed'})
         messages=[dict(role='assistant',content='',tool_calls=[call]),dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=call['id'])]
         if not result.get('ok'):return dict(trace=log,new_messages=messages,answer=FALLBACK,stop_reason='order_unavailable')
-        return dict(trace=log,new_messages=messages,order=result)
+        return dict(trace=log,new_messages=messages,order=result.get('data',result))
 
     async def expand(state):
         log=trace(state,'expand');b=budget(state,deps)
@@ -133,8 +133,8 @@ def build_graph(deps,checkpointer):
     for name,node in [('normalize',normalize),('intent',classify),('select_order',select_order),('query_order',query_order),('expand',expand),('retrieve',retrieve),('confidence_gate',confidence_gate),('direct',direct),('agent',build_agent(deps)),('log',log_node)]:g.add_node(name,node if name=='agent' else adapt_node(name,node,deps))
     g.add_edge(START,'normalize')
     g.add_conditional_edges('normalize',lambda s:'direct' if s.get('greeting') or s.get('stop_reason') else 'intent',{'direct':'direct','intent':'intent'})
-    g.add_conditional_edges('intent',lambda s:{'knowledge':'retrieve','refund':'select_order','agent':'agent'}.get(s['route'],'direct'),{'retrieve':'retrieve','select_order':'select_order','agent':'agent','direct':'direct'})
-    g.add_edge('select_order','query_order')
+    g.add_conditional_edges('intent',lambda s:{'knowledge':'retrieve','refund':'select_order','status':'select_order','agent':'agent'}.get(s['route'],'direct'),{'retrieve':'retrieve','select_order':'select_order','agent':'agent','direct':'direct'})
+    g.add_conditional_edges('select_order',lambda s:'agent' if s.get('route')=='status' else 'query_order',{'agent':'agent','query_order':'query_order'})
     g.add_conditional_edges('query_order',lambda s:'direct' if s.get('stop_reason') else 'expand',{'direct':'direct','expand':'expand'})
     g.add_edge('expand','retrieve');g.add_edge('retrieve','confidence_gate')
     g.add_conditional_edges('confidence_gate',lambda s:'direct' if s.get('stop_reason') else 'agent',{'direct':'direct','agent':'agent'})

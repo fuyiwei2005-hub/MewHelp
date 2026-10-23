@@ -21,7 +21,8 @@ def usage(value):return dict(tokens=value.used,calls=value.calls,accounting='ups
 def tools_for(state,deps):
     from .knowledge import BudgetedKnowledge
     backend=BudgetedKnowledge(deps.knowledge_parent,state,budget(state,deps)) if deps.knowledge_parent else None
-    ctx=ToolContext(deps.business_repo,state['conversation_id'],state['turn_id'],state['resolved_question'],backend,order_backend=deps.repo)
+    ctx=ToolContext(deps.business_repo,state['conversation_id'],state['turn_id'],state['resolved_question'],backend,order_backend=deps.repo,lightweight_results=bool(state.get('memory_enabled')))
+    if getattr(deps,'tool_runtime',None) and 'tool_catalog' in state:return deps.tool_runtime.bind(ctx,state['tool_catalog'])
     all_tools=build_tools(ctx)
     allowed={'query_order','query_product','query_logistics','query_faq'}
     if not state.get('memory_enabled'):
@@ -46,3 +47,18 @@ def request_messages(state,deps,system,tools,phase='decide'):
     messages,fits=fit_final_messages(messages,deps.cfg.input_budget-len(schema.encode('utf-8')))
     if not fits:raise ValueError('workflow_input_budget')
     return messages
+
+
+async def execute_call(state,deps,call,*,tools=None,grant=None,deterministic=False,denied=None):
+    from app.tools import ToolExecutor
+    tools=tools or tools_for(state,deps)
+    runtime=getattr(deps,'tool_runtime',None)
+    if runtime and 'tool_catalog' in state:
+        from app.tooling.engine import failure
+        engine=runtime.engine(state['tool_catalog'])
+        if denied or (state.get('route')=='refund' and not deterministic):
+            result=failure('failure',denied or 'route_forbidden','本节点不允许此工具调用。')
+            await engine.record(tools.context,call,engine.catalog.get(call['name']),'权限拒绝',result)
+            return result
+        return await engine.execute(call,tools.context,grant)
+    return await ToolExecutor(tools,deps.cfg.tool_timeout_seconds,deps.cfg.tool_max_attempts).execute(call)

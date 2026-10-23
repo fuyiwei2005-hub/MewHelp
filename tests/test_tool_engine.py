@@ -95,3 +95,13 @@ def test_read_timeout_finishes_with_retry_and_fault_audit(tmp_path):
         assert engine.audit.rows[0]['retry_count']==1
         assert engine.audit.rows[0]['duration_ms']>=20
     asyncio.run(run())
+
+def test_trusted_tool_timeout_override_preserves_slow_knowledge_call(tmp_path):
+    async def run():
+        from dataclasses import replace
+        async def handler(args,ctx):await asyncio.sleep(.02);return {'answer':'知识查询'}
+        engine,ctx=make(tmp_path,handler)
+        engine.catalog['read_demo']=replace(engine.catalog['read_demo'],timeout=.2)
+        result=await engine.execute({'name':'read_demo','args':{'count':1},'id':'faq'},ctx)
+        assert result['ok'] and engine.audit.rows[-1]['retry_count']==0
+    asyncio.run(run())

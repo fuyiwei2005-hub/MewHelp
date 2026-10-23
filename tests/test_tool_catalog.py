@@ -38,7 +38,7 @@ def test_trusted_plugin_addition_visible_without_catalog_core_changes(tmp_path,m
     (tmp_path/'sample.py').write_text("""from app.tooling.catalog import ToolSpec
 async def call(args,ctx): return {'ok':True,'answer':'新增成功'}
 def register(c): c.register(ToolSpec('new_tool','读取新增演示',{'type':'object'},'builtin',call))
-""")
+""",encoding="utf-8")
     c=Catalog();load_plugins(c,['app.tool_plugins.sample'])
     assert asyncio.run(c.snapshot()['new_tool'].invoke({},None))['answer']=='新增成功'
 

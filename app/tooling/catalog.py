@@ -11,6 +11,7 @@ class ToolSpec:
     source:str
     invoke:object
     project:object=None
+    timeout:float|None=None
     def descriptor(self):
         return dict(name=self.name,description=self.description,parameters=copy.deepcopy(self.parameters),source=self.source)
 

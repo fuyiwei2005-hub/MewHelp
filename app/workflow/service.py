@@ -37,11 +37,17 @@ class WorkflowService:
             strong=gateway.model if not cfg.intent_model else OpenAICompatibleGateway(cfg.model_copy(update={'llm_model':cfg.intent_model})).model
             small=OpenAICompatibleGateway(cfg.model_copy(update={'llm_model':cfg.intent_small_model})).model if cfg.intent_small_model else None
             deps=SimpleNamespace(cfg=cfg,repo=WorkflowRepository(business.db),audit=AuditRepository(business.db),language=Language(strong,small,cfg.intent_threshold),retriever=knowledge.retriever,multi=MultiQueryRetriever(knowledge.retriever),gate=knowledge.gate,gateway=gateway,business_repo=business,knowledge_parent=knowledge)
+            if cfg.tool_system_enabled:
+                from app.tooling.runtime import ToolRuntime
+                from app.tooling.audit import ToolAudit
+                deps.tool_runtime=ToolRuntime(cfg,ToolAudit(business.db))
         self.deps=deps;self.memory=None
         if hasattr(business,'db'):
             from app.memory.manager import ContextManager
             from .common import tools_for
-            tools=tools_for(dict(conversation_id='startup',turn_id='startup',resolved_question='',memory_enabled=True),deps)
+            startup=dict(conversation_id='startup',turn_id='startup',resolved_question='',memory_enabled=True)
+            if getattr(deps,'tool_runtime',None):startup['tool_catalog']=[t.descriptor() for t in deps.tool_runtime.catalog.snapshot().values() if deps.tool_runtime.policy.access(t)]
+            tools=tools_for(startup,deps)
             self.memory=ContextManager(cfg,business.db,list(tools.values()));deps.memory=self.memory
             from langgraph.graph import StateGraph,START,END
             from .state import WorkflowState
@@ -79,10 +85,15 @@ class WorkflowService:
                 while history and first and history[0].get('turn_id')==first:history.pop(0)
                 while history and history[0]['role']!='user':history.pop(0)
             await self.deps.repo.expire_selections(cid)
+            runtime=getattr(self.deps,'tool_runtime',None);catalog=await runtime.refresh() if runtime else None;prefix=None
+            if self.memory and runtime:
+                try:prefix=self.memory.recalculate(list(runtime.bind(ToolContext(self.business,cid,'prepare',question),catalog).values()))
+                except ValueError as error:raise HTTPException(413,str(error)) from None
             tid=uuid4().hex;await self.deps.repo.start(cid,tid,question)
             initial=dict(conversation_id=cid,turn_id=tid,raw_question=question,history=history,turn_messages=[dict(role='user',content=question)],trace=[],usage={'tokens':0,'calls':0},product_category=category,confirmed_actions=await self.deps.repo.confirmed_actions(cid))
+            if catalog is not None:initial['tool_catalog']=catalog
             if self.memory:
-                try:initial.update(await self.memory.prepare(snapshot,cid,tid,question))
+                try:initial.update(await self.memory.prepare(snapshot,cid,tid,question,prefix_tokens=prefix))
                 except ValueError as error:
                     await self.deps.repo.audit(dict(initial,memory_enabled=True),'failed')
                     if '上下文预算不足' in str(error):raise HTTPException(413,str(error)) from None
@@ -108,7 +119,9 @@ class WorkflowService:
             pending=[i.value for task in snapshot.tasks for i in task.interrupts]
             if not any(i.get('selection_id')==selection_id for i in pending):raise HTTPException(409,'本轮无法继续，请重新发起。')
             if not run or run['status']!='paused':await self.deps.repo.audit(snapshot.values,'paused')
-            return Turn(cid,tid,Command(resume={'selection_id':selection_id,'order_id':order_id}),lock,snapshot.values)
+            runtime=getattr(self.deps,'tool_runtime',None)
+            updates={'tool_catalog':await runtime.refresh()} if runtime and 'tool_catalog' not in snapshot.values else None
+            return Turn(cid,tid,Command(resume={'selection_id':selection_id,'order_id':order_id},update=updates),lock,snapshot.values)
         except BaseException:
             await self.release(Turn(cid,tid,None,lock,{}));raise
 
@@ -180,7 +193,13 @@ class WorkflowService:
             if self.memory:
                 from app.memory.bridge import from_item
                 for index,item in enumerate([dict(role='user',content='确认创建工单'),dict(role='assistant',content='',tool_calls=[call])]):projected.append(await self.memory.repo.append(cid,tid,'action:'+str(index),from_item(item)))
-            result=await ToolExecutor(build_tools(ctx),self.cfg.tool_timeout_seconds,self.cfg.tool_max_attempts).execute(call)
+            runtime=getattr(self.deps,'tool_runtime',None)
+            if runtime:
+                from app.tooling.engine import ExecutionGrant
+                ctx.ticket_requested=True;catalog=await runtime.refresh()
+                result=await runtime.engine(catalog).execute(call,ctx,ExecutionGrant.confirmed(ctx,call,'builtin'))
+                if result.get('ok'):result=result.get('data',result)
+            else:result=await ToolExecutor(build_tools(ctx),self.cfg.tool_timeout_seconds,self.cfg.tool_max_attempts).execute(call)
             if not result.get('ok'):raise HTTPException(503,'工单未创建，请重试。')
             state=dict(conversation_id=cid,turn_id=tid,raw_question='用户确认创建工单',turn_messages=[dict(role='user',content='确认创建工单'),dict(role='assistant',content='',tool_calls=[call]),dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=offer_id),dict(role='assistant',content='工单已创建：'+result['ticket_no'])],actions=[],answer='工单已创建：'+result['ticket_no'])
             if self.memory:

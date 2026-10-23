@@ -49,12 +49,17 @@ class PreparedTurn:
     messages: list
     tools: dict
     completed: bool=False
+    catalog: list|None=None
 
 
 class ToolChatService:
     def __init__(self,settings,repo,gateway,faq_backend=None):
         self.settings,self.repo,self.gateway,self.faq_backend=settings,repo,gateway,faq_backend
-        self.busy=set()
+        self.busy=set();self.runtime=None
+        if settings.tool_system_enabled and hasattr(repo,'db'):
+            from app.tooling.runtime import ToolRuntime
+            from app.tooling.audit import ToolAudit
+            self.runtime=ToolRuntime(settings,ToolAudit(repo.db))
 
     async def prepare(self,question,cid,product_category=None):
         if cid and not await self.repo.exists(cid):raise HTTPException(404,"会话不存在。")
@@ -67,7 +72,8 @@ class ToolChatService:
             backend=self.faq_backend
             if hasattr(backend,"for_turn"):backend=backend.for_turn(cid,tid,question,product_category)
             ctx=ToolContext(self.repo,cid,tid,question,backend)
-            tools=build_tools(ctx)
+            catalog=await self.runtime.refresh() if self.runtime else None
+            tools=self.runtime.bind(ctx,catalog) if self.runtime else build_tools(ctx)
             schema=json.dumps([convert_to_openai_tool(t) for t in tools.values()],ensure_ascii=False)
             budget=self.settings.input_budget-len(schema.encode("utf-8"))
             history=await self.repo.history(cid) if await self.repo.exists(cid) else []
@@ -77,7 +83,7 @@ class ToolChatService:
                 del messages[1:stop]
             if estimate_tokens(messages)>budget:raise HTTPException(413,"问题或工具定义超过输入预算。")
             await self.repo.ensure_conversation(cid)
-            return PreparedTurn(cid,tid,question,messages,tools)
+            return PreparedTurn(cid,tid,question,messages,tools,catalog=catalog)
         except BaseException:
             self.busy.discard(cid)
             raise
@@ -123,6 +129,9 @@ class ToolChatService:
                     for call in calls:
                         if len(calls)>1:
                             result=failure("single_tool_limit","一次只支持一个工具，请拆分问题。")
+                            if self.runtime:
+                                engine=self.runtime.engine(turn.catalog)
+                                await engine.record(turn.tools.context,call,engine.catalog.get(call['name']),'权限拒绝',result)
                         else:
                             name=call["name"]
                             yield event("tool_start",{"name":name,"label":LABELS.get(name,name),"tool_call_id":call["id"],"demo":name in ("query_order","query_product","query_logistics")})
@@ -139,7 +148,7 @@ class ToolChatService:
                                     return fit_final_messages(candidate,budget)[1]
                                 backend.set_budget(fits)
                             executor=ToolExecutor(turn.tools,self.settings.tool_timeout_seconds,self.settings.tool_max_attempts,retry)
-                            task=asyncio.create_task(executor.execute(call));tasks.append(task)
+                            task=asyncio.create_task(self.runtime.engine(turn.catalog).execute(call,turn.tools.context) if self.runtime else executor.execute(call));tasks.append(task)
                             async for kind,value in watch(task,queue):
                                 if kind=="event":yield value
                                 else:result=value

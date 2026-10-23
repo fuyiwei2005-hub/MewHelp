@@ -78,7 +78,7 @@ class ToolEngine:
                     for attempt in range(attempts):
                         retries=attempt
                         try:
-                            async with asyncio.timeout(self.timeout):
+                            async with asyncio.timeout(spec.timeout or self.timeout):
                                 if hasattr(ctx,'call_id'):ctx.call_id=call['id']
                                 value=await spec.invoke(copy.deepcopy(call['args']),ctx)
                             result=spec.project(value) if spec.project else normalized(value)

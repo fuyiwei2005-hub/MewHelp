@@ -39,6 +39,7 @@ class ToolContext:
     call_id: str=""
     order_backend: object=None
     lightweight_results: bool=False
+    ticket_requested: bool=False
 
 
 class Registry(dict):

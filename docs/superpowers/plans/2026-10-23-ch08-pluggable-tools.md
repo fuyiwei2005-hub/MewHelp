@@ -58,10 +58,10 @@ Interfaces: MCPDiscovery.refresh()->dict[source,list[ToolSpec]], bounded per-ser
 
 Files: app/workflow/common.py, agent.py, graph.py, service.py, state.py, rules.py; app/main.py, memory/manager.py, assembly.py; tests/test_tool_workflow.py.
 Interfaces: WorkflowService.tool_runtime; State.tool_catalog/version serializable; tools_for binds frozen catalog to per-turn ToolContext; execute_call used by Agent, query_order and complaint action.
-- [ ] Red tests: newly registered read tool is visible and callable without Agent changes, MCP logistics executes, all calls audited, extra/forbidden calls rejected and audited; catalog Schema changes trigger prefix recomputation and budget failure if too large.
-- [ ] Run red, wire runtime only after real lifecycle DB initialization; remove active hardcoded names/LABELS lookups, keep source and route policy. Refund eligibility still prohibits opportunistic tools after mandatory policy.
-- [ ] Add status-query routing test (warranty/return progress, selector if no order); generic policies retain RAG and intent JSON two-field contract.
-- [ ] Run chapter5/6/7 targeted regression; log Task4/commit.
+- [x] Red tests: newly registered read tool is visible and callable without Agent changes, MCP logistics executes, all calls audited, extra/forbidden calls rejected and audited; catalog Schema changes trigger prefix recomputation and budget failure if too large.
+- [x] Run red, wire runtime only after real lifecycle DB initialization; remove active hardcoded names/LABELS lookups, keep source and route policy. Refund eligibility still prohibits opportunistic tools after mandatory policy.
+- [x] Add status-query routing test (warranty/return progress, selector if no order); generic policies retain RAG and intent JSON two-field contract.
+- [x] Run chapter5/6/7 targeted regression; log Task4/commit.
 
 ## Task 5: Explicit ticket intent and durable preview
 

@@ -18,7 +18,14 @@ class ContextManager:
             self.logger.event('budget alarm',reason='上下文预算不足',prefix_actual=self.prefix_tokens,window=cfg.model_context_window);raise
         if self.prefix_tokens>cfg.system_prefix_tokens:self.logger.event('budget alarm',reason='actual_prefix_exceeds_reserve',prefix_actual=self.prefix_tokens,reserved=cfg.system_prefix_tokens)
         self.logger.event('budget_check',prefix_actual=self.prefix_tokens,plan=asdict(self.plan),window=cfg.model_context_window,cjk_factor=cfg.cjk_token_factor)
-    async def prepare(self,snapshot,cid,tid,question):
+    def recalculate(self,tools):
+        prefix=self.counter.text(FIXED_SYSTEM)+self.counter.json(definitions(tools))+16
+        try:plan=ContextBudget.calculate(self.cfg,prefix)
+        except ValueError:
+            self.logger.event('budget alarm',reason='catalog_prefix_exceeds_window',prefix_actual=prefix);raise
+        self.logger.event('tool_catalog_budget',prefix_actual=prefix,plan=asdict(plan))
+        return prefix
+    async def prepare(self,snapshot,cid,tid,question,prefix_tokens=None):
         if self.counter.text(question)>self.cfg.max_user_input_tokens:raise ValueError('上下文预算不足：当前输入超过MAX_USER_INPUT_TOKENS')
         old=snapshot.values.get('messages',[]) if snapshot.values else []
         actions=[]
@@ -34,7 +41,7 @@ class ContextManager:
         history=repair_order([m for m in canonical if m.additional_kwargs.get('turn_id') in completed])
         summaries,bounds=await self.repo.context_snapshot(cid)
         summaries=[{k:v for k,v in s.items() if k!='facts'} for s in summaries]
-        plan=ContextBudget.calculate(self.cfg,self.prefix_tokens,self.counter.json(summaries))
+        plan=ContextBudget.calculate(self.cfg,self.prefix_tokens if prefix_tokens is None else prefix_tokens,self.counter.json(summaries))
         view=partition(history,bounds['summary_upto_msg_id'],bounds['layer1_from_msg_id'],plan,self.counter)
         await self.repo.advance_layer1(cid,view.layer1_from)
         for event in view.events:self.logger.event(event.pop('event'),conversation_id=cid,turn_id=tid,**event)

@@ -4,6 +4,7 @@ from langgraph.graph.message import add_messages
 
 class WorkflowState(TypedDict,total=False):
     messages:Annotated[list[AnyMessage],add_messages]
+    tool_catalog:list[dict]
     memory_enabled:bool
     context_view:dict
     completed_turn_ids:list[str]

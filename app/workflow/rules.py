@@ -17,6 +17,7 @@ def general_faq(question):
 
 
 def route(intent,question):
+    if intent in ('售后','退款退货') and re.search(r'还在保|是否在保|保修状态|剩余.*保修|退货.*(?:进度|到哪|哪一?步)',question):return 'status'
     if intent in ('退款退货','售后'):return 'knowledge' if general_faq(question) else 'refund'
     return {'商品咨询':'knowledge','物流':'agent','订单':'agent','投诉':'complaint','闲聊':'smalltalk'}.get(intent,'other')
 
