@@ -105,3 +105,20 @@ def test_trusted_tool_timeout_override_preserves_slow_knowledge_call(tmp_path):
         result=await engine.execute({'name':'read_demo','args':{'count':1},'id':'faq'},ctx)
         assert result['ok'] and engine.audit.rows[-1]['retry_count']==0
     asyncio.run(run())
+
+
+def test_cancel_during_retry_delay_still_audited(tmp_path):
+    async def run():
+        entered=asyncio.Event()
+        async def handler(args,ctx):
+            entered.set()
+            raise ConnectionError('temporary')
+        engine,ctx=make(tmp_path,handler)
+        task=asyncio.create_task(engine.execute({'name':'read_demo','args':{'count':1},'id':'cancel-delay'},ctx))
+        await entered.wait()
+        await asyncio.sleep(.005)
+        task.cancel()
+        with pytest.raises(asyncio.CancelledError):await task
+        assert len(engine.audit.rows)==1
+        assert 'cancelled' in engine.audit.rows[0]['error']
+    asyncio.run(run())

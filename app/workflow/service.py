@@ -134,6 +134,7 @@ class WorkflowService:
         try:
             yield event('meta',{'conversation_id':turn.cid,'turn_id':turn.tid})
             if turn.replay is not None:
+                if turn.replay.get('ticket_result'):yield event('ticket_result',turn.replay['ticket_result'])
                 if turn.replay.get('citations'):yield event('citations',{'items':turn.replay['citations']})
                 yield event('token',{'text':turn.replay.get('answer','')})
                 if turn.replay.get('actions'):yield event('actions',{'items':turn.replay['actions'],'turn_id':turn.tid})
@@ -249,7 +250,9 @@ class WorkflowService:
             run=await self.deps.repo.run(cid,tid)
             if row['status']=='done' and run and run['status']=='completed':
                 if row['result']['decision'] is not confirmed:raise HTTPException(409,'本次工单已作出其他选择。')
-                return Turn(cid,tid,None,lock,run['data'],replay=run['data'])
+                from .ticket_flow import public_receipt
+                replay=dict(run['data'],ticket_result=public_receipt(row['id'],row['result']['tool_result'],confirmed))
+                return Turn(cid,tid,None,lock,run['data'],replay=replay)
             if snapshot.values.get('turn_id')!=tid:raise HTTPException(409,'工单预览已失效。')
             pending=[i.value for task in snapshot.tasks for i in task.interrupts]
             if not any(i.get('preview_id')==preview_id for i in pending):
@@ -270,7 +273,14 @@ class WorkflowService:
             current=await self.deps.repo.get_offer(cid,offer['id'])
             if current:actions.append(current)
         selections=[i.value for task in snapshot.tasks for i in task.interrupts]
-        return dict(turn_id=state.get('turn_id'),status='paused' if selections else state.get('status'),actions=actions,order_selection=next((i for i in selections if i.get('type')=='order_selection'),None),ticket_preview=next((i for i in selections if i.get('type')=='ticket_preview'),None))
+        preview=next((i for i in selections if i.get('type')=='ticket_preview'),None);receipt=None
+        if getattr(self.deps,'previews',None):
+            row=(await self.deps.previews.get(cid,preview['preview_id']) if preview else
+                 await self.deps.previews.for_turn(cid,state.get('turn_id')))
+            if row and row['status']=='done':
+                from .ticket_flow import public_receipt
+                receipt=public_receipt(row['id'],row['result']['tool_result'],row['result']['decision'])
+        return dict(turn_id=state.get('turn_id'),status='paused' if selections else state.get('status'),actions=actions,order_selection=next((i for i in selections if i.get('type')=='order_selection'),None),ticket_preview=preview,ticket_result=receipt)
 
 class WorkflowResponse(StreamingResponse):
     def __init__(self,service,turn):

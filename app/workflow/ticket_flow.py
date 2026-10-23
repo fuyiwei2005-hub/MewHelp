@@ -4,6 +4,11 @@ from langgraph.types import interrupt
 from .common import tools_for,trace,emit
 from app.tooling.engine import ExecutionGrant,failure
 
+def public_receipt(preview_id,result,confirmed):
+    code=result.get('error',{}).get('code')
+    status='submitted' if result.get('ok') else ('cancelled' if not confirmed else ('uncertain' if code in ('tool_timeout','tool_error') else 'failed'))
+    return dict(preview_id=preview_id,status=status,ticket_no=result.get('data',result).get('ticket_no'),message=result.get('error',{}).get('message',''))
+
 def build_ticket_nodes(deps):
     def context(state):
         tools=tools_for(state,deps);ctx=tools.context;ctx.ticket_requested=bool(state.get('ticket_requested'))
@@ -60,6 +65,7 @@ def build_ticket_nodes(deps):
                     await engine.record(ctx,call,engine.catalog.get(call['name']),'超时',result)
                 else:await engine.record(ctx,call,engine.catalog.get(call['name']),'成功',result)
             result=await deps.previews.finish(ctx.conversation_id,row['id'],result)
+        emit('ticket_result',public_receipt(row['id'],result,state['ticket_decision']))
         emit('tool_end',dict(name=call['name'],source='builtin',tool_call_id=call['id'],status='completed' if result.get('ok') else 'failed'))
         return dict(trace=log,pending_preview=None,ticket_pending=False,ticket_requested=False,ticket_description='',ticket_receipt=result,disposition='answer',
             new_messages=[dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=call['id'])])

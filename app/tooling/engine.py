@@ -78,24 +78,25 @@ class ToolEngine:
                     status='权限拒绝';result=failure('failure','permission_denied','该工具未获本地授权，或尚未取得用户本次确认。')
                 else:
                     attempts=1 if mode=='write' else self.attempts
-                    for attempt in range(attempts):
-                        retries=attempt
-                        try:
-                            async with asyncio.timeout(spec.timeout or self.timeout):
-                                if hasattr(ctx,'call_id'):ctx.call_id=call['id']
-                                value=await spec.invoke(copy.deepcopy(call['args']),ctx)
-                            result=spec.project(value) if spec.project else normalized(value)
-                            status='成功' if result.get('ok') else '失败'
-                            break
-                        except asyncio.CancelledError:
-                            await self.record(ctx,call,spec,'失败',failure('failure','cancelled','调用已中断。'),retries,int((time.monotonic()-start)*1000))
-                            raise
-                        except Exception as error:
-                            if transient(error) and attempt+1<attempts:
-                                await asyncio.sleep(.05);continue
-                            timed=timeout_error(error);status='超时' if timed else '失败'
-                            result=failure('failure','tool_timeout' if timed else 'tool_error','工具超时，结果暂不能确认，请稍后查询。' if timed else '工具执行失败，请稍后重试。')
-                            break
+                    try:
+                        for attempt in range(attempts):
+                            retries=attempt
+                            try:
+                                async with asyncio.timeout(spec.timeout or self.timeout):
+                                    if hasattr(ctx,'call_id'):ctx.call_id=call['id']
+                                    value=await spec.invoke(copy.deepcopy(call['args']),ctx)
+                                result=spec.project(value) if spec.project else normalized(value)
+                                status='成功' if result.get('ok') else '失败'
+                                break
+                            except Exception as error:
+                                if transient(error) and attempt+1<attempts:
+                                    await asyncio.sleep(.05);continue
+                                timed=timeout_error(error);status='超时' if timed else '失败'
+                                result=failure('failure','tool_timeout' if timed else 'tool_error','工具超时，结果暂不能确认，请稍后查询。' if timed else '工具执行失败，请稍后重试。')
+                                break
+                    except asyncio.CancelledError:
+                        await self.record(ctx,call,spec,'失败',failure('failure','cancelled','调用已中断。'),retries,int((time.monotonic()-start)*1000))
+                        raise
         await self.record(ctx,call,spec,status,result,retries,int((time.monotonic()-start)*1000))
         return result
 

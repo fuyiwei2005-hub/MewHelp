@@ -75,9 +75,9 @@ Interfaces: explicit_ticket_request(text)->bool, pending user request tracked in
 ## Task 6: Preview card UI (Vibe)
 
 Files: app/web/index.html; scripts/acceptance_tools_browser.cjs.
-- [ ] Render ticket preview from SSE/state, confirm/cancel each locked after click; refresh restores pending preview.
-- [ ] Confirm resumes SSE and displays ticket number; cancel shows cancelled without ticket; plain new message behaves normally. Existing complaint buttons/order cards remain.
-- [ ] Real installed Edge checks both flows, source tool badges, duplicate clicks and refresh. No frontend TDD/review; log Task6/commit.
+- [x] Render ticket preview from SSE/state, confirm/cancel each locked after click; refresh restores pending preview.
+- [x] Confirm resumes SSE and displays ticket number; cancel shows cancelled without ticket; plain new message behaves normally. Existing complaint buttons/order cards remain.
+- [x] Real installed Edge checks both flows, source tool badges, duplicate clicks and refresh. No frontend TDD/review; log Task6/commit.
 
 ## Task 7: Full acceptance, independent review and finish
 

@@ -1,0 +1,52 @@
+{
+  "checks": {
+    "bare_asks_description": true,
+    "preview_shows_user_facts": true,
+    "locks_on_first_click": true,
+    "confirmed_receipt": true,
+    "one_confirmation_request": true,
+    "reload_keeps_ticket_number": true,
+    "cancelled_card": true,
+    "cancel_locked": true,
+    "keep_chat_without_confirm": true,
+    "pending_restored_after_reload": true,
+    "mobile_preview_no_overflow": true,
+    "complaint_two_independent_buttons": true,
+    "handoff_does_not_disable_ticket": true,
+    "old_button_creates_receipt": true,
+    "no_page_errors": true
+  },
+  "ids": {
+    "confirm": "1d3483cb5a0b4782997b906cc70e88e5",
+    "cancel": "062f7adacb3b45efa5d48c65b22f0095",
+    "ignored": "931cb9c0cec44244b214c3e01ae26e0e",
+    "refresh": "2b08a44e2af84d809df32351bd687d1e",
+    "complaint": "d3882856afb04ceca2407f3a46ef73a7"
+  },
+  "errors": [],
+  "confirmations": 3,
+  "ticket_counts": {
+    "confirm": 1,
+    "cancel": 0,
+    "ignored": 0,
+    "refresh": 0,
+    "complaint": 1
+  },
+  "ticket_audit_statuses": {
+    "confirm": [
+      "成功"
+    ],
+    "cancel": [
+      "权限拒绝"
+    ],
+    "ignored": [
+      "权限拒绝"
+    ],
+    "refresh": [
+      "权限拒绝"
+    ],
+    "complaint": [
+      "成功"
+    ]
+  }
+}

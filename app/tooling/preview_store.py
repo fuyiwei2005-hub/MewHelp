@@ -15,6 +15,10 @@ class PreviewStore:
         async with self.db.sessions() as s:
             row=await s.scalar(self.query(cid,pid))
             return offer_dict(row) if row else None
+    async def for_turn(self,cid,tid):
+        async with self.db.sessions() as s:
+            row=await s.scalar(self.query(cid).where(ActionOffer.turn_id==tid).limit(1))
+            return offer_dict(row) if row else None
     async def prepare(self,state,call,descriptor):
         payload=dict(call=copy.deepcopy(call),descriptor=copy.deepcopy(descriptor),catalog_version=digest(state['tool_catalog']))
         return await self.repo.offer(state['conversation_id'],state['turn_id'],'ticket_preview',payload)

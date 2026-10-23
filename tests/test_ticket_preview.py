@@ -73,6 +73,9 @@ def test_ticket_supplement_preview_confirm_cancel_and_supersede(tmp_path):
             assert info['description']=='饮水机不出水，清理水泵后仍没有恢复' and await count(db,first.cid)==0
             result=await consume(s,await s.prepare_ticket_resume(first.cid,second.tid,info['preview_id'],True))
             assert 'event: done' in result and await count(db,first.cid)==1 and '工单号' in result
+            restored=await s.current_state(first.cid)
+            assert restored['ticket_result']['status']=='submitted'
+            assert restored['ticket_result']['ticket_no']
             replay=await consume(s,await s.prepare_ticket_resume(first.cid,second.tid,info['preview_id'],True))
             assert await count(db,first.cid)==1 and frames(replay,'token')[0]['text']==frames(result,'token')[0]['text']
             third=await s.prepare('帮我建工单，喂食器卡粮无法恢复');body=await consume(s,third);cancel=frames(body,'ticket_preview')[0]
