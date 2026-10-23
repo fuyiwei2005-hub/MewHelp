@@ -4,3 +4,4 @@
 {"id": "old-background", "background": ["此前已处理产品DEMO-OLD。"], "source": [["human", "产品DEMO-NEW尚未发货，请帮我看看能否取消。"]], "required": ["DEMO-NEW", "尚未发货", "取消"], "forbidden": ["DEMO-OLD"]}
 {"id": "unresolved", "source": [["human", "我问的是DEMO-C，不是DEMO-D。水泵还是不出水，尚未解决。"]], "required": ["DEMO-C", "不是DEMO-D", "不出水", "尚未解决"], "forbidden": ["已经修复"]}
 {"id": "multiple-products", "source": [["human", "产品DEMO-E要退货，产品DEMO-F查物流，别搞混了。"]], "required": ["DEMO-E", "退货", "DEMO-F", "物流"], "forbidden": ["已退货"]}
+{"id": "repeated-facts", "source": [["human", "产品DEMO-X想换货，问题还没解决。"], ["ai", "收到"], ["human", "产品DEMO-X想换货，问题还没解决。"], ["ai", "仍在处理"], ["human", "再说一遍，产品DEMO-X想换货，问题还没解决。"]], "required": ["DEMO-X", "换货", "还没解决"], "forbidden": ["已经换货"], "max_chars": 200}

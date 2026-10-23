@@ -1,0 +1,35 @@
+{
+  "default": {
+    "conversation_id": "30325b50c62e4b91b42eeb9bdca7de94",
+    "calls": 119,
+    "minimum_estimate_to_actual": 0.9939,
+    "mean_estimate_to_actual": 1.4138,
+    "maximum_actual_input_tokens": 15280,
+    "maximum_actual_total_tokens": 15307,
+    "event_counts": {
+      "history_ctx": 24,
+      "history_model_ctx": 48,
+      "token_calibration": 119,
+      "model_ctx": 71
+    }
+  },
+  "demo": {
+    "conversation_id": "068de01fbee841ddae5e84a076b248e9",
+    "calls": 124,
+    "minimum_estimate_to_actual": 0.9939,
+    "mean_estimate_to_actual": 1.4014,
+    "maximum_actual_input_tokens": 6062,
+    "maximum_actual_total_tokens": 6225,
+    "event_counts": {
+      "history_ctx": 25,
+      "history_model_ctx": 50,
+      "token_calibration": 124,
+      "model_ctx": 74,
+      "layer1_degrade": 19,
+      "summary trigger": 6,
+      "summary start": 7,
+      "summary failed": 1,
+      "summary done": 6
+    }
+  }
+}

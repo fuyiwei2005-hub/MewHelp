@@ -253,3 +253,46 @@ curl.exe -N -H "Content-Type: application/json" --data-binary "@evals/ch06-refun
 浏览器打开`http://127.0.0.1:18000`。问“我要投诉”，两个按钮分别操作；“转人工”仅前端模拟客服小猫，“建工单”确认后才调用原工具。问“这个能退吗”，点击演示订单卡片继续流程，退款原因从下拉选；退款申请只写本地演示记录，不执行真实退款。不点击按钮可继续聊天，新消息使旧订单选择过期；刷新页面会从检查点恢复当前待选卡片。
 
 当前只支持演示用户`demo-user`和1001/1002/1003三张演示订单，尚不包含真实身份认证/订单API/付款退款/真人坐席。新喵喵优选知识资料仍暂存，未混入当前演示知识；用户待补章节不影响本章流程验收。证据缺失仍会拒答；小样本闸评估保留“已使用15天”保守拒答误差。阶段记录见`dev-notes/ch05.md`、`dev-notes/ch06.md`，真实验收与限制见`docs/reports/ch05-validation.md`、`docs/reports/ch06-validation.md`。
+
+
+## 第七章：会话内三层上下文与多会话页面
+
+沿用第五六章Workflow启动器、现有MySQL与独立PostgreSQL。启动时会幂等补充双锚点字段、会话摘要和持久化任务表；也可单独迁移。完整State.messages保存在官方checkpointer，用户/客服原文和工具结果标识投影到MySQL；模型只拿独立的三层视图。投诉按钮确认动作另存同一checkpointer的actions线程，避免更改正在等待订单选择的主图游标，下一普通轮合入主State。
+
+```powershell
+.\.venv\Scripts\python -m scripts.init_memory
+.\.venv\Scripts\python -m scripts.serve_workflow --port 18000
+# 浏览器打开 http://127.0.0.1:18000 ，开启两次新对话，再从左侧切回续聊
+curl.exe http://127.0.0.1:18000/api/conversations
+curl.exe "http://127.0.0.1:18000/api/conversations/替换为会话ID/messages?limit=100"
+# 真实标注摘要评估 / 默认24轮
+.\.venv\Scripts\python -m scripts.evaluate_summary
+.\.venv\Scripts\python -m scripts.acceptance_memory --profile default --output docs/reports/ch07-default-24.json
+```
+
+演示配置在单独终端启动，不改默认服务的环境；本机端口18004：
+
+```powershell
+$env:MODEL_CONTEXT_WINDOW='18000'
+$env:MAX_OUTPUT_TOKENS='2000'
+$env:MAX_USER_INPUT_TOKENS='2000'
+$env:MAX_AGENT_STEPS='3'
+$env:TOOL_RESULT_MAX_TOKENS='1200'
+$env:RERANK_TOP_K='5'
+$env:CONTEXT_LOG_PATH='log/ch07-demo.log'
+.\.venv\Scripts\python -m scripts.serve_workflow --port 18004
+# 另一终端
+.\.venv\Scripts\python -m scripts.acceptance_memory --profile demo --base-url http://127.0.0.1:18004 --log log/ch07-demo.log --output docs/reports/ch07-demo-24.json
+```
+
+上述基线按1050固定前缀、5×250证据、1000摘要、2000输出、1000安全余量、2000当前输入、3×(1200工具结果+150参数)倒推：历史5650、层1为3954、层2为1695，保留1token保护。实际前缀或追加摘要超预留会重新扣减。默认128000窗口下历史目标上限64000，装得下不压缩。CJK按1字约1token、ASCII约4字1token统一核算；日志token_calibration记录上游真实用量，改计数系数时须连同稳态/预留重新校准。声明窗口应由部署者对照实际模型能力配置。
+
+```powershell
+Select-String -Path log/app.log -Pattern 'model_ctx|history_ctx|summary|layer1_degrade'
+.\.venv\Scripts\python -m pytest -q --basetemp artifacts/pytest-ch07-final
+.\.venv\Scripts\python -m pip check
+```
+
+摘要只追加新段，旧段作为背景不再压缩；任务读冻结checkpoint、LLM在事务外执行，失效租约不能提交。失败/取消轮保留原文但不参与后续模型历史；合法大回合按实际摘要模型窗口处理，不设4000token硬拒绝。超预算工具原文留checkpoint元数据，模型只收到结构化超限结果，摘要不会把未展示的原文当成已确认事实。
+
+侧栏列出当前demo-user全部会话，新对话不删旧会话；切换/刷新从只读接口分页回载完整原文并恢复待选订单。列表失败静默降级。仍无跨会话记忆、画像、真实认证或真实客服系统接入。第八九章待独立设计实施。阶段过程见dev-notes/ch07.md，完整实测结果见docs/reports/ch07-validation.md。

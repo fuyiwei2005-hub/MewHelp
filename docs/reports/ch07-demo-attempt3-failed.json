@@ -1,0 +1,10 @@
+{
+  "profile": "demo",
+  "conversation_id": "3f5554dbc934411fb39a3674a44f5e4a",
+  "checks": null,
+  "completed_rounds": 1,
+  "error": "[{'event': 'error', 'data': {'code': 'workflow_failed', 'message': '本轮未完整完成，请稍后重试。'}, 'seconds': 4.871}]",
+  "recall": null,
+  "archived_full_trace": "artifacts\\ch07-demo-attempt3-failed.json",
+  "note": "Earlier run preserved as rework evidence, not final acceptance. Full SSE locally archived."
+}

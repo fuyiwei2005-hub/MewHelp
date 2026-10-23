@@ -1,0 +1,16 @@
+{
+  "profile": "default",
+  "conversation_id": "e5c15556f78e49408aa94f8313a36ea2",
+  "checks": {
+    "all_24_complete": true,
+    "all_raw_users_preserved": true,
+    "history_logged_each_round": true,
+    "no_degradation": true,
+    "no_summary": true
+  },
+  "completed_rounds": 24,
+  "error": null,
+  "recall": null,
+  "archived_full_trace": "artifacts\\ch07-default-before-prompt.json",
+  "note": "Earlier run preserved as rework evidence, not final acceptance. Full SSE locally archived."
+}

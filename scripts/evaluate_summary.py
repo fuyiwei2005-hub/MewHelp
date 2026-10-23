@@ -18,7 +18,7 @@ async def run(output):
         try:
             async with asyncio.timeout(cfg.summary_timeout_seconds):result=await summarizer.summarize(source,[{'content':s} for s in case.get('background',[])])
             missing=[s for s in case['required'] if s not in result.content];invented=[s for s in case['forbidden'] if s in result.content]
-            rows.append(dict(id=case['id'],passed=not missing and not invented,content=result.content,facts=result.facts,missing=missing,forbidden=invented))
+            rows.append(dict(id=case['id'],passed=not missing and not invented and len(result.content)<=case.get('max_chars',10000),content=result.content,facts=result.facts,missing=missing,forbidden=invented))
         except Exception as error:rows.append(dict(id=case['id'],passed=False,error=str(error)))
         print(json.dumps(rows[-1],ensure_ascii=False),flush=True)
     report=dict(model=cfg.llm_model,total=len(rows),passed=sum(r['passed'] for r in rows),cases=rows)

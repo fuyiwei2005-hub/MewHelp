@@ -1,0 +1,20 @@
+{
+  "profile": "demo",
+  "conversation_id": "77482ff377674d1b95a8fbde7f34dba4",
+  "checks": {
+    "all_24_complete": true,
+    "all_raw_users_preserved": true,
+    "history_logged_each_round": true,
+    "degradation": true,
+    "summary_trigger": true,
+    "summary_appended": true,
+    "earliest_order_recalled": true,
+    "earliest_intent_recalled": true,
+    "foreground_during_summary": true
+  },
+  "completed_rounds": 24,
+  "error": null,
+  "recall": "您最开始查询的是演示订单1001的物流，当时您希望了解该订单的物流延误情况，并让我先记住这个诉求[1]。当时查询记录显示订单1001状态为“运输中”，位置在“北京转运中心”[1]。\n\n需要说明：这是早期查询的历史记录，并非最新查询结果，且属于演示数据，不涉及真实包裹或收件人信息。此后多轮主要查询的是另一订单1002，其物流节点多次变化（先后出现过上海转运中心、杭州配送站、北京转运中心等）[1][2][3][4][5][6]，都不适用于订单1001；订单1001的延误情况仅凭当时的“运输中”记录也无法确认。以上为早期查询回顾，不代表订单1001当前状态。",
+  "archived_full_trace": "artifacts\\ch07-demo-before-prompt.json",
+  "note": "Earlier run preserved as rework evidence, not final acceptance. Full SSE locally archived."
+}

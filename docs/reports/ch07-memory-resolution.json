@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "question": "最开始那个订单后来怎么说？我一开始希望查询什么情况？",
+      "resolution": {
+        "resolved_question": "订单1001之前的物流查询结果是什么，我最初希望了解什么情况？",
+        "retrieval_query": "订单1001 物流查询结果 物流延误情况",
+        "referenced_order_id": "1001"
+      },
+      "intent": {
+        "intent": "物流",
+        "confidence": 0.95
+      },
+      "passed": true
+    },
+    {
+      "question": "最早那单物流，当时查到什么结果？",
+      "resolution": {
+        "resolved_question": "订单1001之前的物流查询结果是什么？",
+        "retrieval_query": "订单1001 物流查询结果 运输状态 当前位置",
+        "referenced_order_id": "1001"
+      },
+      "intent": {
+        "intent": "物流",
+        "confidence": 0.97
+      },
+      "passed": true
+    },
+    {
+      "question": "订单1002物流现在到哪里了？",
+      "resolution": {
+        "resolved_question": "订单1002物流现在到哪里了？",
+        "retrieval_query": "订单1002物流现在到哪里了 当前位置 最近扫描节点 配送状态",
+        "referenced_order_id": "1002"
+      },
+      "intent": {
+        "intent": "物流",
+        "confidence": 0.99
+      },
+      "passed": true
+    }
+  ],
+  "passed": 3
+}

@@ -38,7 +38,7 @@ def validate_facts(source,facts):
     return SummaryResult(content or '本批没有需要保留的业务事实。',clean)
 
 
-PROMPT="""你是当前会话的事实摘录员。只选择本批source中用户明确报告的商品、订单号、手机号、诉求、否定条件、未解决事项，以及工具确认的业务结果。寒暄不留。用原文连续子串quote摘录，每项带source_id，不改写，不推断，不添加承诺。用户报过的订单号、手机号不能漏。尽量合计50至200字，保留事实优先。assistant只用于理解上下文，不作为事实来源。background仅供理解，不得再次摘录或合并，旧摘要不会重写。输出JSON，只有facts数组，每项source_id与quote。"""
+PROMPT="""你是当前会话的事实摘录员。只选择本批source中用户明确报告的商品、订单号、手机号、诉求、否定条件、未解决事项，以及工具确认的业务结果。寒暄不留。用原文连续子串quote摘录，每项带source_id，不改写，不推断，不添加承诺。用户报过的订单号、手机号不能漏。尽量合计50至200字，保留事实优先。相同事实只摘一次，不留测试第几轮或重复同问；相同订单的相同工具状态/位置只留一条。用最短但完整的连续子串保留诉求、否定条件与标识，避免重复长引语。assistant只用于理解上下文，不作为事实来源。background仅供理解，不得再次摘录或合并，旧摘要不会重写。输出JSON，只有facts数组，每项source_id与quote。"""
 
 def summary_prompt(source,background):
     payload=dict(source=[dict(source_id=str(m.id),**item) for m,item in zip(source,wire(source))],background=[s['content'] for s in background])

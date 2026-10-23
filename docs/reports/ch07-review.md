@@ -14,4 +14,6 @@ Minor: tool markers can include tool name and outcome more explicitly; follow-up
 
 Additional real acceptance failure: decision node emitted prose. Added Workflow-only JSON response_format and protocol regression. Two interrupted first attempts are not acceptance passes.
 
-Re-review pending; real default/demo 24-round acceptance pending.
+Re-review at 70affbf: Ready; all five Important findings resolved, no new Critical/Important.
+
+Final uncommitted backend re-review (2026-10-23): Ready. Source of allowed citations is current state.citations, including business-route query_faq; JSON mode preserves tool definitions and terminal parsing cannot grant invalid actions. Independent assembly/stream/terminal tests: 9 passed in 3.13s. Frontend excluded. Final full-suite 168 passed; fresh default/demo 24-round checks all true, including earliest-order/intent recall. See ch07-validation.md.

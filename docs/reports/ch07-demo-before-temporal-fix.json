@@ -1,0 +1,20 @@
+{
+  "profile": "demo",
+  "conversation_id": "fbe28f0ff3a44860967c8bb3f63df4ce",
+  "checks": {
+    "all_24_complete": true,
+    "all_raw_users_preserved": true,
+    "history_logged_each_round": true,
+    "degradation": true,
+    "summary_trigger": true,
+    "summary_appended": true,
+    "earliest_order_recalled": false,
+    "earliest_intent_recalled": false,
+    "foreground_during_summary": true
+  },
+  "completed_rounds": 24,
+  "error": null,
+  "recall": "抱歉，目前无法可靠完成这个请求，请补充必要信息或选择联系人工客服。",
+  "archived_full_trace": "artifacts\\ch07-demo-before-temporal-fix.json",
+  "note": "Earlier run preserved as rework evidence, not final acceptance. Full SSE locally archived."
+}

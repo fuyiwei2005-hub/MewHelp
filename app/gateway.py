@@ -68,8 +68,10 @@ class OpenAICompatibleGateway:
         return await model.ainvoke(messages)
 
     async def decide_control(self,messages,tools):
-        options=dict(response_format={'type':'json_object'})
-        model=self.model.bind_tools(tools,tool_choice='auto',parallel_tool_calls=False,**options) if tools else self.model.bind(**options)
+        # Raw JSON mode avoids the SDK parse endpoint's strict-tool requirement.
+        # Tool arguments and terminal fields are validated by our own schemas.
+        options=dict(extra_body={'response_format':{'type':'json_object'}})
+        model=self.model.bind_tools(tools,tool_choice='auto',parallel_tool_calls=False).bind(**options) if tools else self.model.bind(**options)
         return await model.ainvoke(messages)
 
     async def final_stream(self,messages,tools):

@@ -110,11 +110,11 @@ Files: app/web/index.html；浏览器验收脚本/截图。
 ## Task 7：评审、双profile真实24轮与finish
 
 Files: scripts/acceptance_memory.py、evals/ch07-conversations.jsonl；docs/reports/ch07-*.json、ch07-validation.md；README、.env.example、dev-notes/ch07.md。
-- [ ] 后端requesting-code-review独立只读评审；Important先红绿修复并复审，前端/密钥排除。
-- [ ] 全部旧137+新增回归、pip check；校准真实prompt_tokens与估算，不改一个系数却保留旧预算口径。
-- [ ] 默认与演示独立会话各至少24轮：默认零降级/摘要；演示出现L1降级→L2超额→summary done，之后正确回忆最早订单号/诉求。记录SSE/摘要时间证明不阻塞。
-- [ ] 完整日志对照真实发出messages，浏览器侧栏与原文回载；工具full只在PG，新MySQL仅标识。
-- [ ] 更新演示配置、命令、评估结果和局限，实时finish留痕，沿用保留本地分支。
+- [x] 后端requesting-code-review独立只读评审；Important先红绿修复并复审，前端/密钥排除。
+- [x] 全部旧137+新增回归、pip check；校准真实prompt_tokens与估算，不改一个系数却保留旧预算口径。
+- [x] 默认与演示独立会话各至少24轮：默认零降级/摘要；演示出现L1降级→L2超额→summary done，之后正确回忆最早订单号/诉求。记录SSE/摘要时间证明不阻塞。
+- [x] 完整日志对照真实发出messages，浏览器侧栏与原文回载；工具full只在PG，新MySQL仅标识。
+- [x] 更新演示配置、命令、评估结果和局限，实时finish留痕，沿用保留本地分支。
 
 ## 自审通过
 

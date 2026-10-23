@@ -1,0 +1,16 @@
+{
+  "profile": "default",
+  "conversation_id": "07c816f5fe004e199c9dc2e93cb61246",
+  "checks": {
+    "all_24_complete": true,
+    "all_raw_users_preserved": true,
+    "history_logged_each_round": true,
+    "no_degradation": true,
+    "no_summary": true
+  },
+  "completed_rounds": 24,
+  "error": null,
+  "recall": null,
+  "archived_full_trace": "artifacts\\ch07-default-before-temporal-fix.json",
+  "note": "Earlier run preserved as rework evidence, not final acceptance. Full SSE locally archived."
+}

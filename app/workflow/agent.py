@@ -22,6 +22,15 @@ class Terminal(Strict):
     refund_eligibility:Literal['eligible','conditional','ineligible','unknown']='unknown'
 
 
+def parse_terminal(content):
+    # No further tool call means converge. Only a validated leading control object
+    # may enable suggestions; prose is discarded and never becomes the final answer.
+    try:
+        value,_=json.JSONDecoder().raw_decode(content.lstrip())
+        return Terminal.model_validate(value)
+    except (ValueError,TypeError):return Terminal(disposition='answer')
+
+
 def build_agent(deps):
     async def decide(state):
         log=trace(state,'agent_decide',step=state.get('steps',0)+1)
@@ -41,7 +50,8 @@ def build_agent(deps):
                 if (state.get('memory_enabled') and state.get('route')=='refund') or any(c['name'] not in tools for c in calls):return dict(trace=log,usage=usage(b),answer=FALLBACK,stop_reason='forbidden_tool',disposition='fallback')
                 item=dict(role='assistant',content='',tool_calls=calls)
                 return dict(trace=log,usage=usage(b),new_messages=[item],steps=state.get('steps',0)+1)
-            terminal=Terminal.model_validate_json(response.content)
+            if response.response_metadata.get('finish_reason') not in (None,'stop'):raise ValueError('incomplete_control_response')
+            terminal=parse_terminal(response.content)
             return dict(trace=log,usage=usage(b),steps=state.get('steps',0)+1,**terminal.model_dump())
         except BudgetExceeded:return dict(trace=log,usage=usage(b),answer=FALLBACK,stop_reason='token_budget',disposition='fallback')
 
