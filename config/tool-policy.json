@@ -1,0 +1,10 @@
+{
+  "builtin:query_order": "read",
+  "builtin:query_product": "read",
+  "builtin:query_faq": "read",
+  "builtin:create_ticket": "write",
+  "mcp:logistics:query_logistics": "read",
+  "mcp:logistics:query_delivery_eta": "read",
+  "mcp:aftersales:query_warranty": "read",
+  "mcp:aftersales:query_return_progress": "read"
+}

@@ -20,18 +20,18 @@
 
 ## Task 1: Registration, schema and local policy
 
-Files: app/tooling/catalog.py, policy.py, runtime.py, __init__.py; config/tool-policy.json, tool-plugins.json; tests/test_tool_catalog.py.
-Interfaces: ToolSpec(name,description,parameters,source,invoke,project=None); Catalog.register(spec), replace_source(source,specs), snapshot()->dict[str,ToolSpec]; LocalPolicy.load()->mapping; permits(spec)->read/write/None. Runtime.refresh() loads trusted local modules and MCP discovery, freezes versioned descriptions; bind(context,version)->Registry-compatible tools.
+Files: app/tooling/catalog.py, policy.py, __init__.py; config/tool-policy.json, tool-plugins.json; tests/test_tool_catalog.py.
+Interfaces: ToolSpec(name,description,parameters,source,invoke,project=None); Catalog.register(spec), replace_source(source,specs), snapshot()->dict[str,ToolSpec]; LocalPolicy.load()->mapping; permits(spec)->read/write/None. Runtime refresh/binding integrates in Tasks3/4.
 
-- [ ] Write tests for name collision, invalid Schema, missing metadata, parameter schema retained, forged readOnlyHint denied, local permissions hot reload and builtin module registration. Example:
+- [x] Write tests for name collision, invalid Schema, missing metadata, parameter schema retained, forged readOnlyHint denied, local permissions hot reload and builtin module registration. Example:
 ~~~python
 catalog.register(spec_a)
 with pytest.raises(ValueError): catalog.register(spec_same_name_other_source)
 assert policy.access('mcp:unknown','create_ticket') is None
 ~~~
-- [ ] Run .venv/Scripts/python -m pytest tests/test_tool_catalog.py -q; missing-module failure must precede implementation.
-- [ ] Install preflight-compatible pinned dependencies, add pyproject requirements, implement catalog/policy; no Agent edits yet. Update lock from installed metadata without secrets.
-- [ ] Re-run targeted tests, log Task1 and commit.
+- [x] Run .venv/Scripts/python -m pytest tests/test_tool_catalog.py -q; missing-module failure must precede implementation.
+- [x] Install preflight-compatible pinned dependencies, add pyproject requirements, implement catalog/policy; no Agent edits yet. Update lock from installed metadata without secrets.
+- [x] Re-run targeted tests, log Task1 and commit.
 
 ## Task 2: Unified engine and SQL audit
 

@@ -124,3 +124,4 @@ websockets==16.1.1
 xxhash==4.0.2
 yarl==1.25.1
 zstandard==0.25.0
+mcp==1.28.0\nlangchain-mcp-adapters==0.3.2\njsonschema==4.26.0\nhttpx-sse==0.4.3\npyjwt==2.15.1\npython-multipart==0.0.32\npywin32==312\nsse-starlette==3.5.0\nreferencing==0.37.0\njsonschema-specifications==2025.9.1\nrpds-py==2026.9.1\n
