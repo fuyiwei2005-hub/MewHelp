@@ -1,0 +1,2117 @@
+{
+  "checks": {
+    "logistics_uses_mcp": true,
+    "warranty_uses_mcp": true,
+    "asks_missing_description": true,
+    "bare_creates_nothing": true,
+    "preview_creates_nothing": true,
+    "confirm_creates_one": true,
+    "confirm_replay_no_duplicate": true,
+    "cancel_creates_nothing": true
+  },
+  "results": {
+    "logistics": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "b0975b950a7747948e3321df9156d82e",
+            "turn_id": "931a15b70b704b18930678f1dfd47ee0"
+          },
+          "seconds": 0.304
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "normalize"
+          },
+          "seconds": 0.326
+        },
+        {
+          "event": "normalization",
+          "data": {
+            "original": "演示订单1001的物流到哪了",
+            "resolved": "演示订单1001的物流到哪了",
+            "retrieval_query": "订单1001 物流到哪了"
+          },
+          "seconds": 1.123
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "intent"
+          },
+          "seconds": 1.128
+        },
+        {
+          "event": "intent",
+          "data": {
+            "intent": "物流",
+            "confidence": 0.98
+          },
+          "seconds": 1.76
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 1
+          },
+          "seconds": 1.788
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_tool",
+            "tool": "query_logistics",
+            "call_id": "call_00_ISuWan52lm8gDaLcIKdd5115"
+          },
+          "seconds": 2.616
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "query_logistics",
+            "label": "查询物流",
+            "source": "mcp:logistics",
+            "tool_call_id": "call_00_ISuWan52lm8gDaLcIKdd5115"
+          },
+          "seconds": 2.616
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "query_logistics",
+            "source": "mcp:logistics",
+            "tool_call_id": "call_00_ISuWan52lm8gDaLcIKdd5115",
+            "status": "completed"
+          },
+          "seconds": 2.692
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 2
+          },
+          "seconds": 2.712
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_final"
+          },
+          "seconds": 3.35
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 3.982
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          },
+          "seconds": 4.046
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "100"
+          },
+          "seconds": 4.054
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "1"
+          },
+          "seconds": 4.073
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的"
+          },
+          "seconds": 4.073
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "物流"
+          },
+          "seconds": 4.073
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "信息"
+          },
+          "seconds": 4.073
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "显示"
+          },
+          "seconds": 4.088
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          },
+          "seconds": 4.088
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "当前"
+          },
+          "seconds": 4.088
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "状态"
+          },
+          "seconds": 4.103
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          },
+          "seconds": 4.103
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "“"
+          },
+          "seconds": 4.103
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "运输"
+          },
+          "seconds": 4.103
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "中"
+          },
+          "seconds": 4.118
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "”，"
+          },
+          "seconds": 4.118
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "最新"
+          },
+          "seconds": 4.118
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "位置"
+          },
+          "seconds": 4.118
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "在北京"
+          },
+          "seconds": 4.133
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "转运"
+          },
+          "seconds": 4.133
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "中心"
+          },
+          "seconds": 4.133
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 4.158
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "此前"
+          },
+          "seconds": 4.158
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "已有"
+          },
+          "seconds": 4.174
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "“"
+          },
+          "seconds": 4.18
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "已"
+          },
+          "seconds": 4.18
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "揽"
+          },
+          "seconds": 4.18
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "收"
+          },
+          "seconds": 4.181
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "”"
+          },
+          "seconds": 4.2
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "记录"
+          },
+          "seconds": 4.201
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 4.201
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "以上"
+          },
+          "seconds": 4.201
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          },
+          "seconds": 4.212
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 4.213
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          },
+          "seconds": 4.213
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 4.213
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "仅供参考"
+          },
+          "seconds": 4.213
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 4.232
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "log"
+          },
+          "seconds": 4.256
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "b0975b950a7747948e3321df9156d82e",
+            "finish_reason": "stop"
+          },
+          "seconds": 4.289
+        }
+      ],
+      "text": "演示订单1001的物流信息显示：当前状态为“运输中”，最新位置在北京转运中心，此前已有“已揽收”记录。以上为演示数据，仅供参考。",
+      "meta": {
+        "conversation_id": "b0975b950a7747948e3321df9156d82e",
+        "turn_id": "931a15b70b704b18930678f1dfd47ee0"
+      },
+      "nodes": [
+        "normalize",
+        "intent",
+        "agent_decide",
+        "agent_tool",
+        "agent_decide",
+        "agent_final",
+        "log"
+      ],
+      "tools": [
+        "query_logistics"
+      ]
+    },
+    "warranty": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "fcde009f8b6548d1bdca5a5b8040d7b9",
+            "turn_id": "04279ce3f3f2484ca4c18e2d3c894739"
+          },
+          "seconds": 0.175
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "normalize"
+          },
+          "seconds": 0.179
+        },
+        {
+          "event": "normalization",
+          "data": {
+            "original": "演示订单1001现在还在保吗",
+            "resolved": "演示订单1001现在还在保吗",
+            "retrieval_query": "订单1001 是否仍在保修期内"
+          },
+          "seconds": 1.048
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "intent"
+          },
+          "seconds": 1.052
+        },
+        {
+          "event": "intent",
+          "data": {
+            "intent": "售后",
+            "confidence": 0.98
+          },
+          "seconds": 1.668
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "select_order"
+          },
+          "seconds": 1.669
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 1
+          },
+          "seconds": 1.687
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_tool",
+            "tool": "query_warranty",
+            "call_id": "call_00_CbpJtMuIMlk3GWckes6E9349"
+          },
+          "seconds": 2.542
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "query_warranty",
+            "label": "query_warranty",
+            "source": "mcp:aftersales",
+            "tool_call_id": "call_00_CbpJtMuIMlk3GWckes6E9349"
+          },
+          "seconds": 2.542
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "query_warranty",
+            "source": "mcp:aftersales",
+            "tool_call_id": "call_00_CbpJtMuIMlk3GWckes6E9349",
+            "status": "completed"
+          },
+          "seconds": 2.595
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 2
+          },
+          "seconds": 2.612
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_final"
+          },
+          "seconds": 3.345
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 4.033
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          },
+          "seconds": 4.109
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          },
+          "seconds": 4.109
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "100"
+          },
+          "seconds": 4.109
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "1"
+          },
+          "seconds": 4.11
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          },
+          "seconds": 4.11
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "目前"
+          },
+          "seconds": 4.127
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "显示"
+          },
+          "seconds": 4.138
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          },
+          "seconds": 4.138
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "在"
+          },
+          "seconds": 4.151
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "保"
+          },
+          "seconds": 4.151
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          },
+          "seconds": 4.151
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "按"
+          },
+          "seconds": 4.151
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 4.166
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          },
+          "seconds": 4.184
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 4.184
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "保修"
+          },
+          "seconds": 4.198
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "期"
+          },
+          "seconds": 4.219
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "还剩"
+          },
+          "seconds": 4.219
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          },
+          "seconds": 4.219
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "120"
+          },
+          "seconds": 4.219
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": " "
+          },
+          "seconds": 4.219
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "天"
+          },
+          "seconds": 4.219
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 4.235
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "不过"
+          },
+          "seconds": 4.235
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 4.235
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "这是"
+          },
+          "seconds": 4.244
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 4.244
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          },
+          "seconds": 4.261
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 4.261
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "不是"
+          },
+          "seconds": 4.261
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "真实"
+          },
+          "seconds": 4.261
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          },
+          "seconds": 4.276
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "信息"
+          },
+          "seconds": 4.276
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 4.276
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "log"
+          },
+          "seconds": 4.317
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "fcde009f8b6548d1bdca5a5b8040d7b9",
+            "finish_reason": "stop"
+          },
+          "seconds": 4.354
+        }
+      ],
+      "text": "演示订单 1001 目前显示为在保：按演示数据，保修期还剩 120 天。不过，这是演示数据，不是真实订单信息。",
+      "meta": {
+        "conversation_id": "fcde009f8b6548d1bdca5a5b8040d7b9",
+        "turn_id": "04279ce3f3f2484ca4c18e2d3c894739"
+      },
+      "nodes": [
+        "normalize",
+        "intent",
+        "select_order",
+        "agent_decide",
+        "agent_tool",
+        "agent_decide",
+        "agent_final",
+        "log"
+      ],
+      "tools": [
+        "query_warranty"
+      ]
+    },
+    "bare": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "turn_id": "f9d72934cfd84e1c82751de681834ac5"
+          },
+          "seconds": 0.174
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "normalize"
+          },
+          "seconds": 0.178
+        },
+        {
+          "event": "normalization",
+          "data": {
+            "original": "帮我建个工单",
+            "resolved": "帮我建个工单",
+            "retrieval_query": "帮我建个工单"
+          },
+          "seconds": 0.756
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "intent"
+          },
+          "seconds": 0.76
+        },
+        {
+          "event": "intent",
+          "data": {
+            "intent": "其他",
+            "confidence": 0.4
+          },
+          "seconds": 1.671
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 1
+          },
+          "seconds": 1.685
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_final"
+          },
+          "seconds": 1.69
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您好"
+          },
+          "seconds": 2.376
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 2.451
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "请"
+          },
+          "seconds": 2.467
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "先"
+          },
+          "seconds": 2.477
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "告诉我"
+          },
+          "seconds": 2.493
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          },
+          "seconds": 2.509
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "遇到"
+          },
+          "seconds": 2.534
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的具体"
+          },
+          "seconds": 2.543
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "问题"
+          },
+          "seconds": 2.543
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "（"
+          },
+          "seconds": 2.543
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "例如"
+          },
+          "seconds": 2.555
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "订单"
+          },
+          "seconds": 2.555
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "或"
+          },
+          "seconds": 2.572
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "物流"
+          },
+          "seconds": 2.586
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "情况"
+          },
+          "seconds": 2.606
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "、"
+          },
+          "seconds": 2.638
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "希望"
+          },
+          "seconds": 2.638
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "处理"
+          },
+          "seconds": 2.638
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的事项"
+          },
+          "seconds": 2.652
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "），"
+          },
+          "seconds": 2.652
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "我再"
+          },
+          "seconds": 2.652
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "帮"
+          },
+          "seconds": 2.666
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "您"
+          },
+          "seconds": 2.667
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "申请"
+          },
+          "seconds": 2.667
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "建"
+          },
+          "seconds": 2.69
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "工"
+          },
+          "seconds": 2.691
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          },
+          "seconds": 2.691
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 2.691
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "log"
+          },
+          "seconds": 2.723
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "finish_reason": "stop"
+          },
+          "seconds": 2.764
+        }
+      ],
+      "text": "您好，请先告诉我您遇到的具体问题（例如订单或物流情况、希望处理的事项），我再帮您申请建工单。",
+      "meta": {
+        "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+        "turn_id": "f9d72934cfd84e1c82751de681834ac5"
+      },
+      "nodes": [
+        "normalize",
+        "intent",
+        "agent_decide",
+        "agent_final",
+        "log"
+      ],
+      "tools": []
+    },
+    "supplement": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "turn_id": "57672a834e1847528c3c36e7363c0bd8"
+          },
+          "seconds": 0.173
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "normalize"
+          },
+          "seconds": 0.179
+        },
+        {
+          "event": "normalization",
+          "data": {
+            "original": "演示设备的水泵不出水，清理后仍无法恢复",
+            "resolved": "演示设备的水泵不出水，清理后仍无法恢复",
+            "retrieval_query": "演示设备水泵不出水 清理后仍无法恢复"
+          },
+          "seconds": 0.685
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "intent"
+          },
+          "seconds": 0.689
+        },
+        {
+          "event": "intent",
+          "data": {
+            "intent": "售后",
+            "confidence": 0.95
+          },
+          "seconds": 1.407
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 1
+          },
+          "seconds": 1.425
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_prepare"
+          },
+          "seconds": 2.296
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "create_ticket",
+            "label": "核对工单",
+            "source": "builtin",
+            "tool_call_id": "call_00_UsQLiSuVnd2r8uIzxyIt9374"
+          },
+          "seconds": 2.297
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_wait"
+          },
+          "seconds": 2.34
+        },
+        {
+          "event": "ticket_preview",
+          "data": {
+            "type": "ticket_preview",
+            "preview_id": "6f59ef0e285771028955f187370c4538238b7e00b727f92d7dbe4f9c3455e6c3",
+            "turn_id": "57672a834e1847528c3c36e7363c0bd8",
+            "tool_call_id": "call_00_UsQLiSuVnd2r8uIzxyIt9374",
+            "description": "演示设备的水泵不出水，清理后仍无法恢复",
+            "ticket_type": "售后"
+          },
+          "seconds": 2.395
+        },
+        {
+          "event": "ticket_preview",
+          "data": {
+            "type": "ticket_preview",
+            "preview_id": "6f59ef0e285771028955f187370c4538238b7e00b727f92d7dbe4f9c3455e6c3",
+            "turn_id": "57672a834e1847528c3c36e7363c0bd8",
+            "tool_call_id": "call_00_UsQLiSuVnd2r8uIzxyIt9374",
+            "description": "演示设备的水泵不出水，清理后仍无法恢复",
+            "ticket_type": "售后"
+          },
+          "seconds": 2.395
+        },
+        {
+          "event": "paused",
+          "data": {
+            "turn_id": "57672a834e1847528c3c36e7363c0bd8",
+            "reason": "ticket_preview"
+          },
+          "seconds": 2.396
+        }
+      ],
+      "text": "",
+      "meta": {
+        "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+        "turn_id": "57672a834e1847528c3c36e7363c0bd8"
+      },
+      "nodes": [
+        "normalize",
+        "intent",
+        "agent_decide",
+        "ticket_preview_prepare",
+        "ticket_preview_wait"
+      ],
+      "tools": [
+        "create_ticket"
+      ]
+    },
+    "confirm": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "turn_id": "57672a834e1847528c3c36e7363c0bd8"
+          },
+          "seconds": 0.201
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_wait"
+          },
+          "seconds": 0.212
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_execute"
+          },
+          "seconds": 0.219
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "create_ticket",
+            "source": "builtin",
+            "tool_call_id": "call_00_UsQLiSuVnd2r8uIzxyIt9374",
+            "status": "completed"
+          },
+          "seconds": 0.294
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_final"
+          },
+          "seconds": 0.31
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "已"
+          },
+          "seconds": 0.929
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为您"
+          },
+          "seconds": 1.029
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "申请"
+          },
+          "seconds": 1.029
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "工"
+          },
+          "seconds": 1.029
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          },
+          "seconds": 1.04
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 1.04
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "工"
+          },
+          "seconds": 1.04
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          },
+          "seconds": 1.041
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "号"
+          },
+          "seconds": 1.06
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          },
+          "seconds": 1.06
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "T"
+          },
+          "seconds": 1.061
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "6"
+          },
+          "seconds": 1.061
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "B"
+          },
+          "seconds": 1.061
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "EF"
+          },
+          "seconds": 1.061
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "B"
+          },
+          "seconds": 1.082
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "53"
+          },
+          "seconds": 1.082
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "A"
+          },
+          "seconds": 1.082
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "50"
+          },
+          "seconds": 1.083
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "D"
+          },
+          "seconds": 1.083
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "240"
+          },
+          "seconds": 1.083
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "70"
+          },
+          "seconds": 1.09
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "B"
+          },
+          "seconds": 1.091
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "4"
+          },
+          "seconds": 1.091
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "D"
+          },
+          "seconds": 1.091
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "7"
+          },
+          "seconds": 1.092
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 1.092
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "当前"
+          },
+          "seconds": 1.107
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "状态"
+          },
+          "seconds": 1.107
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "为"
+          },
+          "seconds": 1.107
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "“"
+          },
+          "seconds": 1.128
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "处理"
+          },
+          "seconds": 1.129
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "中"
+          },
+          "seconds": 1.129
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "”。"
+          },
+          "seconds": 1.129
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "问题"
+          },
+          "seconds": 1.129
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "描述"
+          },
+          "seconds": 1.136
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          },
+          "seconds": 1.136
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 1.136
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "设备"
+          },
+          "seconds": 1.136
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "的水"
+          },
+          "seconds": 1.153
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "泵"
+          },
+          "seconds": 1.153
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "不出"
+          },
+          "seconds": 1.153
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "水"
+          },
+          "seconds": 1.172
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 1.172
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "清理"
+          },
+          "seconds": 1.172
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "后"
+          },
+          "seconds": 1.173
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "仍"
+          },
+          "seconds": 1.173
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "无法"
+          },
+          "seconds": 1.173
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "恢复"
+          },
+          "seconds": 1.184
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 1.185
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "log"
+          },
+          "seconds": 1.231
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "finish_reason": "stop"
+          },
+          "seconds": 1.281
+        }
+      ],
+      "text": "已为您申请工单，工单号：T6BEFB53A50D24070B4D7，当前状态为“处理中”。问题描述：演示设备的水泵不出水，清理后仍无法恢复。",
+      "meta": {
+        "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+        "turn_id": "57672a834e1847528c3c36e7363c0bd8"
+      },
+      "nodes": [
+        "ticket_preview_wait",
+        "ticket_preview_execute",
+        "agent_final",
+        "log"
+      ],
+      "tools": []
+    },
+    "replay": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "turn_id": "57672a834e1847528c3c36e7363c0bd8"
+          },
+          "seconds": 0.033
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "已为您申请工单，工单号：T6BEFB53A50D24070B4D7，当前状态为“处理中”。问题描述：演示设备的水泵不出水，清理后仍无法恢复。"
+          },
+          "seconds": 0.033
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+            "finish_reason": "stop"
+          },
+          "seconds": 0.033
+        }
+      ],
+      "text": "已为您申请工单，工单号：T6BEFB53A50D24070B4D7，当前状态为“处理中”。问题描述：演示设备的水泵不出水，清理后仍无法恢复。",
+      "meta": {
+        "conversation_id": "3db084c6ee5148a690e32e21b0ded43e",
+        "turn_id": "57672a834e1847528c3c36e7363c0bd8"
+      },
+      "nodes": [],
+      "tools": []
+    },
+    "to_cancel": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "28eb70b6684941e99b607568097758c0",
+            "turn_id": "78b2270097a24754b531a76177133643"
+          },
+          "seconds": 0.225
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "normalize"
+          },
+          "seconds": 0.234
+        },
+        {
+          "event": "normalization",
+          "data": {
+            "original": "帮我建工单，演示喂食器反复卡粮",
+            "resolved": "帮我建工单，演示喂食器反复卡粮",
+            "retrieval_query": "创建工单 演示喂食器反复卡粮"
+          },
+          "seconds": 1.185
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "intent"
+          },
+          "seconds": 1.198
+        },
+        {
+          "event": "intent",
+          "data": {
+            "intent": "售后",
+            "confidence": 0.95
+          },
+          "seconds": 1.794
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_decide",
+            "step": 1
+          },
+          "seconds": 1.825
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_prepare"
+          },
+          "seconds": 2.586
+        },
+        {
+          "event": "tool_start",
+          "data": {
+            "name": "create_ticket",
+            "label": "核对工单",
+            "source": "builtin",
+            "tool_call_id": "call_00_zMD2qQPBNSJFCqYA0oWr1251"
+          },
+          "seconds": 2.586
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_wait"
+          },
+          "seconds": 2.636
+        },
+        {
+          "event": "ticket_preview",
+          "data": {
+            "type": "ticket_preview",
+            "preview_id": "9e8f4ba8c40ef3a948543ea3054198cc5122f8a9bfc7a7fb172ce764523a63f7",
+            "turn_id": "78b2270097a24754b531a76177133643",
+            "tool_call_id": "call_00_zMD2qQPBNSJFCqYA0oWr1251",
+            "description": "演示喂食器反复卡粮",
+            "ticket_type": "售后"
+          },
+          "seconds": 2.689
+        },
+        {
+          "event": "ticket_preview",
+          "data": {
+            "type": "ticket_preview",
+            "preview_id": "9e8f4ba8c40ef3a948543ea3054198cc5122f8a9bfc7a7fb172ce764523a63f7",
+            "turn_id": "78b2270097a24754b531a76177133643",
+            "tool_call_id": "call_00_zMD2qQPBNSJFCqYA0oWr1251",
+            "description": "演示喂食器反复卡粮",
+            "ticket_type": "售后"
+          },
+          "seconds": 2.69
+        },
+        {
+          "event": "paused",
+          "data": {
+            "turn_id": "78b2270097a24754b531a76177133643",
+            "reason": "ticket_preview"
+          },
+          "seconds": 2.69
+        }
+      ],
+      "text": "",
+      "meta": {
+        "conversation_id": "28eb70b6684941e99b607568097758c0",
+        "turn_id": "78b2270097a24754b531a76177133643"
+      },
+      "nodes": [
+        "normalize",
+        "intent",
+        "agent_decide",
+        "ticket_preview_prepare",
+        "ticket_preview_wait"
+      ],
+      "tools": [
+        "create_ticket"
+      ]
+    },
+    "cancel": {
+      "frames": [
+        {
+          "event": "meta",
+          "data": {
+            "conversation_id": "28eb70b6684941e99b607568097758c0",
+            "turn_id": "78b2270097a24754b531a76177133643"
+          },
+          "seconds": 0.253
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_wait"
+          },
+          "seconds": 0.261
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "ticket_preview_execute"
+          },
+          "seconds": 0.268
+        },
+        {
+          "event": "tool_end",
+          "data": {
+            "name": "create_ticket",
+            "source": "builtin",
+            "tool_call_id": "call_00_zMD2qQPBNSJFCqYA0oWr1251",
+            "status": "failed"
+          },
+          "seconds": 0.3
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "agent_final"
+          },
+          "seconds": 0.324
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "工"
+          },
+          "seconds": 0.809
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          },
+          "seconds": 0.885
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "没有"
+          },
+          "seconds": 0.885
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "建成"
+          },
+          "seconds": 0.885
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "："
+          },
+          "seconds": 0.886
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "你在"
+          },
+          "seconds": 0.899
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "确认"
+          },
+          "seconds": 0.899
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "环节"
+          },
+          "seconds": 0.926
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "取消了"
+          },
+          "seconds": 0.927
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "这次"
+          },
+          "seconds": 0.927
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "操作"
+          },
+          "seconds": 0.931
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 0.947
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "系统"
+          },
+          "seconds": 0.948
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "未"
+          },
+          "seconds": 0.963
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "执行"
+          },
+          "seconds": 0.977
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "创建"
+          },
+          "seconds": 0.977
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "（"
+          },
+          "seconds": 0.978
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "演示"
+          },
+          "seconds": 0.994
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "数据"
+          },
+          "seconds": 1.005
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "）。"
+          },
+          "seconds": 1.005
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "如需"
+          },
+          "seconds": 1.005
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "再次"
+          },
+          "seconds": 1.017
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "申请"
+          },
+          "seconds": 1.034
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 1.051
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "告诉我"
+          },
+          "seconds": 1.052
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "即可"
+          },
+          "seconds": 1.072
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 1.085
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "我会"
+          },
+          "seconds": 1.085
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "重新"
+          },
+          "seconds": 1.103
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "发起"
+          },
+          "seconds": 1.121
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "建"
+          },
+          "seconds": 1.144
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "单"
+          },
+          "seconds": 1.144
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "预览"
+          },
+          "seconds": 1.165
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "，"
+          },
+          "seconds": 1.165
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "写入"
+          },
+          "seconds": 1.165
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "仍需"
+          },
+          "seconds": 1.193
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "你在"
+          },
+          "seconds": 1.2
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "按钮"
+          },
+          "seconds": 1.222
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "上"
+          },
+          "seconds": 1.222
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "确认"
+          },
+          "seconds": 1.223
+        },
+        {
+          "event": "token",
+          "data": {
+            "text": "。"
+          },
+          "seconds": 1.25
+        },
+        {
+          "event": "workflow",
+          "data": {
+            "node": "log"
+          },
+          "seconds": 1.301
+        },
+        {
+          "event": "done",
+          "data": {
+            "conversation_id": "28eb70b6684941e99b607568097758c0",
+            "finish_reason": "stop"
+          },
+          "seconds": 1.348
+        }
+      ],
+      "text": "工单没有建成：你在确认环节取消了这次操作，系统未执行创建（演示数据）。如需再次申请，告诉我即可，我会重新发起建单预览，写入仍需你在按钮上确认。",
+      "meta": {
+        "conversation_id": "28eb70b6684941e99b607568097758c0",
+        "turn_id": "78b2270097a24754b531a76177133643"
+      },
+      "nodes": [
+        "ticket_preview_wait",
+        "ticket_preview_execute",
+        "agent_final",
+        "log"
+      ],
+      "tools": []
+    }
+  }
+}

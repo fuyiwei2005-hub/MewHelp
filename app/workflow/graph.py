@@ -21,8 +21,10 @@ def build_graph(deps,checkpointer):
         if history:value.update(summaries=state['context_view']['summaries'])
         return value
     async def normalize(state):
+        from app.tooling.tickets import ticket_context
+        ticket=ticket_context(state) if getattr(deps,'tool_runtime',None) else {}
         log=trace(state,'normalize')
-        reset=dict(evidence=[],citations=[],actions=[],suggested_actions=[],queries=[],steps=0,seen=[],order=None,answer='',stop_reason='',disposition='',refund_eligibility='unknown',status='running',trace=log)
+        reset=dict(evidence=[],citations=[],actions=[],suggested_actions=[],queries=[],steps=0,seen=[],order=None,answer='',stop_reason='',disposition='',refund_eligibility='unknown',status='running',trace=log,pending_preview=None,pending_calls=[],ticket_receipt=None,**ticket)
         if is_greeting(state['raw_question']):return dict(reset,greeting=True,resolved_question=state['raw_question'],retrieval_query=state['raw_question'],intent='闲聊',confidence=1.0,route='smalltalk',order_id=None)
         b=budget(state,deps)
         try:result=await deps.language.resolve(state['raw_question'],state.get('history',[]),budget=b,**memory_kwargs(state,'resolve',True))
@@ -37,7 +39,7 @@ def build_graph(deps,checkpointer):
         except BudgetExceeded:result=Intent(intent='其他',confidence=0);reason='token_budget'
         except Exception:result=Intent(intent='其他',confidence=0);reason='intent_unavailable'
         emit('intent',result.model_dump())
-        return dict(trace=log,intent=result.intent,confidence=result.confidence,route=route(result.intent,state['resolved_question']),usage=usage(b),stop_reason=reason)
+        return dict(trace=log,intent=result.intent,confidence=result.confidence,route='ticket' if state.get('ticket_requested') else route(result.intent,state['resolved_question']),usage=usage(b),stop_reason=reason)
 
     async def select_order(state):
         log=trace(state,'select_order')
@@ -133,7 +135,7 @@ def build_graph(deps,checkpointer):
     for name,node in [('normalize',normalize),('intent',classify),('select_order',select_order),('query_order',query_order),('expand',expand),('retrieve',retrieve),('confidence_gate',confidence_gate),('direct',direct),('agent',build_agent(deps)),('log',log_node)]:g.add_node(name,node if name=='agent' else adapt_node(name,node,deps))
     g.add_edge(START,'normalize')
     g.add_conditional_edges('normalize',lambda s:'direct' if s.get('greeting') or s.get('stop_reason') else 'intent',{'direct':'direct','intent':'intent'})
-    g.add_conditional_edges('intent',lambda s:{'knowledge':'retrieve','refund':'select_order','status':'select_order','agent':'agent'}.get(s['route'],'direct'),{'retrieve':'retrieve','select_order':'select_order','agent':'agent','direct':'direct'})
+    g.add_conditional_edges('intent',lambda s:{'knowledge':'retrieve','refund':'select_order','status':'select_order','agent':'agent','ticket':'agent'}.get(s['route'],'direct'),{'retrieve':'retrieve','select_order':'select_order','agent':'agent','direct':'direct'})
     g.add_conditional_edges('select_order',lambda s:'agent' if s.get('route')=='status' else 'query_order',{'agent':'agent','query_order':'query_order'})
     g.add_conditional_edges('query_order',lambda s:'direct' if s.get('stop_reason') else 'expand',{'direct':'direct','expand':'expand'})
     g.add_edge('expand','retrieve');g.add_edge('retrieve','confidence_gate')

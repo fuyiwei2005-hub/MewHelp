@@ -50,3 +50,8 @@ def test_catalog_schema_is_frozen_against_caller_mutation():
     view=c.snapshot();view['read_demo'].parameters['required']=[]
     assert c.version==before
     assert c.snapshot()['read_demo'].parameters['required']==['name']
+
+def test_builtin_write_cannot_be_downgraded_to_read_by_bad_local_config(tmp_path):
+    from app.tooling.policy import LocalPolicy
+    file=tmp_path/'policy.json';file.write_text('{"builtin:create_ticket":"read"}')
+    assert LocalPolicy(file).access(spec('create_ticket')) is None

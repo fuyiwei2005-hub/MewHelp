@@ -49,9 +49,11 @@ class ToolRuntime:
         return ToolEngine(self.resolve(descriptors),self.policy,self.audit,self.cfg.tool_timeout_seconds,self.cfg.tool_max_attempts)
     def bind(self,context,descriptors):
         tools=[]
-        for spec in self.resolve(descriptors).values():
-            async def invoke(spec=spec,**args):
-                call=dict(name=spec.name,args=args,id=getattr(context,'call_id','bound'))
+        # Schema remains frozen even after restart/server removal. Execution separately
+        # resolves an identical trusted handler or returns a recorded unavailable error.
+        for descriptor in descriptors:
+            async def invoke(descriptor=descriptor,**args):
+                call=dict(name=descriptor['name'],args=args,id=getattr(context,'call_id','bound'))
                 return await self.engine(descriptors).execute(call,context)
-            tools.append(StructuredTool.from_function(coroutine=invoke,name=spec.name,description=spec.description,args_schema=spec.parameters,infer_schema=False,metadata={'source':spec.source}))
+            tools.append(StructuredTool.from_function(coroutine=invoke,name=descriptor['name'],description=descriptor['description'],args_schema=descriptor['parameters'],infer_schema=False,metadata={'source':descriptor['source']}))
         return Registry(context,tools)

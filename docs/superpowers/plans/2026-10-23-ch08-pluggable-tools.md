@@ -67,10 +67,10 @@ Interfaces: WorkflowService.tool_runtime; State.tool_catalog/version serializabl
 
 Files: app/tooling/tickets.py; app/workflow/ticket_flow.py, service.py, graph.py, api.py, state.py, repository.py; tests/test_ticket_preview.py; evals/ch08-ticket-intent.jsonl; scripts/evaluate_ticket_intent.py.
 Interfaces: explicit_ticket_request(text)->bool, pending user request tracked in State; PreviewStore.prepare/confirm/cancel/supersede with frozen args/hash/version/call; service.prepare_ticket_resume(cid,tid,preview_id,confirmed)->Turn; POST /workflow/ticket-preview.
-- [ ] Red real graph/DB tests: bare request asks description with no ticket; supplied facts create preview only; true confirm creates once/receipt, false confirm no write+permission audit; replay/foreign/stale previews rejected or idempotently replayed; new message supersedes preview and resumes ordinary chat without orphan tool messages.
-- [ ] Run red; implement separate interrupt node with idempotent preparation and engine grant only after server validates click. Model arguments cannot manufacture grant; missing description cannot be guessed.
-- [ ] Evaluate labeled explicit/negated/quoted/hypothetical/bare/continuation cases; inspect true model supplement/preview behavior. Old complaint button passes its existing confirmation through engine without second preview.
-- [ ] Verify pending checkpoint survives reopening official PG saver, memory histories remain separate; log Task5/commit.
+- [x] Red real graph/DB tests: bare request asks description with no ticket; supplied facts create preview only; true confirm creates once/receipt, false confirm no write+permission audit; replay/foreign/stale previews rejected or idempotently replayed; new message supersedes preview and resumes ordinary chat without orphan tool messages.
+- [x] Run red; implement separate interrupt node with idempotent preparation and engine grant only after server validates click. Model arguments cannot manufacture grant; missing description cannot be guessed.
+- [x] Evaluate labeled explicit/negated/quoted/hypothetical/bare/continuation cases; inspect true model supplement/preview behavior. Old complaint button passes its existing confirmation through engine without second preview.
+- [x] Verify pending checkpoint survives reopening official PG saver, memory histories remain separate; log Task5/commit.
 
 ## Task 6: Preview card UI (Vibe)
 

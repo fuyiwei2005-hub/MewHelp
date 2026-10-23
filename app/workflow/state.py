@@ -4,6 +4,14 @@ from langgraph.graph.message import add_messages
 
 class WorkflowState(TypedDict,total=False):
     messages:Annotated[list[AnyMessage],add_messages]
+    ticket_requested:bool
+    ticket_pending:bool
+    ticket_description:str
+    ticket_request_quote:str
+    pending_calls:list[dict]
+    pending_preview:dict|None
+    ticket_decision:bool
+    ticket_receipt:dict|None
     tool_catalog:list[dict]
     memory_enabled:bool
     context_view:dict

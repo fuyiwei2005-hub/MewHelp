@@ -11,5 +11,6 @@ class LocalPolicy:
         except (OSError,ValueError):return {}
     def access(self,spec):
         mode=self.load().get(spec.source+':'+spec.name)
+        if (spec.source,spec.name)==('builtin','create_ticket') and mode!='write':return None
         if mode=='write' and (spec.source,spec.name)!=('builtin','create_ticket'):return None
         return mode if mode in ('read','write') else None

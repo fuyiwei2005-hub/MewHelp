@@ -35,6 +35,7 @@ def build_agent(deps):
     async def decide(state):
         log=trace(state,'agent_decide',step=state.get('steps',0)+1)
         if state.get('steps',0)>=deps.cfg.agent_max_steps:return dict(trace=log,stop_reason='step_limit',answer=FALLBACK,disposition='fallback')
+        if state.get('route')=='ticket' and not state.get('ticket_description'):return dict(trace=log,disposition='clarify')
         tools=tools_for(state,deps);b=budget(state,deps)
         try:
             messages=request_messages(state,deps,AGENT_PROMPT+'\n'+NEGATIVE_KNOWLEDGE,tools)
@@ -49,7 +50,7 @@ def build_agent(deps):
             if calls:
                 if not getattr(deps,'tool_runtime',None) and ((state.get('memory_enabled') and state.get('route')=='refund') or any(c['name'] not in tools for c in calls)):return dict(trace=log,usage=usage(b),answer=FALLBACK,stop_reason='forbidden_tool',disposition='fallback')
                 item=dict(role='assistant',content='',tool_calls=calls)
-                return dict(trace=log,usage=usage(b),new_messages=[item],steps=state.get('steps',0)+1)
+                return dict(trace=log,usage=usage(b),new_messages=[item],pending_calls=calls,steps=state.get('steps',0)+1)
             if response.response_metadata.get('finish_reason') not in (None,'stop'):raise ValueError('incomplete_control_response')
             terminal=parse_terminal(response.content)
             return dict(trace=log,usage=usage(b),steps=state.get('steps',0)+1,**terminal.model_dump())
@@ -108,8 +109,18 @@ def build_agent(deps):
 
     def after_decide(state):
         if state.get('disposition') or state.get('stop_reason'):return 'final'
+        if getattr(deps,'previews',None) and state.get('pending_calls',[{}])[0].get('name')=='create_ticket':return 'ticket_prepare'
         return 'tools'
     g=StateGraph(WorkflowState);g.add_node('decide',adapt_node('agent_decide',decide,deps));g.add_node('tools',adapt_node('agent_tools',execute,deps));g.add_node('final',adapt_node('agent_final',finish,deps))
-    g.add_edge(START,'decide');g.add_conditional_edges('decide',after_decide,{'final':'final','tools':'tools'})
+    g.add_edge(START,'decide')
+    decisions={'final':'final','tools':'tools'}
+    if getattr(deps,'previews',None):
+        from .ticket_flow import build_ticket_nodes
+        prepare,wait,commit=build_ticket_nodes(deps)
+        for name,node in [('ticket_prepare',prepare),('ticket_wait',wait),('ticket_commit',commit)]:g.add_node(name,adapt_node(name,node,deps))
+        decisions['ticket_prepare']='ticket_prepare'
+        g.add_conditional_edges('ticket_prepare',lambda s:'ticket_wait' if s.get('pending_preview') else 'decide',{'ticket_wait':'ticket_wait','decide':'decide'})
+        g.add_edge('ticket_wait','ticket_commit');g.add_edge('ticket_commit','final')
+    g.add_conditional_edges('decide',after_decide,decisions)
     g.add_conditional_edges('tools',lambda s:'final' if s.get('stop_reason') else 'decide',{'final':'final','decide':'decide'});g.add_edge('final',END)
     return g.compile()

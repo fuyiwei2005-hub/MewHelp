@@ -10,6 +10,11 @@ class Selection(Request):
     turn_id:str=Field(min_length=1,max_length=64)
     selection_id:str=Field(min_length=1,max_length=128)
     order_id:str=Field(min_length=1,max_length=64)
+class TicketDecision(Request):
+    turn_id:str=Field(min_length=1,max_length=64)
+    preview_id:str=Field(min_length=1,max_length=128)
+    confirmed:bool
+
 class Action(Request):
     kind:Literal['ticket','refund']
     reason:str|None=Field(default=None,max_length=64)
@@ -25,6 +30,9 @@ def install_routes(app,service=None):
         value=service or getattr(app.state,'workflow_service',None)
         if value is None:raise HTTPException(503,'工作流尚未启用。')
         return value
+    @app.post('/workflow/ticket-preview')
+    async def ticket_preview(payload:TicketDecision):
+        s=get();return WorkflowResponse(s,await s.prepare_ticket_resume(payload.conversation_id,payload.turn_id,payload.preview_id,payload.confirmed))
     @app.post('/workflow/select-order')
     async def select(payload:Selection):
         s=get();return WorkflowResponse(s,await s.prepare_resume(payload.conversation_id,payload.turn_id,payload.selection_id,payload.order_id))

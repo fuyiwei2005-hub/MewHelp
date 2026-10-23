@@ -52,6 +52,9 @@ class WorkflowService:
             from langgraph.graph import StateGraph,START,END
             from .state import WorkflowState
             self.memory.action_graph=StateGraph(WorkflowState).add_node('capture',lambda s:{}).add_edge(START,'capture').add_edge('capture',END).compile(checkpointer=saver)
+        if getattr(deps,'tool_runtime',None) and hasattr(deps.repo,'db'):
+            from app.tooling.preview_store import PreviewStore
+            deps.previews=PreviewStore(deps.repo)
         self.graph=build_graph(deps,saver)
 
     def config(self,cid):return {'configurable':{'thread_id':cid},'recursion_limit':100}
@@ -84,6 +87,7 @@ class WorkflowService:
                 first=history.pop(0).get('turn_id')
                 while history and first and history[0].get('turn_id')==first:history.pop(0)
                 while history and history[0]['role']!='user':history.pop(0)
+            await self.supersede_previews(cid,snapshot)
             await self.deps.repo.expire_selections(cid)
             runtime=getattr(self.deps,'tool_runtime',None);catalog=await runtime.refresh() if runtime else None;prefix=None
             if self.memory and runtime:
@@ -151,8 +155,8 @@ class WorkflowService:
                 snapshot=await self.graph.aget_state(self.config(turn.cid))
                 if interrupts:
                     await self.deps.repo.audit(snapshot.values,'paused');finished=True
-                    for info in interrupts:yield event('order_selection',info)
-                    yield event('paused',{'turn_id':turn.tid,'reason':'order_selection'})
+                    for info in interrupts:yield event(info.get('type','order_selection'),info)
+                    yield event('paused',{'turn_id':turn.tid,'reason':interrupts[0].get('type','order_selection')})
                 else:
                     if snapshot.values.get('status')!='completed':raise ValueError('incomplete_workflow')
                     finished=True;yield event('done',{'conversation_id':turn.cid,'finish_reason':'stop'})
@@ -212,6 +216,52 @@ class WorkflowService:
             return await self.deps.repo.complete_offer(cid,offer_id,result)
         finally:await self.release(Turn(cid,'',None,lock,{}))
 
+    async def supersede_previews(self,cid,snapshot):
+        store=getattr(self.deps,'previews',None)
+        if store is None:return
+        rows=await store.supersede(cid)
+        for row in rows:
+            from app.tooling.engine import failure
+            call=row['payload']['call'];ctx=ToolContext(self.business,cid,row['turn_id'],'',ticket_requested=True)
+            catalog=snapshot.values.get('tool_catalog',[]) if snapshot.values else []
+            engine=self.deps.tool_runtime.engine(catalog)
+            result=failure('failure','permission_denied','用户继续新对话，未确认的工单已取消，未执行创建。')
+            await engine.record(ctx,call,engine.catalog.get(call['name']),'权限拒绝',result)
+            if self.memory:
+                from app.memory.bridge import from_item
+                items=[dict(role='tool',content=json.dumps(result,ensure_ascii=False),tool_call_id=call['id']),dict(role='assistant',content='上次工单未确认，已取消。')]
+                projected=[await self.memory.repo.append(cid,row['turn_id'],'preview_superseded:'+str(i),from_item(item)) for i,item in enumerate(items)]
+                await self.memory.action_graph.ainvoke({'messages':projected},self.config(cid+':actions'))
+                old=dict(snapshot.values,conversation_id=cid,turn_id=row['turn_id'],answer='上次工单未确认，已取消。',stop_reason='preview_superseded')
+                await self.deps.repo.audit(old,'cancelled')
+
+    async def prepare_ticket_resume(self,cid,tid,preview_id,confirmed):
+        store=getattr(self.deps,'previews',None)
+        if store is None:raise HTTPException(503,'工单预览流程尚未启用。')
+        if type(confirmed) is not bool:raise HTTPException(422,'请选择确认或取消。')
+        if not await self.business.exists(cid):raise HTTPException(404,'会话不存在。')
+        lock=await self.acquire(cid)
+        try:
+            row=await store.get(cid,preview_id)
+            if not row or row['turn_id']!=tid:raise HTTPException(422,'工单预览无效。')
+            if row['status']=='superseded':raise HTTPException(409,'工单预览已失效。')
+            snapshot=await self.graph.aget_state(self.config(cid))
+            run=await self.deps.repo.run(cid,tid)
+            if row['status']=='done' and run and run['status']=='completed':
+                if row['result']['decision'] is not confirmed:raise HTTPException(409,'本次工单已作出其他选择。')
+                return Turn(cid,tid,None,lock,run['data'],replay=run['data'])
+            if snapshot.values.get('turn_id')!=tid:raise HTTPException(409,'工单预览已失效。')
+            pending=[i.value for task in snapshot.tasks for i in task.interrupts]
+            if not any(i.get('preview_id')==preview_id for i in pending):
+                if row['status']=='done':return Turn(cid,tid,None,lock,snapshot.values)
+                raise HTTPException(409,'本轮没有等待该工单确认。')
+            await self.deps.tool_runtime.refresh()
+            try:await store.decide(cid,preview_id,confirmed)
+            except ValueError:raise HTTPException(409,'工单预览已失效或已作出其他选择。') from None
+            return Turn(cid,tid,Command(resume={'preview_id':preview_id,'confirmed':confirmed}),lock,snapshot.values)
+        except BaseException:
+            await self.release(Turn(cid,tid,None,lock,{}));raise
+
     async def current_state(self,cid):
         if not await self.business.exists(cid):raise HTTPException(404,'会话不存在。')
         snapshot=await self.graph.aget_state(self.config(cid));state=snapshot.values
@@ -220,7 +270,7 @@ class WorkflowService:
             current=await self.deps.repo.get_offer(cid,offer['id'])
             if current:actions.append(current)
         selections=[i.value for task in snapshot.tasks for i in task.interrupts]
-        return dict(turn_id=state.get('turn_id'),status='paused' if selections else state.get('status'),actions=actions,order_selection=selections[0] if selections else None)
+        return dict(turn_id=state.get('turn_id'),status='paused' if selections else state.get('status'),actions=actions,order_selection=next((i for i in selections if i.get('type')=='order_selection'),None),ticket_preview=next((i for i in selections if i.get('type')=='ticket_preview'),None))
 
 class WorkflowResponse(StreamingResponse):
     def __init__(self,service,turn):

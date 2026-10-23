@@ -121,3 +121,18 @@ def test_legacy_chat_entry_cannot_bypass_new_write_gate(tmp_path):
         assert r.audit.rows[-1]['status']=='权限拒绝'
         assert 'permission_denied' in str(repo.rows)
     asyncio.run(run())
+
+def test_resume_keeps_frozen_schema_when_handler_is_unavailable(tmp_path):
+    from app.tools import ToolContext
+    async def run():
+        r=runtime(tmp_path)
+        async def extra(args,ctx):return {'answer':'ok'}
+        r.register(ToolSpec('query_added','新增工具',{'type':'object'},'builtin',extra))
+        catalog=await r.refresh();r.snapshots.clear()
+        from app.tooling.catalog import Catalog
+        r.catalog=Catalog()
+        tools=r.bind(ToolContext(None,'c','t','问题'),catalog)
+        assert 'query_added' in tools and tools['query_added'].args_schema=={'type':'object'}
+        result=await tools['query_added'].ainvoke({})
+        assert result['error']['code']=='unknown_tool'
+    asyncio.run(run())

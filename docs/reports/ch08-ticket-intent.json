@@ -1,0 +1,102 @@
+{
+  "total": 16,
+  "passed": 16,
+  "cases": [
+    {
+      "text": "帮我建个工单",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "我要创建工单，物流一直没到",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "请给我开一张人工工单",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "建工单",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "麻烦建个售后工单，水泵坏了",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "不要帮我建工单",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "我不想建工单，只想查物流",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "如果我说帮我建工单会怎样",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "示例：帮我建个工单",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "用户说“帮我建工单”，这是啥意思",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "工单怎么创建",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "我要投诉",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "物流一直没到",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "不用建工单了",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "不要退款，请帮我建工单",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "先不建工单，查一下物流",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    }
+  ]
+}

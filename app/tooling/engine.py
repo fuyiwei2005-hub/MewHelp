@@ -50,6 +50,11 @@ def normalized(value):
         return failure(kind,code,error.get('message','工具返回业务错误。') if isinstance(error,dict) else str(error))
     return {'ok':True,'data':public_data(value)}
 
+def argument_errors(spec,args):
+    try:errors=list(Draft202012Validator(spec.parameters).iter_errors(args))
+    except Exception:errors=[None]
+    return [dict(path='.'.join(str(p) for p in e.absolute_path) or '$',message=e.message[:500]) if e else dict(path='$',message='参数无法按Schema校验') for e in errors[:10]]
+
 class ToolEngine:
     def __init__(self,catalog,policy,audit,timeout=5,attempts=2):
         self.catalog,self.policy,self.audit,self.timeout,self.attempts=catalog,policy,audit,timeout,attempts
@@ -64,10 +69,8 @@ class ToolEngine:
         if spec is None:
             status='权限拒绝';result=failure('failure','unknown_tool','该工具未登记或当前不可用。')
         else:
-            try:errors=list(Draft202012Validator(spec.parameters).iter_errors(call.get('args')))
-            except Exception:errors=[None]
-            if errors:
-                details=[dict(path='.'.join(str(p) for p in e.absolute_path) or '$',message=e.message) if e else dict(path='$',message='参数无法按Schema校验') for e in errors[:10]]
+            details=argument_errors(spec,call.get('args'))
+            if details:
                 status='校验拦下';result=failure('invalid_arguments','invalid_arguments','工具参数不符合要求，请补充或更正后再试。',details=details)
             else:
                 mode=self.policy.access(spec)
@@ -95,3 +98,13 @@ class ToolEngine:
                             break
         await self.record(ctx,call,spec,status,result,retries,int((time.monotonic()-start)*1000))
         return result
+
+    async def prepare_write(self,call,ctx):
+        spec=self.catalog.get(call.get('name'))
+        if spec is None or argument_errors(spec,call.get('args')):
+            return await self.execute(call,ctx)
+        if self.policy.access(spec)!='write' or not getattr(ctx,'ticket_requested',False):
+            result=failure('failure','permission_denied','客户尚未明确要求建工单，不能发起预览。')
+            await self.record(ctx,call,spec,'权限拒绝',result)
+            return result
+        return {'ok':True,'pending_confirmation':True}
