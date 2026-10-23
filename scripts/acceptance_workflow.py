@@ -24,14 +24,14 @@ def run(base,output):
         checks['greeting_zero_model']=results['greeting']['nodes']==['normalize','fixed_response','log']
         checks['logistics_tool']='query_logistics' in results['logistics']['tools'] and 'retrieve' not in results['logistics']['nodes']
         checks['complex_multiple_tools']=len(results['complex']['tools'])>=2
-        nodes=results['policy']['nodes'];checks['policy_forced_gate']='retrieve' in nodes and 'confidence_gate' in nodes and nodes.index('confidence_gate')<nodes.index('agent_decide')
+        nodes=results['policy']['nodes'];checks['policy_forced_gate']='retrieve' in nodes and 'confidence_gate' in nodes and nodes.index('retrieve')<nodes.index('confidence_gate') and (('agent_decide' in nodes and nodes.index('confidence_gate')<nodes.index('agent_decide')) or ('agent_decide' not in nodes and 'fixed_response' in nodes))
         complaint=results['complaint'];offers=next(f['data']['items'] for f in complaint['frames'] if f['event']=='actions')
         checks['complaint_choices']={o['kind'] for o in offers}=={'handoff','ticket'} and 'agent_decide' not in complaint['nodes']
         pause=results['refund'];selection=next(f['data'] for f in pause['frames'] if f['event']=='order_selection')
         checks['refund_paused']=any(f['event']=='paused' for f in pause['frames']) and not any(f['event']=='done' for f in pause['frames'])
         payload={**pause['meta'],'selection_id':selection['selection_id'],'order_id':'1001'}
         results['resume']=read(client,base,'/workflow/select-order',payload)
-        nodes=results['resume']['nodes'];checks['refund_order_then_policy']=all(n in nodes for n in ['query_order','expand','retrieve','confidence_gate','agent_decide']) and nodes.index('query_order')<nodes.index('expand')<nodes.index('retrieve')<nodes.index('confidence_gate')<nodes.index('agent_decide')
+        nodes=results['resume']['nodes'];checks['refund_order_then_policy']=all(n in nodes for n in ['query_order','expand','retrieve','confidence_gate']) and nodes.index('query_order')<nodes.index('expand')<nodes.index('retrieve')<nodes.index('confidence_gate') and (('agent_decide' in nodes and nodes.index('confidence_gate')<nodes.index('agent_decide')) or ('agent_decide' not in nodes and 'fixed_response' in nodes))
         print('resume',nodes,flush=True)
     report=dict(scope='Real upstream + existing BGE/Milvus/reranker + MySQL + official PostgreSQL checkpointer',checks=checks,results=results)
     Path(output).write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')

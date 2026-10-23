@@ -6,5 +6,6 @@
   "mcp:logistics:query_logistics": "read",
   "mcp:logistics:query_delivery_eta": "read",
   "mcp:aftersales:query_warranty": "read",
-  "mcp:aftersales:query_return_progress": "read"
+  "mcp:aftersales:query_return_progress": "read",
+  "builtin:query_order_note": "read"
 }

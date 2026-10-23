@@ -295,4 +295,39 @@ Select-String -Path log/app.log -Pattern 'model_ctx|history_ctx|summary|layer1_d
 
 摘要只追加新段，旧段作为背景不再压缩；任务读冻结checkpoint、LLM在事务外执行，失效租约不能提交。失败/取消轮保留原文但不参与后续模型历史；合法大回合按实际摘要模型窗口处理，不设4000token硬拒绝。超预算工具原文留checkpoint元数据，模型只收到结构化超限结果，摘要不会把未展示的原文当成已确认事实。
 
-侧栏列出当前demo-user全部会话，新对话不删旧会话；切换/刷新从只读接口分页回载完整原文并恢复待选订单。列表失败静默降级。仍无跨会话记忆、画像、真实认证或真实客服系统接入。第八九章待独立设计实施。阶段过程见dev-notes/ch07.md，完整实测结果见docs/reports/ch07-validation.md。
+侧栏列出当前demo-user全部会话，新对话不删旧会话；切换/刷新从只读接口分页回载完整原文并恢复待选订单。列表失败静默降级。仍无跨会话记忆、画像、真实认证或真实客服系统接入。第八章接入见下节，第九章待独立设计。阶段过程见dev-notes/ch07.md，完整实测结果见docs/reports/ch07-validation.md。
+
+
+## 第八章：统一工具与MCP
+
+安装依赖后在三个终端分别启动；沿用现有MySQL/PostgreSQL和知识库服务：
+
+~~~powershell
+.\.venv\Scripts\python -m pip install -r requirements.lock
+.\.venv\Scripts\python -m scripts.serve_mcp --server logistics --plugin-file mcp_servers/delivery_eta_plugin.py
+.\.venv\Scripts\python -m scripts.serve_mcp --server aftersales
+.\.venv\Scripts\python -m scripts.serve_workflow --port 18000
+~~~
+
+打开 http://127.0.0.1:18000 ，问“演示订单1001的物流到哪了”“演示订单1001还在保吗”，气泡工具徽章分别显示物流、售后MCP来源。工具返回随机演示数据，不连接真实业务系统。
+
+问“帮我建工单”会先追问描述；补充“演示饮水机不出水”后出现预览。确认才写tickets并返回工单号；取消不写tickets，审计为权限拒绝。也可以不点卡片继续聊天，旧卡片失效。原投诉流程的转人工、建工单两个按钮独立保留。
+
+本地可信扩展示例为app/tool_plugins/order_note.py，只在config/tool-plugins.json登记模块并在config/tool-policy.json授权builtin:query_order_note为read；下一轮即发现，不改Agent代码、不重启客服。当前演示已登记，可问“演示订单1001的订单备注是什么”。不要把不可信Python代码放进此目录。
+
+MCP热发现演示：先不带--plugin-file启动物流，随后仅停掉该物流进程，再带上述--plugin-file重启；客服进程保持不动。下一轮问“演示订单1001预计还要几天送到”，会调用新发现的query_delivery_eta。该工具已在本地权限表预授权；外部Server声明不会自动获得授权。未知工具默认拒绝，外部MCP写工具禁用。
+
+~~~powershell
+.\.venv\Scripts\python -m scripts.acceptance_ticket --base-url http://127.0.0.1:18000 --output docs/reports/ch08-ticket-live.json
+.\.venv\Scripts\python -m scripts.acceptance_workflow --base-url http://127.0.0.1:18000 --output docs/reports/ch08-workflow-regression.json
+.\.venv\Scripts\python -m scripts.evaluate_ticket_intent
+.\.venv\Scripts\python -m pytest -q --basetemp artifacts/pytest-ch08-delivery
+.\.venv\Scripts\python -m pytest tests/test_tool_mcp.py tests/test_tool_audit.py tests/test_tool_engine.py -q --basetemp artifacts/pytest-ch08-faults
+.\.venv\Scripts\python -m pip check
+~~~
+
+工具审计写入tool_audit_logs，无外键；参数错误、权限拒绝、网络重试和超时均记录。读工具只重试暂时故障，空结果不重试；写工具默认一次，不因超时重复执行。工单预览冻结参数、会话、轮次、调用ID，服务端确认后才签发执行许可；断线后的不确定结果先查已有工单，不能盲重试。审计失败只记录告警。
+
+每轮发现有4秒每Server上限，故障Server本轮移除、其他Server继续；JSON Schema和权限表均以服务端可信配置为准。新增工具会重新核算模型固定前缀，工具清单无限扩大仍可能触发上下文预算不足。当前仍是demo-user演示，不含身份认证或真实物流、坐席。
+
+结果及限制见docs/reports/ch08-validation.md，阶段留痕见dev-notes/ch08.md。

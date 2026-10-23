@@ -6,7 +6,7 @@ from app.tools import ToolExecutor,LABELS
 from app.services import FINAL_SYSTEM
 from app.context import estimate_tokens
 from app.knowledge.quality import NEGATIVE_KNOWLEDGE,CITATION_RULES
-from app.knowledge.citation_stream import validated_citation_stream
+from app.knowledge.citation_stream import validated_citation_stream,CitationError
 from .state import WorkflowState
 from .language import Strict
 from .common import trace,emit,budget,usage,tools_for,request_messages,execute_call
@@ -98,6 +98,12 @@ def build_agent(deps):
                     if piece.text:texts.append(piece.text);emit('token',{'text':piece.text})
                     reason=piece.finish_reason or reason
                     actual_usage=getattr(piece,'usage',None) or actual_usage
+            except CitationError:
+                await deps.audit.record_low(state['raw_question'],state['conversation_id'],state['turn_id'],'generation','invalid_citations','回答未通过完整证据引用校验')
+                refusal='\n回答未通过完整证据引用校验，我无法据此确认完整结论。'+FALLBACK
+                emit('token',{'text':refusal})
+                answer=''.join(texts)+refusal
+                return dict(trace=log,answer=answer,usage=usage(b),disposition='fallback',stop_reason='invalid_citations',new_messages=[dict(role='assistant',content=answer)])
             finally:
                 if hasattr(stream,'aclose'):await stream.aclose()
             answer=''.join(texts)

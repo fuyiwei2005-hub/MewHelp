@@ -1,0 +1,714 @@
+{
+  "builtin": {
+    "frames": [
+      {
+        "event": "meta",
+        "data": {
+          "conversation_id": "77cff3aa3ea4416ca058ff148ce1435a",
+          "turn_id": "f7cb32682005476993859f6d87366606"
+        },
+        "seconds": 0.368
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "normalize"
+        },
+        "seconds": 0.39
+      },
+      {
+        "event": "normalization",
+        "data": {
+          "original": "演示订单1001的订单备注和包装要求是什么？",
+          "resolved": "演示订单1001的订单备注和包装要求是什么？",
+          "retrieval_query": "演示订单1001的订单备注和包装要求是什么"
+        },
+        "seconds": 1.424
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "intent"
+        },
+        "seconds": 1.436
+      },
+      {
+        "event": "intent",
+        "data": {
+          "intent": "订单",
+          "confidence": 0.93
+        },
+        "seconds": 2.067
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_decide",
+          "step": 1
+        },
+        "seconds": 2.086
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_tool",
+          "tool": "query_order_note",
+          "call_id": "call_00_2GZw4VGkmNfxanptwTq70508"
+        },
+        "seconds": 2.93
+      },
+      {
+        "event": "tool_start",
+        "data": {
+          "name": "query_order_note",
+          "label": "query_order_note",
+          "source": "builtin",
+          "tool_call_id": "call_00_2GZw4VGkmNfxanptwTq70508"
+        },
+        "seconds": 2.931
+      },
+      {
+        "event": "tool_end",
+        "data": {
+          "name": "query_order_note",
+          "source": "builtin",
+          "tool_call_id": "call_00_2GZw4VGkmNfxanptwTq70508",
+          "status": "completed"
+        },
+        "seconds": 2.952
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_decide",
+          "step": 2
+        },
+        "seconds": 2.982
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_final"
+        },
+        "seconds": 3.519
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "演示"
+        },
+        "seconds": 4.075
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "订单"
+        },
+        "seconds": 4.155
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": " "
+        },
+        "seconds": 4.166
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "100"
+        },
+        "seconds": 4.167
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "1"
+        },
+        "seconds": 4.167
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": " "
+        },
+        "seconds": 4.167
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "的"
+        },
+        "seconds": 4.167
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "订单"
+        },
+        "seconds": 4.183
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "备注"
+        },
+        "seconds": 4.183
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "为"
+        },
+        "seconds": 4.183
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "：“"
+        },
+        "seconds": 4.183
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "易"
+        },
+        "seconds": 4.199
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "碎"
+        },
+        "seconds": 4.199
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "品"
+        },
+        "seconds": 4.199
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 4.199
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "请"
+        },
+        "seconds": 4.199
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "轻"
+        },
+        "seconds": 4.199
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "放"
+        },
+        "seconds": 4.215
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "。”（"
+        },
+        "seconds": 4.215
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "演示"
+        },
+        "seconds": 4.215
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "数据"
+        },
+        "seconds": 4.239
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "）\n\n"
+        },
+        "seconds": 4.239
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "我没有"
+        },
+        "seconds": 4.247
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "查到"
+        },
+        "seconds": 4.247
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "该"
+        },
+        "seconds": 4.265
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "订单"
+        },
+        "seconds": 4.265
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "有"
+        },
+        "seconds": 4.265
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "单独的"
+        },
+        "seconds": 4.283
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "包装"
+        },
+        "seconds": 4.283
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "要求"
+        },
+        "seconds": 4.283
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "记录"
+        },
+        "seconds": 4.283
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 4.301
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "因此"
+        },
+        "seconds": 4.301
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "无法"
+        },
+        "seconds": 4.301
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "确认"
+        },
+        "seconds": 4.314
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "包装"
+        },
+        "seconds": 4.314
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "相关信息"
+        },
+        "seconds": 4.314
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "。"
+        },
+        "seconds": 4.364
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "log"
+        },
+        "seconds": 4.406
+      },
+      {
+        "event": "done",
+        "data": {
+          "conversation_id": "77cff3aa3ea4416ca058ff148ce1435a",
+          "finish_reason": "stop"
+        },
+        "seconds": 4.458
+      }
+    ],
+    "text": "演示订单 1001 的订单备注为：“易碎品，请轻放。”（演示数据）\n\n我没有查到该订单有单独的包装要求记录，因此无法确认包装相关信息。",
+    "meta": {
+      "conversation_id": "77cff3aa3ea4416ca058ff148ce1435a",
+      "turn_id": "f7cb32682005476993859f6d87366606"
+    },
+    "nodes": [
+      "normalize",
+      "intent",
+      "agent_decide",
+      "agent_tool",
+      "agent_decide",
+      "agent_final",
+      "log"
+    ],
+    "tools": [
+      "query_order_note"
+    ]
+  },
+  "mcp": {
+    "frames": [
+      {
+        "event": "meta",
+        "data": {
+          "conversation_id": "781e4382edb74d4eb23e80a63ff04ff5",
+          "turn_id": "4c2baa83190f45a89a84237dd6bf3b7b"
+        },
+        "seconds": 0.233
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "normalize"
+        },
+        "seconds": 0.239
+      },
+      {
+        "event": "normalization",
+        "data": {
+          "original": "演示订单1001预计还要几天送到？请查预计配送时间",
+          "resolved": "演示订单1001预计还要几天送到？请查预计配送时间",
+          "retrieval_query": "订单1001 预计配送时间 几天送到"
+        },
+        "seconds": 0.882
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "intent"
+        },
+        "seconds": 0.885
+      },
+      {
+        "event": "intent",
+        "data": {
+          "intent": "物流",
+          "confidence": 0.98
+        },
+        "seconds": 1.613
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_decide",
+          "step": 1
+        },
+        "seconds": 1.639
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_tool",
+          "tool": "query_delivery_eta",
+          "call_id": "call_00_qhdqNxgaGGNdThAMqnkj2015"
+        },
+        "seconds": 2.644
+      },
+      {
+        "event": "tool_start",
+        "data": {
+          "name": "query_delivery_eta",
+          "label": "query_delivery_eta",
+          "source": "mcp:logistics",
+          "tool_call_id": "call_00_qhdqNxgaGGNdThAMqnkj2015"
+        },
+        "seconds": 2.644
+      },
+      {
+        "event": "tool_end",
+        "data": {
+          "name": "query_delivery_eta",
+          "source": "mcp:logistics",
+          "tool_call_id": "call_00_qhdqNxgaGGNdThAMqnkj2015",
+          "status": "completed"
+        },
+        "seconds": 2.724
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_decide",
+          "step": 2
+        },
+        "seconds": 2.754
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "agent_final"
+        },
+        "seconds": 3.688
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "演示"
+        },
+        "seconds": 4.088
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "订单"
+        },
+        "seconds": 4.147
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "100"
+        },
+        "seconds": 4.157
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "1"
+        },
+        "seconds": 4.158
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "当前"
+        },
+        "seconds": 4.158
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "查询"
+        },
+        "seconds": 4.176
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "到的"
+        },
+        "seconds": 4.187
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "预计"
+        },
+        "seconds": 4.212
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "配送"
+        },
+        "seconds": 4.212
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "时间"
+        },
+        "seconds": 4.212
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "约为"
+        },
+        "seconds": 4.227
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": " "
+        },
+        "seconds": 4.227
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "3"
+        },
+        "seconds": 4.228
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": " "
+        },
+        "seconds": 4.249
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "天"
+        },
+        "seconds": 4.249
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "（"
+        },
+        "seconds": 4.249
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "演示"
+        },
+        "seconds": 4.25
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "预测"
+        },
+        "seconds": 4.257
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "数据"
+        },
+        "seconds": 4.298
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "，"
+        },
+        "seconds": 4.299
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "不"
+        },
+        "seconds": 4.299
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "承诺"
+        },
+        "seconds": 4.3
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "实际"
+        },
+        "seconds": 4.3
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "配送"
+        },
+        "seconds": 4.301
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "时效"
+        },
+        "seconds": 4.302
+      },
+      {
+        "event": "token",
+        "data": {
+          "text": "）。"
+        },
+        "seconds": 4.302
+      },
+      {
+        "event": "workflow",
+        "data": {
+          "node": "log"
+        },
+        "seconds": 4.344
+      },
+      {
+        "event": "done",
+        "data": {
+          "conversation_id": "781e4382edb74d4eb23e80a63ff04ff5",
+          "finish_reason": "stop"
+        },
+        "seconds": 4.388
+      }
+    ],
+    "text": "演示订单1001当前查询到的预计配送时间约为 3 天（演示预测数据，不承诺实际配送时效）。",
+    "meta": {
+      "conversation_id": "781e4382edb74d4eb23e80a63ff04ff5",
+      "turn_id": "4c2baa83190f45a89a84237dd6bf3b7b"
+    },
+    "nodes": [
+      "normalize",
+      "intent",
+      "agent_decide",
+      "agent_tool",
+      "agent_decide",
+      "agent_final",
+      "log"
+    ],
+    "tools": [
+      "query_delivery_eta"
+    ]
+  },
+  "checks": {
+    "builtin_registered": true,
+    "mcp_added": true
+  },
+  "process_evidence": {
+    "customer_pid_before_registration": 34524,
+    "customer_pid_after_both_calls": 34524,
+    "logistics_pid_before_server_restart": 23116,
+    "source": "Get-NetTCPConnection OwningProcess before and after; customer not restarted between registration and both calls"
+  }
+}

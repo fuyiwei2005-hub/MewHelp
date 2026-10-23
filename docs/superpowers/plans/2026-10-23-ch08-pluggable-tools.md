@@ -82,10 +82,10 @@ Files: app/web/index.html; scripts/acceptance_tools_browser.cjs.
 ## Task 7: Full acceptance, independent review and finish
 
 Files: scripts/acceptance_tools.py; docs/reports/ch08-*; README/.env.example/dev-notes/ch08.md.
-- [ ] Independent read-only backend review through requesting-code-review; Important red/green fix and re-review, no frontend review.
-- [ ] All pytest, pip check, live upstream query logistics/aftersales, new builtin registration and MCP Server-only restart (prove customer PID unchanged), ticket supplement/confirm/cancel SQL counts.
-- [ ] Fault-injection readonly timeout audited with retry_count1; write timeout audited retry_count0. Production mock defaults unchanged.
-- [ ] Document complete demo commands, results/limits, write incremental finish, retain current branch.
+- [x] Independent read-only backend review through requesting-code-review; Important red/green fix and re-review, no frontend review.
+- [x] All pytest, pip check, live upstream query logistics/aftersales, new builtin registration and MCP Server-only restart (prove customer PID unchanged), ticket supplement/confirm/cancel SQL counts.
+- [x] Fault-injection readonly timeout audited with retry_count1; write timeout audited retry_count0. Production mock defaults unchanged.
+- [x] Document complete demo commands, results/limits, write incremental finish, retain current branch.
 
 ## Plan self-review
 

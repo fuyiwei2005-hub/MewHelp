@@ -50,3 +50,22 @@ def test_repeated_call_stops_with_all_tool_results_paired():
         results=[m['tool_call_id'] for m in result['turn_messages'] if m['role']=='tool']
         assert calls==results
     asyncio.run(run())
+
+
+def test_invalid_generated_citation_refuses_and_records_quality_gap():
+    from app.workflow.graph import build_graph
+    from app.gateway import StreamPiece
+    from langchain_core.messages import AIMessage
+    async def run():
+        d=deps()
+        async def decide(messages,tools):return AIMessage(content='{"disposition":"answer"}')
+        async def invalid(messages,tools):
+            yield StreamPiece('杜撰政策[999]')
+            yield StreamPiece(finish_reason='stop')
+        d.gateway.decide=decide;d.gateway.final_stream=invalid
+        result=await build_graph(d,InMemorySaver()).ainvoke(input_state('退货政策是什么'),{'configurable':{'thread_id':'invalid-citation'}})
+        assert result['disposition']=='fallback'
+        assert '999' not in result['answer'] and '杜撰' not in result['answer']
+        assert any('invalid_citations' in args for args in d.audit.low)
+        assert result['status']=='completed'
+    asyncio.run(run())
