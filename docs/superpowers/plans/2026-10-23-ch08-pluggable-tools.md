@@ -50,9 +50,9 @@ assert await ticket_count()==0
 
 Files: mcp_servers/logistics.py, aftersales.py; app/tooling/mcp.py; runtime.py; tests/test_tool_mcp.py; scripts/serve_mcp.py; app/config.py.
 Interfaces: MCPDiscovery.refresh()->dict[source,list[ToolSpec]], bounded per-server; transport errors preserved; each ToolSpec wrapper adapts structured/text content without inferring permissions.
-- [ ] Red integration starts two subprocesses on test ports and verifies query_logistics source, warranty/return tools, no duplicate builtin logistics, one failed server isolated. Stop/restart only logistics with additional registered test tool; next discovery sees it.
-- [ ] Run red; implement SDK FastMCP instances and adapters get_tools(server_name=...), health-independent discovery errors, mock data/demo flag, no MySQL import in servers.
-- [ ] Verify actual HTTP discovery/calls and source/Schema/policy; pinned API signatures inspected after Context7. Log Task3/commit.
+- [x] Red integration starts two subprocesses on test ports and verifies query_logistics source, warranty/return tools, no duplicate builtin logistics, one failed server isolated. Stop/restart only logistics with additional registered test tool; next discovery sees it.
+- [x] Run red; implement SDK FastMCP instances and adapters get_tools(server_name=...), health-independent discovery errors, mock data/demo flag, no MySQL import in servers.
+- [x] Verify actual HTTP discovery/calls and source/Schema/policy; pinned API signatures inspected after Context7. Log Task3/commit.
 
 ## Task 4: Chat integration, dynamic prefix and audit coverage
 

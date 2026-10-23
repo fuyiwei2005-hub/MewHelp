@@ -45,6 +45,12 @@ class Settings(BaseSettings):
     agent_token_budget: int = Field(default=24000,ge=1024)
     workflow_timeout_seconds: float = Field(default=480,gt=0)
     faq_backend: Literal["keyword","dense","hybrid"] = "dense"
+    tool_system_enabled: bool = True
+    tool_policy_path: Path = ROOT/'config/tool-policy.json'
+    tool_plugins_path: Path = ROOT/'config/tool-plugins.json'
+    mcp_logistics_url: str = 'http://127.0.0.1:18011/mcp'
+    mcp_aftersales_url: str = 'http://127.0.0.1:18012/mcp'
+    mcp_discovery_timeout_seconds: float = Field(default=4,gt=0,le=30)
     tool_timeout_seconds: float = Field(default=5, gt=0)
     tool_max_attempts: int = Field(default=2, ge=1, le=3)
     embedding_base_url: str = "http://127.0.0.1:18001/v1"
